@@ -1,0 +1,17 @@
+---
+import logo from "@/assets/logo.png";
+
+// Props to pass in different values
+// remove quotes from "logo.src" to use the imported logo
+const { src = "logo.src", alt = "Site Logo", width = "auto", height = "auto", classes = "h-auto w-auto" } = Astro.props;
+---
+
+<a href="/" class="flex items-center space-x-2 text-neutral-800 dark:text-neutral-200">
+  <img 
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    class={classes}
+  />
+</a>

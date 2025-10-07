@@ -1,0 +1,78 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Enable browser theming  */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Custom vertical screen queries */
+@custom-variant xshort { @media (max-height: 400px) { @slot; } }
+@custom-variant short { @media (min-height: 401px) and (max-height: 600px) { @slot; } }
+@custom-variant tall { @media (min-height: 601px) and (max-height: 800px) { @slot; } }
+@custom-variant xtall { @media (min-height: 801px) { @slot; } }
+
+@theme {
+  --color-primary: #EC4646;
+  --color-primary-dark: #F5EE27;
+  --color-secondary: #51C2D5;
+  --color-body: #f6f6f6;
+  --color-body-dark: #0c0c0c;
+  --color-accent: #9792e3;
+  --color-border: #E0E0E0;
+  --color-muted: #F5F5F5;
+
+  --background-image-horizonAnimated: url("src/assets/horizon-animated.svg");
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html, body {
+  height: 100%;
+}
+
+:root {
+  /* --particle-color-1: #fc03ad; */
+  --particle-color-1: theme(colors.neutral.800);
+  /* --particle-color-2: #0073ff; */
+  --particle-color-2: #9792e3;
+  /* --svg-color: theme(colors.accent / 0.15); */
+  --svg-color: theme(colors.neutral.800 / 0.15);
+
+}
+
+
+/* Correct selector for when the html element has class "dark" */
+html.dark {
+  /* --particle-color-1: #00f970; */
+  --particle-color-1: theme(colors.neutral.200);
+  /* --particle-color-2: #eeff00; */
+  --svg-color: theme(colors.accent / 0.15);
+  /* --svg-color: theme(colors.neutral.200 / 0.15); */
+}
+
+
+.hidden-menu {
+  opacity: 0;
+  pointer-events:none;
+  visibility: hidden;
+  /* transform: translateY(-6px); */
+}
+
+body.menu-open .hidden-menu {
+  opacity: 1;
+  pointer-events:auto;
+  visibility: visible;
+  transform: none;
+}
+
+body.menu-open #hidden-menu {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  pointer-events: auto;
+}

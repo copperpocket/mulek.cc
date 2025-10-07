@@ -1,0 +1,137 @@
+---
+import LogoIcon from "./Logo.astro";
+import ThemeIcon from "./Theme.astro";
+import HamburgerMenu from "./HamburgerMenu.astro";
+---
+
+<header
+  id="site-header"
+  class="w-full sticky top-0 z-40 flex items-start py-6"
+>
+  <div id="header-nav"
+       class="mx-auto flex items-center justify-between w-full 
+              relative transition-all duration-[300ms] px-8">
+  <span id="nav-border"
+      class="absolute bottom-0 left-0 h-[2px] w-full bg-accent opacity-0 translate-y-25 transition-all duration-[300ms]">
+  </span>
+
+    <div id="logo-wrapper" 
+         class="inline-flex transform origin-left transition-all duration-[300ms] h-0 translate-y-[32px] items-center xtall:pl-4">
+        <LogoIcon alt="mulek.cc" classes="text-2xl" />
+    </div>
+
+    <div class="flex items-center space-x-6 xtall:space-x-10"> 
+      <div id="theme-wrapper" 
+            class="inline-flex transform transition-all duration-[300ms] h-0 translate-y-[32px] items-center">
+            <ThemeIcon />
+        </div>
+
+        <div id="menu-wrapper" 
+            class="inline-flex z-50 transition-all duration-[300ms] h-0 translate-y-[32px] items-center xtall:pr-4">
+            <HamburgerMenu /> 
+        </div>
+    </div>
+
+
+    <div
+      id="hidden-menu"
+      class="hidden-menu fixed inset-0 bg-neutral-100/60 dark:bg-neutral-900/60 backdrop-blur-sm
+             flex items-center justify-center overflow-auto z-40"
+    >
+      <ul class="flex flex-col p-4 space-y-4 text-neutral-800 dark:text-neutral-200 text-2xl">
+        <li><a href="/" class="hover:text-blue-500">Home</a></li>
+        <li><a href="/projects" class="hover:text-blue-500">Projects</a></li>
+        <li><a href="/blog" class="hover:text-blue-500">Blog</a></li>
+        <li><a href="/#section-contact" class="hover:text-blue-500">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<script type="module">
+  const header = document.getElementById("site-header");
+  const logoWrapper = document.getElementById("logo-wrapper");
+  const themeWrapper = document.getElementById("theme-wrapper");
+  const menuWrapper = document.getElementById("menu-wrapper");
+  const navBorder = document.getElementById("nav-border"); 
+  // Add a variable to check if the current page is the root page
+  const isRootPage = window.location.pathname === '/';
+
+  function updateHeader() {
+    // If not root page or scrolled down more than 30px, apply the styles
+    if (!isRootPage || window.scrollY > 30) {
+      // Move elements up
+      logoWrapper.classList.remove("translate-y-[32px]");
+      logoWrapper.classList.add("translate-y-0");
+      themeWrapper.classList.remove("translate-y-[32px]");
+      themeWrapper.classList.add("translate-y-0");
+      menuWrapper.classList.remove("translate-y-[32px]");
+      menuWrapper.classList.add("translate-y-0");
+
+      // Scale down elements
+      logoWrapper.classList.add("scale-75");
+      themeWrapper.classList.add("scale-75");
+      menuWrapper.classList.add("scale-75");
+
+      // Animate border
+      navBorder.classList.remove("opacity-0", "translate-y-25");
+      navBorder.classList.add("opacity-90", "translate-y-6");  
+
+      // Add background
+      header.classList.add("bg-body", "dark:bg-body-dark");
+    } else {
+      // Reset transforms
+      logoWrapper.classList.add("translate-y-[32px]");
+      logoWrapper.classList.remove("translate-y-0");
+      themeWrapper.classList.add("translate-y-[32px]");
+      themeWrapper.classList.remove("translate-y-0");
+      menuWrapper.classList.add("translate-y-[32px]");
+      menuWrapper.classList.remove("translate-y-0");
+
+      // Reset scale
+      logoWrapper.classList.remove("scale-75");
+      themeWrapper.classList.remove("scale-75");
+      menuWrapper.classList.remove("scale-75");
+
+      // Remove background
+      header.classList.remove("bg-body", "dark:bg-body-dark");
+
+      // Remove border
+      navBorder.classList.remove("opacity-90", "translate-y-6");
+      navBorder.classList.add("opacity-0", "translate-y-25");
+    }
+  }
+
+  // Then keep updating on scroll
+  window.addEventListener("scroll", updateHeader );
+
+  // ✅ Run once right away so refresh matches scroll position
+  updateHeader();
+</script>
+
+<script>
+  // Get a reference to the checkbox from the HamburgerMenu component
+  const menuBtn = document.getElementById('menu-btn');
+  const body = document.body;
+
+  if (menuBtn) {
+    // Listen for changes on the checkbox (when the burger is clicked)
+    menuBtn.addEventListener('change', () => {
+      if ((menuBtn as HTMLInputElement).checked) {
+        // Checkbox is checked (menu is opening)
+        body.classList.add('menu-open');
+      } else {
+        // Checkbox is unchecked (menu is closing)
+        body.classList.remove('menu-open');
+      }
+    });
+
+    // OPTIONAL: Add listeners to close the menu when a link is clicked
+    document.querySelectorAll('#hidden-menu a').forEach(link => {
+        link.addEventListener('click', () => {
+            (menuBtn as HTMLInputElement).checked = false; // Uncheck the box (closes the burger icon)
+            body.classList.remove('menu-open'); // Remove class (hides the menu)
+        });
+    });
+  }
+</script>

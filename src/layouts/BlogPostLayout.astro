@@ -1,0 +1,72 @@
+---
+// 1. Import necessary components
+import MainLayout from "./MainLayout.astro";
+import BackgroundParticles from "@/components/BackgroundParticles.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import "@/styles/global.css";
+
+// 2. Define the expected frontmatter data structure
+// Astro automatically passes the frontmatter of the Markdown file as props to its layout.
+interface Props {
+  // These properties come from the Markdown file's frontmatter
+  frontmatter: {
+    title: string;
+    description: string;
+    pubDate: string; // Use string here, we'll convert it to Date for display
+    author: string;
+    tags: string[];
+    // Optionally add image/og properties here if needed
+  };
+}
+
+const { frontmatter } = Astro.props;
+
+// Helper to format the date
+const formattedDate = new Date(frontmatter.pubDate).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+});
+---
+
+<MainLayout title={frontmatter.title} description={frontmatter.description}>
+    <BackgroundParticles minHeight="0" maxHeight="100%" particleCount={150} />
+    <Header />
+
+    <div id="post-container" class="relative z-20 min-h-screen">
+        <article class="container mx-auto px-4 py-8 max-w-4xl">
+            
+            <div class="text-center pb-8 border-b border-neutral-200 dark:border-neutral-700">
+                
+                <div class="text-xs text-neutral-500 dark:text-neutral-400 mb-2">
+                    <span class="font-medium">{frontmatter.author}</span>
+                    <span class="mx-2 text-neutral-300 dark:text-neutral-600">/</span>
+                    <time datetime={frontmatter.pubDate}>{formattedDate}</time>
+                </div>
+
+                <h1 class="text-3xl font-extrabold text-neutral-800 dark:text-neutral-200 sm:text-5xl">
+                    {frontmatter.title}
+                </h1>
+                <p class="text-lg text-neutral-600 dark:text-neutral-400 mt-4 max-w-2xl mx-auto">
+                    {frontmatter.description}
+                </p>
+            </div>
+            
+            <div class="flex flex-wrap justify-center gap-2 mt-6 mb-12"> 
+                {frontmatter.tags.map(tag => (
+                    <span class="text-xs font-medium px-3 py-1 rounded-full bg-accent/20 dark:bg-accent/30 text-accent border border-accent/50">
+                        #{tag}
+                    </span>
+                ))}
+            </div>
+
+            <div class="prose dark:prose-invert max-w-prose mx-auto lg:prose-lg">
+                <slot />
+            </div>
+
+            </article>
+    </div>
+
+    <Footer />
+</MainLayout>

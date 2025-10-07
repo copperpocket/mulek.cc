@@ -1,0 +1,54 @@
+---
+// 1. Import your main layout component
+import MainLayout from "@/layouts/MainLayout.astro";
+import BackgroundParticles from "@/components/BackgroundParticles.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import "@/styles/global.css";
+
+// 2. Use import.meta.glob to fetch all Markdown/MDX files in a subdirectory.
+const allPosts = await Astro.glob('./*.{md,mdx}'); 
+
+// 3. Sort posts by date, newest first (optional but recommended)
+allPosts.sort((a, b) => new Date(b.frontmatter.pubDate).valueOf() - new Date(a.frontmatter.pubDate).valueOf());
+
+// 4. Define the page title
+const pageTitle = "Blog Archive";
+---
+
+<MainLayout>
+    <BackgroundParticles minHeight="0" maxHeight="100%" particleCount={150} />
+    <Header />
+    
+    <div class="relative z-10 pt-20 pb-16 min-h-screen"> 
+        <div class="container mx-auto px-4">
+            <section class="max-w-3xl mx-auto">
+                <h1 class="text-3xl font-bold text-center mb-10 text-neutral-800 dark:text-neutral-200">
+                    {pageTitle}
+                </h1>
+                
+                {/* 5. Loop through the sorted posts and display a link for each */}
+                {allPosts.length > 0 ? (
+                    <ul role="list" class="space-y-6">
+                        {allPosts.map((post) => (
+                            <li class="post-preview bg-white dark:bg-neutral-900 rounded-lg shadow-xl p-6 transition-all duration-300 hover:shadow-2xl hover:scale-[1.01]">
+                                <a href={post.url} class="block">
+                                    <h2 class="text-xl font-semibold mb-2 text-accent">{post.frontmatter.title}</h2>
+                                    <p class="post-date text-sm text-neutral-500 dark:text-neutral-400">
+                                        Published: {new Date(post.frontmatter.pubDate).toLocaleDateString()}
+                                    </p>
+                                    <p class="post-description mt-3 text-neutral-700 dark:text-neutral-300">{post.frontmatter.description}</p>
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <div class="text-center py-10 text-neutral-600 dark:text-neutral-400">
+                        <p>No blog posts found.</p>
+                    </div>
+                )}
+            </section>
+        </div>
+    </div>
+    <Footer />
+</MainLayout>

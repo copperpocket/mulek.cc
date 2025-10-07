@@ -1,0 +1,244 @@
+---
+const { 
+  minHeight = "0", 
+  maxHeight = "100%", 
+  particleCount = 100, 
+  bounceIds = [] 
+} = Astro.props; 
+---
+
+<canvas 
+  class="absolute inset-0 w-full h-full z-10 pointer-events-none section-particles"
+  data-min-height={minHeight}
+  data-max-height={maxHeight}
+  data-override-hero={Astro.props.overrideHero ? "true" : undefined}
+  data-particle-count={particleCount}
+  data-bounce-ids={bounceIds.join(",")}>
+</canvas>
+
+<script>
+function parseValue(value: string | number, reference: number) {
+  if (typeof value === "number") return value;
+  if (typeof value !== "string") return 0;
+  if (value.endsWith("%")) return (parseFloat(value) / 100) * reference;
+  if (value.endsWith("px")) return parseFloat(value);
+  return parseFloat(value);
+}
+
+function initParticles(canvas: HTMLCanvasElement) {
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  // Cache CSS vars
+  const cssVars: { [key: string]: string } = {
+    "--particle-color-1": getCSSVar("--particle-color-1"),
+    "--particle-color-2": getCSSVar("--particle-color-2")
+  };
+
+  function getCSSVar(name: string) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  // Throttled resize
+  function resizeCanvas() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+
+  // Bounds that will update on resize
+  let minY = parseValue(canvas.dataset.minHeight ?? "0", canvas.height);
+  let maxY = canvas.dataset.maxHeight === "auto" ? canvas.height : parseValue(canvas.dataset.maxHeight ?? "100%", canvas.height);
+
+  function updateBounds() {
+    minY = parseValue(canvas.dataset.minHeight ?? "0", canvas.height);
+    maxY = canvas.dataset.maxHeight === "auto" ? canvas.height : parseValue(canvas.dataset.maxHeight ?? "100%", canvas.height);
+  }
+
+  function throttle(func: Function, wait: number) {
+    let timeout: number | null = null;
+    return (...args: any[]) => {
+      if (timeout === null) {
+        func(...args);
+        timeout = window.setTimeout(() => {
+          timeout = null;
+        }, wait);
+      }
+    };
+  }
+
+  const throttledResize = throttle(() => {
+    resizeCanvas();
+    updateBounds();
+    bounceBounds.splice(0, bounceBounds.length, ...getBounceBounds());
+  }, 100);
+
+  window.addEventListener("resize", throttledResize);
+
+  // Initial call
+  resizeCanvas();
+  updateBounds();
+
+  const count = parseInt(canvas.dataset.particleCount ?? "100") || 100;
+  const bounceIds = (canvas.dataset.bounceIds || "").split(",").map(s => s.trim()).filter(Boolean);
+
+  interface Particle {
+    x: number;
+    y: number;
+    radius: number;
+    alpha: number;
+    growing: boolean;
+    delay: number;
+    lastUpdate: number;
+    vx: number;
+    vy: number;
+    lastOpacityChange: number;
+    colorVar: string;
+  }
+
+  const particles: Particle[] = [];
+
+  function getBounceBounds() {
+    return bounceIds.map(id => {
+      const el = document.getElementById(id);
+      if (!el) return null;
+      const rect = el.getBoundingClientRect();
+      const canvasRect = canvas.getBoundingClientRect();
+      return {
+        x1: rect.left - canvasRect.left,
+        y1: rect.top - canvasRect.top,
+        x2: rect.right - canvasRect.left,
+        y2: rect.bottom - canvasRect.top
+      };
+    }).filter(Boolean);
+  }
+
+  const bounceBounds = getBounceBounds();
+
+  function createParticle() {
+    const radius = Math.random() * 1.75 + 0.25;
+    let x: number, y: number;
+    let tries = 0;
+
+    do {
+      x = Math.random() * canvas.width;
+      y = Math.random() * (maxY - minY) + minY;
+      tries++;
+      if (tries > 50) break;
+    } while (
+      bounceBounds.some(
+        b =>
+          b &&
+          x + radius > b.x1 &&
+          x - radius < b.x2 &&
+          y + radius > b.y1 &&
+          y - radius < b.y2
+      )
+    );
+
+    const alpha = Math.random() * 0.5 + 0.5;
+    const delay = Math.random() * 2000 + 500;
+    const vx = Math.random() * 0.5 - 0.25;
+    const vy = Math.random() * 0.5 - 0.25;
+    const colorVar = Math.random() < 0.5 ? "--particle-color-1" : "--particle-color-2";
+
+    particles.push({
+      x, y, radius, alpha, growing: true,
+      delay, lastUpdate: Date.now(),
+      vx, vy, lastOpacityChange: Date.now(),
+      colorVar
+    });
+  }
+
+  for (let i = 0; i < count; i++) createParticle();
+
+  function drawParticles() {
+    if (!ctx) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const now = Date.now();
+    const len = bounceBounds.length;
+    const BOUNCE_SKIP_DISTANCE = 50; // px
+
+    particles.forEach(p => {
+      // Alpha animation
+      if (now - p.lastOpacityChange > p.delay) {
+        if (p.growing) { 
+          p.alpha += 0.0025; 
+          if (p.alpha >= 1) { p.growing = false; p.lastOpacityChange = now; } 
+        } else { 
+          p.alpha -= 0.0025; 
+          if (p.alpha <= 0.01) { p.growing = true; p.lastOpacityChange = now; } 
+        }
+      }
+
+      // Move particle
+      p.x += p.vx;
+      p.y += p.vy;
+
+      // Canvas bounds
+      if (p.x - p.radius < 0) { p.vx = Math.abs(p.vx); p.x = p.radius; }
+      if (p.x + p.radius > canvas.width) { p.vx = -Math.abs(p.vx); p.x = canvas.width - p.radius; }
+      if (p.y - p.radius < minY) { p.vy = Math.abs(p.vy); p.y = minY + p.radius; }
+      if (p.y + p.radius > maxY) { p.vy = -Math.abs(p.vy); p.y = maxY - p.radius; }
+
+      // Bounce bounds with distance skip
+      const particleBox = {
+        x1: p.x - p.radius,
+        y1: p.y - p.radius,
+        x2: p.x + p.radius,
+        y2: p.y + p.radius
+      };
+
+      for (let i = 0; i < len; i++) {
+        const b = bounceBounds[i];
+        if (!b) continue;
+
+        const dx = Math.max(b.x1 - particleBox.x2, 0, particleBox.x1 - b.x2);
+        const dy = Math.max(b.y1 - particleBox.y2, 0, particleBox.y1 - b.y2);
+        if (dx * dx + dy * dy > BOUNCE_SKIP_DISTANCE * BOUNCE_SKIP_DISTANCE) continue;
+
+        if (
+          particleBox.x2 > b.x1 &&
+          particleBox.x1 < b.x2 &&
+          particleBox.y2 > b.y1 &&
+          particleBox.y1 < b.y2
+        ) {
+          const prevX = p.x - p.vx;
+          const prevY = p.y - p.vy;
+
+          if (prevX + p.radius <= b.x1) { p.vx = -p.vx; p.x = b.x1 - p.radius; } 
+          else if (prevX - p.radius >= b.x2) { p.vx = -p.vx; p.x = b.x2 + p.radius; }
+
+          if (prevY + p.radius <= b.y1) { p.vy = -p.vy; p.y = b.y1 - p.radius; } 
+          else if (prevY - p.radius >= b.y2) { p.vy = -p.vy; p.y = b.y2 + p.radius; }
+        }
+      }
+
+      // Draw particle
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = cssVars[p.colorVar];
+      ctx.globalAlpha = p.alpha;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    });
+  }
+
+  function animate() { 
+    drawParticles(); 
+    requestAnimationFrame(animate); 
+  }
+  animate();
+}
+
+document.querySelectorAll(".section-particles").forEach((el, index) => {
+  if (el instanceof HTMLCanvasElement) {
+    if (el.dataset.overrideHero) {
+      console.log("Overriding hero maxHeight for particle canvas", index);
+      const offset = 1.5 * parseFloat(getComputedStyle(document.documentElement).fontSize);
+      el.dataset.maxHeight = (window.innerHeight / 2 + offset) + "px";
+    }
+    initParticles(el);
+  }
+});
+</script>

@@ -1,0 +1,107 @@
+---
+import MainLayout from "@/layouts/MainLayout.astro";
+import BackgroundParticles from "@/components/BackgroundParticles.astro";
+import BackgroundSVG from "@/components/BackgroundSVG.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import "@/styles/global.css";
+---
+
+<MainLayout>
+  <BackgroundParticles fullPage={true} particleCount={150} bounceIds={["tech-card"]} />
+  <!-- <div class="absolute inset-0 z-10">
+    <BackgroundSVG />
+  </div> -->
+  <Header />
+
+  <main class="relative z-20 container mx-auto py-16 text-neutral-800 dark:text-neutral-200">
+    
+    <section id="about-hero" class="pt-24 pb-12 flex flex-col items-center text-center">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-accent mb-4">About Me</h1>
+      <p class="text-lg max-w-3xl">
+        This page goes deeper into my professional journey, technical background, and what drives my passion for systems engineering and development.
+      </p>
+    </section>
+
+    <section id="about-technical" class="mt-16 mb-24 flex flex-col items-center">
+      <h2 class="text-2xl font-semibold mb-4 text-center">My Technical Foundation</h2>
+      
+      <div id="tech-card"
+        class="w-full max-w-4xl p-6 md:p-10 rounded-xl space-y-6 
+               bg-[color:theme(colors.accent/20%)] dark:bg-neutral-900 shadow-xl"
+      >
+        <p class="text-sm md:text-base">
+          As a Systems Engineer, my core philosophy is rooted in **automation, reliability, and security**. I believe that robust systems are built on strong fundamentals—infrastructure as code, proactive monitoring, and a security-first mindset.
+        </p>
+        
+        <h3 class="text-lg font-bold text-accent">Key Areas of Expertise:</h3>
+        <ul class="grid grid-cols-2 sm:grid-cols-3 gap-y-2 text-sm md:text-base list-disc list-inside ml-4">
+          <li>Cloud Services (AWS, Azure)</li>
+          <li>Automation (PowerShell, Python)</li>
+          <li>Virtualization (VMware, Hyper-V)</li>
+          <li>Networking & Infrastructure</li>
+          <li>Linux Administration</li>
+          <li>System Monitoring (Grafana, Prometheus)</li>
+        </ul>
+        
+        <p class="text-sm md:text-base italic pt-4 border-t border-accent/30">
+          I thrive on complexity and am constantly seeking new ways to optimize workflows, whether it's managing enterprise environments or building out my personal homelab.
+        </p>
+      </div>
+    </section>
+
+    <section id="about-timeline" class="mt-16 mb-24 mx-4 flex flex-col items-center">
+      <h2 class="text-2xl font-semibold mb-8 text-center">Professional Timeline</h2>
+
+      <div class="w-full max-w-3xl relative">
+        <div class="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-accent opacity-50 hidden sm:block"></div>
+
+        <div class="relative mb-8 flex justify-between items-center w-full">
+          <div class="w-full sm:w-1/2 sm:pr-8">
+            <h4 class="font-bold text-lg text-accent">Systems Engineer</h4>
+            <p class="text-sm text-neutral-600 dark:text-neutral-400">VC3 (Current)</p>
+            <p class="text-xs mt-1">Leading infrastructure projects, automating maintenance tasks, and providing top-tier systems support for diverse clients.</p>
+          </div>
+          <div class="z-10 w-4 h-4 rounded-full bg-accent absolute left-1/2 transform -translate-x-1/2 hidden sm:block"></div>
+          <div class="w-full sm:w-1/2"></div>
+        </div>
+
+        <div class="relative mb-8 flex justify-between items-center w-full flex-row-reverse">
+          <div class="w-full sm:w-1/2 sm:pl-8 text-left sm:text-right">
+            <h4 class="font-bold text-lg text-accent">IT Support Specialist</h4>
+            <p class="text-sm text-neutral-600 dark:text-neutral-400">ABC Company</p>
+            <p class="text-xs mt-1">Managed desktop deployments, provided network troubleshooting, and contributed to security audits.</p>
+          </div>
+          <div class="z-10 w-4 h-4 rounded-full bg-accent absolute left-1/2 transform -translate-x-1/2 hidden sm:block"></div>
+          <div class="w-full sm:w-1/2"></div>
+        </div>
+
+        <div class="relative mb-8 flex justify-between items-center w-full">
+          <div class="w-full sm:w-1/2 sm:pr-8">
+            <h4 class="font-bold text-lg text-accent">B.S. Computer Science</h4>
+            <p class="text-sm text-neutral-600 dark:text-neutral-400">University XYZ</p>
+            <p class="text-xs mt-1">Specialized in operating systems and distributed computing.</p>
+          </div>
+          <div class="z-10 w-4 h-4 rounded-full bg-accent absolute left-1/2 transform -translate-x-1/2 hidden sm:block"></div>
+          <div class="w-full sm:w-1/2"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="about-cta" class="mt-16 pt-12 border-t border-accent/30 flex flex-col items-center text-center">
+      <p class="text-lg mb-6">
+        Want to know more or discuss a potential project?
+      </p>
+      <a
+        href="#section-contact"
+        class="px-8 py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition shadow-lg"
+      >
+        Get in Touch
+      </a>
+    </section>
+
+  </main>
+
+  <Footer />
+</MainLayout>

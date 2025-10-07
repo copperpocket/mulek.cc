@@ -1,0 +1,27 @@
+---
+// Define the expected properties (props) for the layout component.
+export interface Props {
+  title?: string;
+  meta_title?: string;
+  description?: string;
+}
+
+// Destructure the props passed to the component.
+const { title, meta_title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="snap-y overflow-y-auto snap-proximity h-full">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="generator" content={Astro.generator} />
+        <title>mulek.cc</title>
+    </head>
+  <body class="bg-body dark:bg-body-dark text-neutral-800 dark:text-neutral-200 h-full">
+    <main id="main-content" class="relative min-h-full">
+      <slot />
+    </main>
+  </body>
+</html>

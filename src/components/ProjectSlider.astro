@@ -1,0 +1,181 @@
+<div class="w-full max-w-md mx-auto">
+  <!-- Slider frame -->
+  <div class="relative h-[45vh] tall:h-[50vh] xtall:h-[50vh] overflow-hidden">
+    <!-- Slides wrapper -->
+    <div class="flex transition-transform duration-500 ease-in-out h-full" id="slides">
+      
+      <!-- Project 1 -->
+      <div class="flex-none w-[calc(100%-4rem)] mx-8 h-full flex flex-col rounded-2xl overflow-hidden bg-[color:theme(colors.accent/20%)] dark:bg-neutral-900 border-2 border-accent">
+        <!-- Image -->
+        <div class="w-full h-20 tall:h-1/2 xtall:h-1/2 bg-cover bg-center" style="background-image: url('https://picsum.photos/200/300');"></div>
+
+        <!-- Content -->
+        <div class="flex-1 flex flex-col items-center justify-center text-center px-4">
+          <h2 class="text-sm sm:text-lg mb-1 text-neutral-800 dark:text-neutral-200">Quackshire</h2>
+          <p class="text-xs text-neutral-600 dark:text-neutral-400">
+            A custom Minecraft creative server powered by PaperMC.
+            Seamless experience with server-side plugins—no client mods needed.
+          </p>
+          <a href="/projects/quackshire" class="mt-2 px-3 py-1 bg-accent text-white rounded-lg text-xs hover:bg-accent/90 transition">See More</a>
+        </div>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="flex-none w-[calc(100%-4rem)] mx-8 h-full flex flex-col rounded-2xl bg-[color:theme(colors.accent/20%)] dark:bg-neutral-900 border-2 border-accent overflow-hidden">
+        <div class="w-full h-20 tall:h-1/2 xtall:h-1/2 bg-cover bg-center" style="background-image: url('https://picsum.photos/200/301');"></div>
+        <div class="flex-1 flex flex-col items-center justify-center text-center px-4">
+          <h2 class="text-sm sm:text-lg mb-1 text-neutral-800 dark:text-neutral-200">Duckcraft</h2>
+          <p class="text-xs text-neutral-600 dark:text-neutral-400">
+            A Wrath of the Lich King private server built with AzerothCore.  
+            Features <em>playerbots</em> so you can quest and raid alongside AI players.
+          </p>
+          <a href="/projects/duckcraft" class="mt-2 px-3 py-1 bg-accent text-white rounded-lg text-xs hover:bg-accent/90 transition">See More</a>
+        </div>
+      </div>
+
+      <!-- Project 3 -->
+      <div class="flex-none w-[calc(100%-4rem)] mx-8 h-full flex flex-col rounded-2xl overflow-hidden bg-[color:theme(colors.accent/20%)] dark:bg-neutral-900 border-2 border-accent">
+        <div class="w-full h-20 tall:h-1/2 xtall:h-1/2 bg-cover bg-center" style="background-image: url('https://picsum.photos/200/302');"></div>
+        <div class="flex-1 flex flex-col items-center justify-center text-center px-4">
+          <h2 class="text-sm sm:text-lg mb-1 text-neutral-800 dark:text-neutral-200">Echoes</h2>
+          <p class="text-xs text-neutral-600 dark:text-neutral-400">
+            A work-in-progress digital card game using Godot + Dialogic.  
+            Inspired by Hearthstone & Gwent, focused on structure and UI foundation.
+          </p>
+          <a href="/projects/cardgame" class="mt-2 px-3 py-1 bg-accent text-white rounded-lg text-xs hover:bg-accent/90 transition">See More</a>
+        </div>
+      </div>
+
+      <!-- Project 4 -->
+      <div class="flex-none w-[calc(100%-4rem)] mx-8 h-full flex flex-col rounded-2xl overflow-hidden bg-[color:theme(colors.accent/20%)] dark:bg-neutral-900 border-2 border-accent">
+        <div class="w-full h-20 tall:h-1/2 xtall:h-1/2 bg-cover bg-center" style="background-image: url('https://picsum.photos/200/303');"></div>
+        <div class="flex-1 flex flex-col items-center justify-center text-center px-4">
+          <h2 class="text-sm sm:text-lg mb-1 text-neutral-800 dark:text-neutral-200">mulek.cc</h2>
+          <p class="text-xs text-neutral-600 dark:text-neutral-400">
+            My personal Astro + Tailwind site.  
+            Showcases projects. Runs from my homelab behind a reverse proxy.
+          </p>
+          <a href="/projects/mulekcc" class="mt-2 px-3 py-1 bg-accent text-white rounded-lg text-xs hover:bg-accent/90 transition">See More</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="flex justify-center items-center mt-4 gap-4">
+    <button id="prev" class="bg-accent hover:bg-accent/90 text-white rounded-full w-8 h-8 flex items-center justify-center">&lt;</button>
+
+    <div class="flex gap-2">
+      <span class="w-3 h-3 rounded-full bg-accent/50 dark:bg-accent/30 cursor-pointer control active" data-index="0"></span>
+      <span class="w-3 h-3 rounded-full bg-accent/50 dark:bg-accent/30 cursor-pointer control" data-index="1"></span>
+      <span class="w-3 h-3 rounded-full bg-accent/50 dark:bg-accent/30 cursor-pointer control" data-index="2"></span>
+      <span class="w-3 h-3 rounded-full bg-accent/50 dark:bg-accent/30 cursor-pointer control" data-index="3"></span>
+    </div>
+
+    <button id="next" class="bg-accent hover:bg-accent/90 text-white rounded-full w-8 h-8 flex items-center justify-center">&gt;</button>
+  </div>
+</div>
+
+
+
+
+
+<script type="module">
+  const slides = document.getElementById('slides');
+  const controls = document.querySelectorAll('.control');
+  const prev = document.getElementById('prev');
+  const next = document.getElementById('next');
+
+  let currentIndex = 0;
+  const totalSlides = slides.children.length;
+  let startX = 0;
+  let currentX = 0;
+  let isDragging = false;
+  let isAnimating = false; // <-- lock flag (for arrows/controls only)
+  let touchStartTime = 0;
+
+  function updateControls() {
+    controls.forEach((c, i) => {
+      if (i === currentIndex) {
+        c.classList.remove("bg-accent/50", "dark:bg-accent/30");
+        c.classList.add("bg-accent", "dark:bg-accent");
+      } else {
+        c.classList.remove("bg-accent", "dark:bg-accent");
+        c.classList.add("bg-accent/50", "dark:bg-accent/30");
+      }
+    });
+  }
+
+  function goToSlide(index, smooth = true, force = false) {
+    // lock only applies when smooth + not forced (swipe will pass force=true)
+    if (isAnimating && !force) return;
+
+    currentIndex = index;
+    isAnimating = smooth && !force; 
+
+    slides.style.transition = smooth ? "transform 0.3s ease" : "none";
+    slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+    updateControls();
+  }
+
+  // unlock after CSS transition ends
+  slides.addEventListener("transitionend", () => {
+    isAnimating = false;
+  });
+
+  // --- Control Buttons ---
+  controls.forEach(control => {
+    control.addEventListener('click', () => {
+      goToSlide(parseInt(control.dataset.index));
+    });
+  });
+
+  prev.addEventListener('click', () => {
+    goToSlide((currentIndex - 1 + totalSlides) % totalSlides);
+  });
+
+  next.addEventListener('click', () => {
+    goToSlide((currentIndex + 1) % totalSlides);
+  });
+
+  // --- Swipe / Drag Support ---
+  slides.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    currentX = startX;
+    isDragging = true;
+    touchStartTime = Date.now(); // record time
+    slides.style.transition = "none"; // kill any animation mid-drag
+    isAnimating = false; // <-- cancel lock when user starts dragging
+  });
+
+  slides.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    currentX = e.touches[0].clientX;
+    const deltaX = currentX - startX;
+    const offset = -currentIndex * window.innerWidth + deltaX;
+    slides.style.transform = `translateX(${offset}px)`;
+  });
+
+  slides.addEventListener('touchend', () => {
+    isDragging = false;
+    const diff = currentX - startX;
+    const duration = Date.now() - touchStartTime;
+    const velocity = diff / duration; // px per ms
+
+    // Momentum thresholds
+    const fastSwipe = Math.abs(velocity) > 0.3; // quick flick
+    const longSwipe = Math.abs(diff) > 50;      // slow but far
+
+    if ((diff > 0 && (longSwipe || fastSwipe)) && currentIndex > 0) {
+      goToSlide(currentIndex - 1, true, true); // force transition
+    } else if ((diff < 0 && (longSwipe || fastSwipe)) && currentIndex < totalSlides - 1) {
+      goToSlide(currentIndex + 1, true, true); // force transition
+    } else {
+      goToSlide(currentIndex, true, true); // snap back
+    }
+  });
+
+  // Init
+  goToSlide(0, false);
+</script>

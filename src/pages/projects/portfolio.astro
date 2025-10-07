@@ -1,0 +1,96 @@
+---
+import MainLayout from "@/layouts/MainLayout.astro";
+import BackgroundParticles from "@/components/BackgroundParticles.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import "@/styles/global.css";
+
+// Project-specific data
+const project = {
+    title: "Portfolio Site v2",
+    description: "The current site you are viewing, built with modern web technologies including Astro.js and TailwindCSS. It showcases my projects, experience, and portfolio in a minimal and responsive design.",
+    longDescription: `
+        This portfolio was designed to be lightweight, fast, and fully responsive. 
+        It uses Astro.js for static site generation and TailwindCSS for utility-first styling.
+        The site also features custom particle backgrounds, smooth scrolling, and interactive project cards.
+    `,
+    techStack: ["Astro.js", "TailwindCSS", "JavaScript", "HTML", "CSS"],
+    screenshots: [
+        "/images/screenshots/portfolio-1.png",
+        "/images/screenshots/portfolio-2.png"
+    ],
+    url: "#",
+    github: "#"
+};
+---
+
+<MainLayout>
+    <BackgroundParticles minHeight="0" maxHeight="100%" particleCount={120} />
+    <Header />
+
+    <main class="relative z-20 container mx-auto px-4 py-16 min-h-screen">
+        <h1 class="text-3xl font-bold text-center mb-6 text-neutral-800 dark:text-neutral-200">
+            {project.title}
+        </h1>
+
+        <p class="text-center text-neutral-600 dark:text-neutral-400 mb-12 max-w-3xl mx-auto">
+            {project.description}
+        </p>
+
+        <section id="project-overview" class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4 text-neutral-800 dark:text-neutral-200">Overview</h2>
+            <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                {project.longDescription}
+            </p>
+        </section>
+
+        <section id="tech-stack" class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4 text-neutral-800 dark:text-neutral-200">Tech Stack</h2>
+            <div class="flex flex-wrap gap-3">
+                {project.techStack.map(tech => (
+                    <span class="px-3 py-1 rounded-full bg-accent/20 dark:bg-accent/30 text-accent text-sm font-medium">
+                        {tech}
+                    </span>
+                ))}
+            </div>
+        </section>
+
+        {project.screenshots.length > 0 && (
+            <section id="screenshots" class="mb-12">
+                <h2 class="text-2xl font-semibold mb-4 text-neutral-800 dark:text-neutral-200">Screenshots</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    {project.screenshots.map(src => (
+                        <img 
+                            src={src} 
+                            alt={`${project.title} screenshot`} 
+                            class="rounded-lg shadow-lg w-full object-cover"
+                        />
+                    ))}
+                </div>
+            </section>
+        )}
+
+        <section id="links" class="mb-12 text-center">
+            <a 
+                href={project.url} 
+                target="_blank" 
+                class="inline-block px-6 py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition mb-4"
+            >
+                View Live Site
+            </a>
+            <a 
+                href={project.github} 
+                target="_blank" 
+                class="inline-block px-6 py-3 border border-accent text-accent font-semibold rounded-lg hover:bg-accent/10 transition ml-4"
+            >
+                GitHub Repository
+            </a>
+        </section>
+
+        <section class="text-center">
+            <a href="/projects" class="text-accent hover:underline font-semibold">← Back to Projects</a>
+        </section>
+    </main>
+
+    <Footer />
+</MainLayout>

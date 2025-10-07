@@ -1,0 +1,209 @@
+---
+import MainLayout from "@/layouts/MainLayout.astro";
+import Avatar from "@/components/Avatar.astro";
+import BackgroundParticles from "@/components/BackgroundParticles.astro";
+import BackgroundSVG from "@/components/BackgroundSVG.astro";
+import Header from "@/components/Header.astro";
+import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
+import ProjectSlider from "@/components/ProjectSlider.astro";
+import "@/styles/global.css";
+import Footer from "@/components/Footer.astro";
+---
+
+<MainLayout>
+  <TwSizeIndicator />
+  <Header />
+  <BackgroundParticles minHeight="0" maxHeight="50%" particleCount={100} overrideHero />
+
+  <section
+    id="hero-section"
+    class="relative flex items-center justify-center w-full bg-body dark:bg-body-dark overflow-hidden min-h-[calc(100vh-3rem)] snap-center scroll-mt-12"
+  >
+    <div class="absolute inset-0 z-10">
+      <BackgroundSVG />
+    </div>
+
+    <div
+      class="relative z-20 flex flex-col items-center text-center text-neutral-800 dark:text-neutral-200 space-y-2 px-4"
+    >
+      <Avatar />
+      <h1 class="text-2xl">Hi, I'm Mike.</h1>
+      <p>Systems Engineer I</p>
+      <p>Let's dive into what I've been working on! 🚀💻</p>
+
+      <div class="flex flex-col space-y-3 mt-4">
+        <a
+          href="#section-about-site"
+          class="px-6 py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition"
+        >
+          See More
+        </a>
+        <a
+          href="/projects"
+          class="px-6 py-3 border border-accent text-accent font-semibold rounded-lg hover:bg-accent/10 transition"
+        >
+          Projects
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sections... (About, Projects, About Me, Contact) -->
+  <section id="section-about-site" class="snap-center scroll-mt-4 relative w-full min-h-[calc(100vh-5rem)] mx-auto text-neutral-800 dark:text-neutral-200 flex flex-col justify-between">
+    <BackgroundParticles minHeight="32px" maxHeight="100%" particleCount={50} bounceIds={["card-about-site"]} />
+    <div class="absolute top-0 left-0 w-full h-8 bg-accent"></div>
+    <div class="flex flex-col items-center space-y-4 flex-1 justify-center">
+      <h2 class="text-md xtall:text-2xl font-semibold text-center">About This Site</h2>
+
+      <div
+        id="card-about-site"
+        class="text-xs mx-auto px-6 py-4 bg-[color:theme(colors.accent/20%)] dark:bg-neutral-900 rounded max-w-3xl text-center space-y-4"
+      >
+        <p>
+          Welcome! This site showcases my projects, experience, and my passion for creating and exploring technology.
+        </p>
+        <p>
+          Explore my
+          <a href="#section-projects" class="text-accent font-semibold hover:underline">Projects</a>
+          — the work I've built, from personal websites to servers and game prototypes.
+        </p>
+        <p>
+          See More
+          <a href="#section-about-me" class="text-accent font-semibold hover:underline">About Me</a>
+          — who I am, my passions, and my professional experience.
+        </p>
+        <p>
+          <a href="#section-contact" class="text-accent font-semibold hover:underline">Get in Touch</a>
+          — reach out if you have questions, collaboration ideas, or just want to say hello.
+        </p>
+        <p>
+          The goal is to provide a minimal, clean experience while giving you a quick overview of what I do and how we can connect.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="section-projects" class="snap-center scroll-mt-4 relative w-full min-h-[calc(100vh-5rem)] max-h-[calc(100vh-5rem)] mx-auto text-neutral-800 dark:text-neutral-200 flex flex-col justify-between overflow-hidden">
+    <BackgroundParticles minHeight="32px" maxHeight="100%" particleCount={50} bounceIds={["slides"]} />
+    <div class="absolute top-0 left-0 w-full h-8 bg-accent"></div>
+    <div class="flex flex-col items-center space-y-2 flex-1 justify-center">
+      <h2 class="text-md xtall:text-2xl font-semibold text-center">Featured Projects</h2>
+        <div 
+          id="card-projects"
+          class="text-xs space-y-4 text-center w-full"
+        >
+          <p>
+            A quick overview of some of my favorite projects. For a more details, check out the
+            <a href="/projects" class="text-accent font-semibold hover:underline">Projects Page</a>.  
+          </p>
+      <ProjectSlider />
+  </section>
+
+  <section id="section-about-me" class="snap-center scroll-mt-4 relative w-full min-h-[calc(100vh-5rem)] max-h-[calc(100vh-5rem)] mx-auto text-neutral-800 dark:text-neutral-200 flex flex-col justify-between">
+    <BackgroundParticles minHeight="32px" maxHeight="100%" particleCount={50} bounceIds={["card-about-me"]} />
+    <div class="absolute top-0 left-0 w-full h-8 bg-accent"></div>
+    <div class="flex flex-col items-center flex-1 justify-center">
+    <h2 class="text-md xtall:text-2xl font-semibold mb-2">About Me</h2>
+
+    <div 
+      id="card-about-me"
+      class="flex flex-col items-center justify-center bg-[color:theme(colors.accent/20%)] dark:bg-neutral-900 rounded px-4 py-4 shadow max-w-3xl"
+    >
+      <div class="text-xs space-y-2 text-center">
+        <p>
+          Hi, I’m Mike. I’m from Minnesota, where I live with my partner Chelsea and our four pets - dogs Gertie and Ducky, and cats Salem and Oliver.
+        </p>
+        <p>
+          I’m passionate about self-hosting and home lab projects.
+          I love experimenting with new tools, managing my own infrastructure, and learning through
+          hands-on projects that push me to understand systems at a deeper level.
+        </p>
+        <p>
+          Currently, I work as a Systems Engineer at
+          <a href="https://www.vc3.com" target="_blank" rel="noopener noreferrer" class="text-accent font-semibold hover:underline">VC3</a>,
+          helping businesses optimize their IT environments. I bring over 6 years of professional experience in the IT field, with a background spanning infrastructure, automation, and systems support.
+        </p>
+        <p>
+          Feel free to <a href="#section-contact" class="text-accent font-semibold hover:underline">reach out through my contact page</a> - I’d love to connect.
+        </p>
+      </div>
+
+    </div>
+  </div>
+  </section>
+
+  <section id="section-contact" class="snap-center scroll-mt-12 relative w-full min-h-[calc(100vh-3rem)] max-h-[calc(100vh-3rem)] mx-auto text-neutral-800 dark:text-neutral-200 flex flex-col justify-between">
+    <div class="absolute top-0 left-0 w-full h-8 bg-accent"></div>
+    <div id="last-accent-bar" class="absolute bottom-0 left-0 w-full h-8 bg-accent"></div>
+    <BackgroundParticles minHeight="32px" maxHeight="100%" particleCount={50} bounceIds={["card-contact","last-accent-bar"]} />
+    <div 
+    class="flex flex-col items-center flex-1 justify-center"
+  >
+    <h2 class="text-md xtall:text-2xl font-semibold mb-2">Get in Touch</h2>
+    <div
+      id="card-contact"
+      class= "rounded-2xl p-4 w-full max-w-xl flex flex-col space-y-4 bg-[color:theme(colors.accent/20%)] dark:bg-neutral-900"
+    >
+      
+      <p class="text-xs text-center">
+        Have a question, a project idea, or just want to say hello?  
+        I'm always open to connecting with other developers and creators.
+      </p>
+
+      <form class="flex flex-col space-y-3" method="POST" action="/api/contact" id="contact-form">
+        <input
+          type="text"
+          name="name"
+          placeholder="Your Name"
+          required
+          class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-accent text-xs"
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Your Email"
+          required
+          class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-accent text-xs"
+        />
+        <textarea
+          name="message"
+          placeholder="Your Message"
+          rows="4"
+          required
+          class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-accent text-xs resize-none"
+        ></textarea>
+
+        <button
+          type="submit"
+          class="bg-accent text-white font-semibold rounded-lg px-4 py-2 hover:bg-accent/90 transition text-xs"
+        >
+          Send Message
+        </button>
+
+        <div class="mt-2 text-xs text-gray-500 text-center">
+          CAPTCHA will appear here
+        </div>
+      </form>
+
+      <div class="flex justify-center items-center space-x-6 mt-4 text-xs">
+        <a href="https://copperpocket.bsky.social" class="text-accent hover:underline">Bluesky</a>
+        <a href="https://github.com/copperpocket" class="text-accent hover:underline">GitHub</a>
+        <a href="https://linkedin.com" class="text-accent hover:underline">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="w-screen h-8 bg-accent"></div>
+  </section>
+
+  <Footer />
+</MainLayout>
+
+<script type="module">
+  import { initHeroHeight, initSmoothScroll, initParticleObserver } from "@/scripts/pageHelpers.js";
+
+  initHeroHeight();
+  initSmoothScroll();
+  initParticleObserver();
+</script>
+
