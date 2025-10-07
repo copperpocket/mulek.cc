@@ -1,6 +1,26 @@
+# -------------------------------
+# Conventional Commit Template
+# -------------------------------
 # Type: chore, docs, feat, fix, refactor, style, test
 # Scope (optional): e.g., README, header, build
-# Short description (max ~50 chars)
+# Short description: concise, ~50 chars max
 #
-# Example:
-# docs: update README with project overview
+# Type examples:
+# feat:     new feature
+# fix:      bug fix
+# docs:     documentation changes
+# style:    code style (formatting, spacing, etc.)
+# refactor: code restructuring without changing behavior
+# test:     adding or updating tests
+# chore:    maintenance or tooling (config, deps, etc.)
+#
+# Examples with scope:
+# docs(README): update project overview
+# feat(header): add sticky menu functionality
+# fix(build): resolve production bundling error
+#
+# Instructions:
+# 1. Replace this template with your commit message.
+# 2. Format: type(scope): short description
+# 3. Scope is optional. If not needed, omit parentheses.
+# -------------------------------
