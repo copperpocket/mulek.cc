@@ -1,0 +1,6 @@
+# Type: chore, docs, feat, fix, refactor, style, test
+# Scope (optional): e.g., README, header, build
+# Short description (max ~50 chars)
+#
+# Example:
+# docs: update README with project overview
