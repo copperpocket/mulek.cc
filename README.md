@@ -1,46 +1,38 @@
-# Astro Starter Kit: Basics
+# mulek.cc
 
-```sh
-npm create astro@latest -- --template basics
-```
+A minimal, open-source portfolio website built with [Astro](https://astro.build).  
+Designed to be clean, fast, and easy to maintain.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## ✨ Overview
 
-## 🚀 Project Structure
+**mulek.cc** is a personal portfolio and blog showcasing open-source projects and development work.  
+It focuses on simplicity and performance — using Astro’s component-based architecture and static output to keep things lightweight.
 
-Inside of your Astro project, you'll see the following folders and files:
+This site serves as both a home for documentation and a hub for ongoing experiments in design, infrastructure, and automation.
+
+## 🧠 Tech Stack
+
+- [Astro](https://astro.build) — Static site framework  
+- [Tailwind CSS](https://tailwindcss.com) — Utility-first styling  
+- [TypeScript](https://www.typescriptlang.org) — Type-safe development  
+- Markdown-based content system for posts and projects  
+
+## 🧩 Project Structure
 
 ```text
 /
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+├── public/           # Static assets
+├── src/
+│   ├── assets/       # Dynamic Assets
+│   ├── components/   # UI components
+│   ├── config/       # Configuration files
+│   ├── layouts/      # Page layouts
+│   ├── pages/        # Routes & content
+│   ├── scripts/      # Script files
+│   └── styles/       # Style pages
+├── .gitignore
+├── astro.config.mjs
+├── package.json
+├── README.md.json
+└── tsconfig.json
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
