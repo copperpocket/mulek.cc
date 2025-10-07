@@ -1,14 +1,14 @@
 ---
 import { Image } from "astro:assets";
 
-const src = "/src/assets/drawn.png";
+import avatarUrl from "/src/assets/drawn.png";
 ---
 
 <div
   class="flex justify-center items-center w-40 h-40 p-2 overflow-hidden z-30"
 >
   <Image
-    src={src}
+    src={avatarUrl}
     alt="Portrait of me"
     width={144}
     height={144}
