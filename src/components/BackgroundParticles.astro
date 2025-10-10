@@ -17,6 +17,9 @@ const {
 </canvas>
 
 <script>
+// A map to store active animation frame IDs and resize listeners for cleanup across page transitions
+const activeAnimations = new Map();
+
 function parseValue(value: string | number, reference: number) {
   if (typeof value === "number") return value;
   if (typeof value !== "string") return 0;
@@ -28,6 +31,17 @@ function parseValue(value: string | number, reference: number) {
 function initParticles(canvas: HTMLCanvasElement) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
+
+  // --- START: CRUCIAL CLEANUP FOR ASTRO VIEW TRANSITIONS ---
+  // Stop any previously running animation loop and remove old listeners for this canvas
+  if (activeAnimations.has(canvas)) {
+    const { frameId, resizeHandler } = activeAnimations.get(canvas);
+    cancelAnimationFrame(frameId);
+    window.removeEventListener("resize", resizeHandler);
+    activeAnimations.delete(canvas);
+  }
+  // --- END: CRUCIAL CLEANUP ---
+
 
   // Cache CSS vars
   const cssVars: { [key: string]: string } = {
@@ -66,15 +80,16 @@ function initParticles(canvas: HTMLCanvasElement) {
     };
   }
 
-  const throttledResize = throttle(() => {
+  // Renamed to resizeHandler for clear cleanup reference
+  const resizeHandler = throttle(() => { 
     resizeCanvas();
     updateBounds();
     bounceBounds.splice(0, bounceBounds.length, ...getBounceBounds());
   }, 100);
 
-  window.addEventListener("resize", throttledResize);
+  window.addEventListener("resize", resizeHandler);
 
-  // Initial call
+  // Initial call (Crucial to get correct dimensions on load)
   resizeCanvas();
   updateBounds();
 
@@ -226,19 +241,33 @@ function initParticles(canvas: HTMLCanvasElement) {
 
   function animate() { 
     drawParticles(); 
-    requestAnimationFrame(animate); 
+    // Store the frame ID for later cancellation
+    const frameId = requestAnimationFrame(animate); 
+    // Store the frame ID and the resize handler for cleanup
+    activeAnimations.set(canvas, { frameId, resizeHandler }); 
   }
   animate();
 }
 
-document.querySelectorAll(".section-particles").forEach((el, index) => {
-  if (el instanceof HTMLCanvasElement) {
-    if (el.dataset.overrideHero) {
-      console.log("Overriding hero maxHeight for particle canvas", index);
-      const offset = 1.5 * parseFloat(getComputedStyle(document.documentElement).fontSize);
-      el.dataset.maxHeight = (window.innerHeight / 2 + offset) + "px";
+
+function initializeAllParticles() {
+  document.querySelectorAll(".section-particles").forEach((el, index) => {
+    if (el instanceof HTMLCanvasElement) {
+      if (el.dataset.overrideHero) {
+        // Recalculate hero height on every page load/transition
+        const offset = 1.5 * parseFloat(getComputedStyle(document.documentElement).fontSize);
+        el.dataset.maxHeight = (window.innerHeight / 2 + offset) + "px";
+      }
+      // Re-initialize the particles (which includes size calculation and cleanup)
+      initParticles(el);
     }
-    initParticles(el);
-  }
-});
+  });
+}
+
+// 1. Initial call on first page load
+initializeAllParticles();
+
+// 2. Re-initialize after every Astro View Transition
+// This ensures the canvas size is correct and the animation is clean on every new page.
+document.addEventListener('astro:page-load', initializeAllParticles);
 </script>

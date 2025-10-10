@@ -17,7 +17,7 @@ import Footer from "@/components/Footer.astro";
 
   <section
     id="hero-section"
-    class="relative flex items-center justify-center w-full bg-body dark:bg-body-dark overflow-hidden min-h-[calc(100vh-3rem)] snap-center scroll-mt-12"
+    class="relative flex items-center justify-center w-full bg-body dark:bg-body-dark overflow-hidden min-h-[calc(100vh-3rem)] scroll-mt-12"
   >
     <div class="absolute inset-0 z-10">
       <BackgroundSVG />
@@ -49,7 +49,8 @@ import Footer from "@/components/Footer.astro";
   </section>
 
   <!-- Sections... (About, Projects, About Me, Contact) -->
-  <section id="section-about-site" class="snap-center scroll-mt-4 relative w-full min-h-[calc(100vh-5rem)] mx-auto text-neutral-800 dark:text-neutral-200 flex flex-col justify-between">
+  <!-- About This Site Section -->
+  <section id="section-about-site" class="scroll-mt-4 relative w-full min-h-[calc(100vh-5rem)] mx-auto text-neutral-800 dark:text-neutral-200 flex flex-col justify-between">
     <BackgroundParticles minHeight="32px" maxHeight="100%" particleCount={50} bounceIds={["card-about-site"]} />
     <div class="absolute top-0 left-0 w-full h-8 bg-accent"></div>
     <div class="flex flex-col items-center space-y-4 flex-1 justify-center">
@@ -82,8 +83,8 @@ import Footer from "@/components/Footer.astro";
       </div>
     </div>
   </section>
-
-  <section id="section-projects" class="snap-center scroll-mt-4 relative w-full min-h-[calc(100vh-5rem)] max-h-[calc(100vh-5rem)] mx-auto text-neutral-800 dark:text-neutral-200 flex flex-col justify-between overflow-hidden">
+  <!-- Projects Section -->
+  <section id="section-projects" class="scroll-mt-4 relative w-full min-h-[calc(100vh-5rem)] max-h-[calc(100vh-5rem)] mx-auto text-neutral-800 dark:text-neutral-200 flex flex-col justify-between overflow-hidden">
     <BackgroundParticles minHeight="32px" maxHeight="100%" particleCount={50} bounceIds={["slides"]} />
     <div class="absolute top-0 left-0 w-full h-8 bg-accent"></div>
     <div class="flex flex-col items-center space-y-2 flex-1 justify-center">
@@ -98,8 +99,8 @@ import Footer from "@/components/Footer.astro";
           </p>
       <ProjectSlider />
   </section>
-
-  <section id="section-about-me" class="snap-center scroll-mt-4 relative w-full min-h-[calc(100vh-5rem)] max-h-[calc(100vh-5rem)] mx-auto text-neutral-800 dark:text-neutral-200 flex flex-col justify-between">
+  <!-- About Me Section -->
+  <section id="section-about-me" class="scroll-mt-4 relative w-full min-h-[calc(100vh-5rem)] max-h-[calc(100vh-5rem)] mx-auto text-neutral-800 dark:text-neutral-200 flex flex-col justify-between">
     <BackgroundParticles minHeight="32px" maxHeight="100%" particleCount={50} bounceIds={["card-about-me"]} />
     <div class="absolute top-0 left-0 w-full h-8 bg-accent"></div>
     <div class="flex flex-col items-center flex-1 justify-center">
@@ -131,8 +132,8 @@ import Footer from "@/components/Footer.astro";
     </div>
   </div>
   </section>
-
-  <section id="section-contact" class="snap-center scroll-mt-12 relative w-full min-h-[calc(100vh-3rem)] max-h-[calc(100vh-3rem)] mx-auto text-neutral-800 dark:text-neutral-200 flex flex-col justify-between">
+  <!-- Contact Section -->
+  <section id="section-contact" class="scroll-mt-12 relative w-full min-h-[calc(100vh-3rem)] max-h-[calc(100vh-3rem)] mx-auto text-neutral-800 dark:text-neutral-200 flex flex-col justify-between">
     <div class="absolute top-0 left-0 w-full h-8 bg-accent"></div>
     <div id="last-accent-bar" class="absolute bottom-0 left-0 w-full h-8 bg-accent"></div>
     <BackgroundParticles minHeight="32px" maxHeight="100%" particleCount={50} bounceIds={["card-contact","last-accent-bar"]} />
