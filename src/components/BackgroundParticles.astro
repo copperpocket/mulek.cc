@@ -1,4 +1,5 @@
 ---
+// BackgroundParticles.astro
 const { 
   minHeight = "0", 
   maxHeight = "100%", 
@@ -18,7 +19,12 @@ const {
 
 <script>
 // A map to store active animation frame IDs and resize listeners for cleanup across page transitions
-const activeAnimations = new Map();
+const activeAnimations = new Map<
+  HTMLCanvasElement,
+  { frameId: number; resizeHandler: () => void }
+>();
+
+// --- Utility Functions ---
 
 function parseValue(value: string | number, reference: number) {
   if (typeof value === "number") return value;
@@ -28,32 +34,49 @@ function parseValue(value: string | number, reference: number) {
   return parseFloat(value);
 }
 
+// Utility: Throttle function execution
+function throttle<T extends (...args: any[]) => void>(
+  func: T,
+  limit: number
+): (...args: Parameters<T>) => void {
+  let inThrottle = false;
+  return function (this: any, ...args: Parameters<T>) {
+    if (!inThrottle) {
+      func.apply(this, args);
+      inThrottle = true;
+      setTimeout(() => (inThrottle = false), limit);
+    }
+  };
+}
+
+function getCSSVar(name: string) {
+  return getComputedStyle(document.documentElement)
+    .getPropertyValue(name)
+    .trim();
+}
+
+// --- Particle Initialization ---
+
 function initParticles(canvas: HTMLCanvasElement) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
-  // --- START: CRUCIAL CLEANUP FOR ASTRO VIEW TRANSITIONS ---
-  // Stop any previously running animation loop and remove old listeners for this canvas
+  // --- START: CLEANUP FOR ASTRO VIEW TRANSITIONS ---
   if (activeAnimations.has(canvas)) {
-    const { frameId, resizeHandler } = activeAnimations.get(canvas);
+    const { frameId, resizeHandler } = activeAnimations.get(canvas)!;
     cancelAnimationFrame(frameId);
     window.removeEventListener("resize", resizeHandler);
     activeAnimations.delete(canvas);
   }
-  // --- END: CRUCIAL CLEANUP ---
-
+  // --- END CLEANUP ---
 
   // Cache CSS vars
-  const cssVars: { [key: string]: string } = {
+  const cssVars: Record<string, string> = {
     "--particle-color-1": getCSSVar("--particle-color-1"),
-    "--particle-color-2": getCSSVar("--particle-color-2")
+    "--particle-color-2": getCSSVar("--particle-color-2"),
   };
 
-  function getCSSVar(name: string) {
-    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-  }
-
-  // Throttled resize
+  // Canvas sizing
   function resizeCanvas() {
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
@@ -61,41 +84,61 @@ function initParticles(canvas: HTMLCanvasElement) {
 
   // Bounds that will update on resize
   let minY = parseValue(canvas.dataset.minHeight ?? "0", canvas.height);
-  let maxY = canvas.dataset.maxHeight === "auto" ? canvas.height : parseValue(canvas.dataset.maxHeight ?? "100%", canvas.height);
+  let maxY =
+    canvas.dataset.maxHeight === "auto"
+      ? canvas.height
+      : parseValue(canvas.dataset.maxHeight ?? "100%", canvas.height);
 
   function updateBounds() {
     minY = parseValue(canvas.dataset.minHeight ?? "0", canvas.height);
-    maxY = canvas.dataset.maxHeight === "auto" ? canvas.height : parseValue(canvas.dataset.maxHeight ?? "100%", canvas.height);
+    maxY =
+      canvas.dataset.maxHeight === "auto"
+        ? canvas.height
+        : parseValue(canvas.dataset.maxHeight ?? "100%", canvas.height);
   }
 
-  function throttle(func: Function, wait: number) {
-    let timeout: number | null = null;
-    return (...args: any[]) => {
-      if (timeout === null) {
-        func(...args);
-        timeout = window.setTimeout(() => {
-          timeout = null;
-        }, wait);
-      }
-    };
+  // Collect bounce IDs and calculate bounds
+  const bounceIds = (canvas.dataset.bounceIds || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  function getBounceBounds() {
+    return bounceIds
+      .map((id) => {
+        const el = document.getElementById(id);
+        if (!el) return null;
+        const rect = el.getBoundingClientRect();
+        const canvasRect = canvas.getBoundingClientRect();
+        return {
+          x1: rect.left - canvasRect.left,
+          y1: rect.top - canvasRect.top,
+          x2: rect.right - canvasRect.left,
+          y2: rect.bottom - canvasRect.top,
+        };
+      })
+      .filter(Boolean) as {
+      x1: number;
+      y1: number;
+      x2: number;
+      y2: number;
+    }[];
   }
 
-  // Renamed to resizeHandler for clear cleanup reference
-  const resizeHandler = throttle(() => { 
+  const bounceBounds = getBounceBounds();
+
+  // Throttled resize handler
+  const resizeHandler = throttle(() => {
     resizeCanvas();
     updateBounds();
     bounceBounds.splice(0, bounceBounds.length, ...getBounceBounds());
   }, 100);
 
   window.addEventListener("resize", resizeHandler);
-
-  // Initial call (Crucial to get correct dimensions on load)
   resizeCanvas();
   updateBounds();
 
-  const count = parseInt(canvas.dataset.particleCount ?? "100") || 100;
-  const bounceIds = (canvas.dataset.bounceIds || "").split(",").map(s => s.trim()).filter(Boolean);
-
+  // Particle definition
   interface Particle {
     x: number;
     y: number;
@@ -111,23 +154,7 @@ function initParticles(canvas: HTMLCanvasElement) {
   }
 
   const particles: Particle[] = [];
-
-  function getBounceBounds() {
-    return bounceIds.map(id => {
-      const el = document.getElementById(id);
-      if (!el) return null;
-      const rect = el.getBoundingClientRect();
-      const canvasRect = canvas.getBoundingClientRect();
-      return {
-        x1: rect.left - canvasRect.left,
-        y1: rect.top - canvasRect.top,
-        x2: rect.right - canvasRect.left,
-        y2: rect.bottom - canvasRect.top
-      };
-    }).filter(Boolean);
-  }
-
-  const bounceBounds = getBounceBounds();
+  const count = parseInt(canvas.dataset.particleCount ?? "100") || 100;
 
   function createParticle() {
     const radius = Math.random() * 1.75 + 0.25;
@@ -141,8 +168,7 @@ function initParticles(canvas: HTMLCanvasElement) {
       if (tries > 50) break;
     } while (
       bounceBounds.some(
-        b =>
-          b &&
+        (b) =>
           x + radius > b.x1 &&
           x - radius < b.x2 &&
           y + radius > b.y1 &&
@@ -154,63 +180,87 @@ function initParticles(canvas: HTMLCanvasElement) {
     const delay = Math.random() * 2000 + 500;
     const vx = Math.random() * 0.5 - 0.25;
     const vy = Math.random() * 0.5 - 0.25;
-    const colorVar = Math.random() < 0.5 ? "--particle-color-1" : "--particle-color-2";
+    const colorVar =
+      Math.random() < 0.5 ? "--particle-color-1" : "--particle-color-2";
 
     particles.push({
-      x, y, radius, alpha, growing: true,
-      delay, lastUpdate: Date.now(),
-      vx, vy, lastOpacityChange: Date.now(),
-      colorVar
+      x,
+      y,
+      radius,
+      alpha,
+      growing: true,
+      delay,
+      lastUpdate: Date.now(),
+      vx,
+      vy,
+      lastOpacityChange: Date.now(),
+      colorVar,
     });
   }
 
   for (let i = 0; i < count; i++) createParticle();
 
+  // Draw loop
   function drawParticles() {
     if (!ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     const now = Date.now();
+    const BOUNCE_SKIP_DISTANCE = 50;
     const len = bounceBounds.length;
-    const BOUNCE_SKIP_DISTANCE = 50; // px
 
-    particles.forEach(p => {
+    for (const p of particles) {
       // Alpha animation
       if (now - p.lastOpacityChange > p.delay) {
-        if (p.growing) { 
-          p.alpha += 0.0025; 
-          if (p.alpha >= 1) { p.growing = false; p.lastOpacityChange = now; } 
-        } else { 
-          p.alpha -= 0.0025; 
-          if (p.alpha <= 0.01) { p.growing = true; p.lastOpacityChange = now; } 
+        if (p.growing) {
+          p.alpha += 0.0025;
+          if (p.alpha >= 1) {
+            p.growing = false;
+            p.lastOpacityChange = now;
+          }
+        } else {
+          p.alpha -= 0.0025;
+          if (p.alpha <= 0.01) {
+            p.growing = true;
+            p.lastOpacityChange = now;
+          }
         }
       }
 
-      // Move particle
+      // Movement
       p.x += p.vx;
       p.y += p.vy;
 
-      // Canvas bounds
-      if (p.x - p.radius < 0) { p.vx = Math.abs(p.vx); p.x = p.radius; }
-      if (p.x + p.radius > canvas.width) { p.vx = -Math.abs(p.vx); p.x = canvas.width - p.radius; }
-      if (p.y - p.radius < minY) { p.vy = Math.abs(p.vy); p.y = minY + p.radius; }
-      if (p.y + p.radius > maxY) { p.vy = -Math.abs(p.vy); p.y = maxY - p.radius; }
+      // Bounds
+      if (p.x - p.radius < 0) {
+        p.vx = Math.abs(p.vx);
+        p.x = p.radius;
+      }
+      if (p.x + p.radius > canvas.width) {
+        p.vx = -Math.abs(p.vx);
+        p.x = canvas.width - p.radius;
+      }
+      if (p.y - p.radius < minY) {
+        p.vy = Math.abs(p.vy);
+        p.y = minY + p.radius;
+      }
+      if (p.y + p.radius > maxY) {
+        p.vy = -Math.abs(p.vy);
+        p.y = maxY - p.radius;
+      }
 
-      // Bounce bounds with distance skip
+      // Bounce collisions
       const particleBox = {
         x1: p.x - p.radius,
         y1: p.y - p.radius,
         x2: p.x + p.radius,
-        y2: p.y + p.radius
+        y2: p.y + p.radius,
       };
 
       for (let i = 0; i < len; i++) {
         const b = bounceBounds[i];
-        if (!b) continue;
-
         const dx = Math.max(b.x1 - particleBox.x2, 0, particleBox.x1 - b.x2);
         const dy = Math.max(b.y1 - particleBox.y2, 0, particleBox.y1 - b.y2);
-        if (dx * dx + dy * dy > BOUNCE_SKIP_DISTANCE * BOUNCE_SKIP_DISTANCE) continue;
+        if (dx * dx + dy * dy > BOUNCE_SKIP_DISTANCE ** 2) continue;
 
         if (
           particleBox.x2 > b.x1 &&
@@ -220,12 +270,20 @@ function initParticles(canvas: HTMLCanvasElement) {
         ) {
           const prevX = p.x - p.vx;
           const prevY = p.y - p.vy;
-
-          if (prevX + p.radius <= b.x1) { p.vx = -p.vx; p.x = b.x1 - p.radius; } 
-          else if (prevX - p.radius >= b.x2) { p.vx = -p.vx; p.x = b.x2 + p.radius; }
-
-          if (prevY + p.radius <= b.y1) { p.vy = -p.vy; p.y = b.y1 - p.radius; } 
-          else if (prevY - p.radius >= b.y2) { p.vy = -p.vy; p.y = b.y2 + p.radius; }
+          if (prevX + p.radius <= b.x1) {
+            p.vx = -p.vx;
+            p.x = b.x1 - p.radius;
+          } else if (prevX - p.radius >= b.x2) {
+            p.vx = -p.vx;
+            p.x = b.x2 + p.radius;
+          }
+          if (prevY + p.radius <= b.y1) {
+            p.vy = -p.vy;
+            p.y = b.y1 - p.radius;
+          } else if (prevY - p.radius >= b.y2) {
+            p.vy = -p.vy;
+            p.y = b.y2 + p.radius;
+          }
         }
       }
 
@@ -236,38 +294,51 @@ function initParticles(canvas: HTMLCanvasElement) {
       ctx.globalAlpha = p.alpha;
       ctx.fill();
       ctx.globalAlpha = 1;
-    });
+    }
   }
 
-  function animate() { 
-    drawParticles(); 
-    // Store the frame ID for later cancellation
-    const frameId = requestAnimationFrame(animate); 
-    // Store the frame ID and the resize handler for cleanup
-    activeAnimations.set(canvas, { frameId, resizeHandler }); 
+  // Animation loop
+  function animate() {
+    drawParticles();
+    const frameId = requestAnimationFrame(animate);
+    const existing = activeAnimations.get(canvas);
+    if (existing) existing.frameId = frameId;
+    else activeAnimations.set(canvas, { frameId, resizeHandler });
   }
+
   animate();
 }
 
+// --- Initialization / Lifecycle ---
 
 function initializeAllParticles() {
-  document.querySelectorAll(".section-particles").forEach((el, index) => {
+  document.querySelectorAll(".section-particles").forEach((el) => {
     if (el instanceof HTMLCanvasElement) {
       if (el.dataset.overrideHero) {
-        // Recalculate hero height on every page load/transition
-        const offset = 1.5 * parseFloat(getComputedStyle(document.documentElement).fontSize);
-        el.dataset.maxHeight = (window.innerHeight / 2 + offset) + "px";
+        const offset =
+          1.5 * parseFloat(getComputedStyle(document.documentElement).fontSize);
+        el.dataset.maxHeight = window.innerHeight / 2 + offset + "px";
       }
-      // Re-initialize the particles (which includes size calculation and cleanup)
       initParticles(el);
     }
   });
 }
 
-// 1. Initial call on first page load
+// 1. Initial load
 initializeAllParticles();
 
-// 2. Re-initialize after every Astro View Transition
-// This ensures the canvas size is correct and the animation is clean on every new page.
-document.addEventListener('astro:page-load', initializeAllParticles);
+// 2. Re-init after Astro View Transitions
+document.addEventListener("astro:page-load", initializeAllParticles);
+
+// 3. Custom refresh event (resizes all particle canvases without reinitializing)
+const refreshParticles = throttle(() => {
+  document.querySelectorAll(".section-particles").forEach((canvas) => {
+    if (canvas instanceof HTMLCanvasElement) {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    }
+  });
+}, 100);
+
+window.addEventListener("particles:refresh", refreshParticles);
 </script>

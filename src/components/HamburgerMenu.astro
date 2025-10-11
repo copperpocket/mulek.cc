@@ -2,68 +2,65 @@
 // src/components/Hamburger.astro
 ---
 <input class="menu-btn hidden" type="checkbox" id="menu-btn" />
-<label class="menu-icon cursor-pointer flex justify-center items-center relative select-none visible h-10 w-10" for="menu-btn">
-    <span class="navicon block relative transition-[background] duration-200 ease-out bg-current text-neutral-800 dark:text-neutral-200 w-7/8 h-1 rounded-full" />
+<label
+  class="menu-icon cursor-pointer flex justify-center items-center relative select-none visible
+         h-10 w-8 xtall:w-10
+         [--bar-gap:10px] xtall:[--bar-gap:12px]" 
+  for="menu-btn"
+>
+  <span
+    class="navicon block relative transition-[background] duration-200 ease-out
+           bg-current text-neutral-800 dark:text-neutral-200
+           w-7/8 h-[3px] xtall:h-1 rounded-full"
+  />
 </label>
 
 <style>
-  /* --- HIDE CHECKBOX --- */
   .menu-btn {
     display: none;
   }
 
-  /* --- MENU ICON CONTAINER (The clickable area) --- */
   .menu-icon {
-    /* Kept the structural CSS minimal */
-    grid-area: hamburger; 
+    grid-area: hamburger;
   }
 
-  /* --- NAVICON (The middle bar) --- */
   .navicon {
-    /* Removed redundant background/color from here, using classes above */
-    /* Only keeping necessary custom properties */
     transition-duration: 0.2s;
     transition-timing-function: ease-out;
   }
 
-  /* --- TOP and BOTTOM BARS (Pseudo-elements) --- */
-  .navicon:before, .navicon:after {
-    background: currentColor; 
-    
+  /* --- Pseudo-elements use the variable for spacing --- */
+  .navicon::before,
+  .navicon::after {
+    background: currentColor;
     content: '';
     position: absolute;
     display: block;
     width: 100%;
     height: 100%;
-    
-    /* ADDED: border-radius for rounded ends */
-    border-radius: 9999px; /* Equivalent to Tailwind's rounded-full */
-    
-    transition: transform .2s ease-out;
+    border-radius: 9999px;
+    transition: transform 0.2s ease-out;
   }
 
-  .navicon:before {
-    top: -12px;
+  .navicon::before {
+    top: calc(-1 * var(--bar-gap, 10px));
   }
 
-  .navicon:after {
-    top: 12px;
+  .navicon::after {
+    top: var(--bar-gap, 10px);
   }
 
-  /* --- ANIMATION STATES (when checked) --- */
-
-  /* Hide the middle bar */
+  /* --- Animation states (when checked) --- */
   .menu-btn:checked ~ .menu-icon .navicon {
     background: transparent;
   }
 
-  /* Move and rotate the pseudo-elements (the X) */
-  .menu-btn:checked ~ .menu-icon .navicon:before {
+  .menu-btn:checked ~ .menu-icon .navicon::before {
     top: 0;
     transform: rotate(-45deg);
   }
 
-  .menu-btn:checked ~ .menu-icon .navicon:after {
+  .menu-btn:checked ~ .menu-icon .navicon::after {
     top: 0;
     transform: rotate(45deg);
   }

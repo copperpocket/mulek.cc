@@ -27,9 +27,9 @@ import Footer from "@/components/Footer.astro";
       class="relative z-20 flex flex-col items-center text-center text-neutral-800 dark:text-neutral-200 space-y-2 px-4"
     >
       <Avatar />
-      <h1 class="text-2xl">Hi, I'm Mike.</h1>
-      <p>Systems Engineer I</p>
-      <p>Let's dive into what I've been working on! 🚀💻</p>
+      <h1 class="text-2xl xtall:text-3xl">Hi, I'm Mike.</h1>
+      <p class="text-sm xtall:text-base">Systems Engineer I</p>
+      <p class="text-sm xtall:text-base">Let's dive into what I've been working on! 🚀💻</p>
 
       <div class="flex flex-col space-y-3 mt-4">
         <a
@@ -50,15 +50,15 @@ import Footer from "@/components/Footer.astro";
 
   <!-- Sections... (About, Projects, About Me, Contact) -->
   <!-- About This Site Section -->
-  <section id="section-about-site" class="scroll-mt-4 relative w-full min-h-[calc(100vh-5rem)] mx-auto text-neutral-800 dark:text-neutral-200 flex flex-col justify-between">
+  <section id="section-about-site" class="scroll-mt-12 relative w-full min-h-[calc(100vh-5rem)] mx-auto text-neutral-800 dark:text-neutral-200 flex flex-col justify-between">
     <BackgroundParticles minHeight="32px" maxHeight="100%" particleCount={50} bounceIds={["card-about-site"]} />
     <div class="absolute top-0 left-0 w-full h-8 bg-accent"></div>
     <div class="flex flex-col items-center space-y-4 flex-1 justify-center">
-      <h2 class="text-md xtall:text-2xl font-semibold text-center">About This Site</h2>
+      <h2 class="text-md xtall:text-3xl font-semibold text-center">About This Site</h2>
 
       <div
         id="card-about-site"
-        class="text-xs mx-auto px-6 py-4 bg-[color:theme(colors.accent/20%)] dark:bg-neutral-900 rounded max-w-3xl text-center space-y-4"
+        class="text-xs xtall:text-base mx-auto px-6 py-4 bg-[color:theme(colors.accent/20%)] dark:bg-neutral-900 rounded max-w-3xl text-center space-y-4"
       >
         <p>
           Welcome! This site showcases my projects, experience, and my passion for creating and exploring technology.
@@ -84,14 +84,14 @@ import Footer from "@/components/Footer.astro";
     </div>
   </section>
   <!-- Projects Section -->
-  <section id="section-projects" class="scroll-mt-4 relative w-full min-h-[calc(100vh-5rem)] max-h-[calc(100vh-5rem)] mx-auto text-neutral-800 dark:text-neutral-200 flex flex-col justify-between overflow-hidden">
+  <section id="section-projects" class="scroll-mt-12 relative w-full min-h-[calc(100vh-5rem)] max-h-[calc(100vh-5rem)] mx-auto text-neutral-800 dark:text-neutral-200 flex flex-col justify-between overflow-hidden">
     <BackgroundParticles minHeight="32px" maxHeight="100%" particleCount={50} bounceIds={["slides"]} />
     <div class="absolute top-0 left-0 w-full h-8 bg-accent"></div>
     <div class="flex flex-col items-center space-y-2 flex-1 justify-center">
       <h2 class="text-md xtall:text-2xl font-semibold text-center">Featured Projects</h2>
         <div 
           id="card-projects"
-          class="text-xs space-y-4 text-center w-full"
+          class="text-xs xtall:text-base space-y-4 text-center w-full"
         >
           <p>
             A quick overview of some of my favorite projects. For a more details, check out the
@@ -100,17 +100,17 @@ import Footer from "@/components/Footer.astro";
       <ProjectSlider />
   </section>
   <!-- About Me Section -->
-  <section id="section-about-me" class="scroll-mt-4 relative w-full min-h-[calc(100vh-5rem)] max-h-[calc(100vh-5rem)] mx-auto text-neutral-800 dark:text-neutral-200 flex flex-col justify-between">
+  <section id="section-about-me" class="scroll-mt-12 relative w-full min-h-[calc(100vh-5rem)] max-h-[calc(100vh-5rem)] mx-auto text-neutral-800 dark:text-neutral-200 flex flex-col justify-between">
     <BackgroundParticles minHeight="32px" maxHeight="100%" particleCount={50} bounceIds={["card-about-me"]} />
     <div class="absolute top-0 left-0 w-full h-8 bg-accent"></div>
     <div class="flex flex-col items-center flex-1 justify-center">
-    <h2 class="text-md xtall:text-2xl font-semibold mb-2">About Me</h2>
+    <h2 class="text-md xtall:text-3xl font-semibold mb-2">About Me</h2>
 
     <div 
       id="card-about-me"
       class="flex flex-col items-center justify-center bg-[color:theme(colors.accent/20%)] dark:bg-neutral-900 rounded px-4 py-4 shadow max-w-3xl"
     >
-      <div class="text-xs space-y-2 text-center">
+      <div class="text-xs xtall:text-base space-y-2 text-center">
         <p>
           Hi, I’m Mike. I’m from Minnesota, where I live with my partner Chelsea and our four pets - dogs Gertie and Ducky, and cats Salem and Oliver.
         </p>
@@ -120,9 +120,9 @@ import Footer from "@/components/Footer.astro";
           hands-on projects that push me to understand systems at a deeper level.
         </p>
         <p>
-          Currently, I work as a Systems Engineer at
+          I work as a Systems Engineer at
           <a href="https://www.vc3.com" target="_blank" rel="noopener noreferrer" class="text-accent font-semibold hover:underline">VC3</a>,
-          helping businesses optimize their IT environments. I bring over 6 years of professional experience in the IT field, with a background spanning infrastructure, automation, and systems support.
+          helping businesses optimize their IT environments. I bring over 6 years of professional experience in the industry, with a background spanning infrastructure, automation, and technical support.
         </p>
         <p>
           Feel free to <a href="#section-contact" class="text-accent font-semibold hover:underline">reach out through my contact page</a> - I’d love to connect.
@@ -140,13 +140,13 @@ import Footer from "@/components/Footer.astro";
     <div 
     class="flex flex-col items-center flex-1 justify-center"
   >
-    <h2 class="text-md xtall:text-2xl font-semibold mb-2">Get in Touch</h2>
+    <h2 class="text-md xtall:text-3xl font-semibold mb-2">Get in Touch</h2>
     <div
       id="card-contact"
       class= "rounded-2xl p-4 w-full max-w-xl flex flex-col space-y-4 bg-[color:theme(colors.accent/20%)] dark:bg-neutral-900"
     >
       
-      <p class="text-xs text-center">
+      <p class="text-xs xtall:text-base text-center">
         Have a question, a project idea, or just want to say hello?  
         I'm always open to connecting with other developers and creators.
       </p>
@@ -176,17 +176,17 @@ import Footer from "@/components/Footer.astro";
 
         <button
           type="submit"
-          class="bg-accent text-white font-semibold rounded-lg px-4 py-2 hover:bg-accent/90 transition text-xs"
+          class="text-xs xtall:text-base bg-accent text-white font-semibold rounded-lg px-4 py-2 hover:bg-accent/90 transition"
         >
           Send Message
         </button>
 
-        <div class="mt-2 text-xs text-gray-500 text-center">
+        <div class="mt-2 text-xs xtall:text-sm text-gray-500 text-center">
           CAPTCHA will appear here
         </div>
       </form>
 
-      <div class="flex justify-center items-center space-x-6 mt-4 text-xs">
+      <div class="flex justify-center items-center space-x-6 mt-4 text-xs xtall:text-sm">
         <a href="https://copperpocket.bsky.social" class="text-accent hover:underline">Bluesky</a>
         <a href="https://github.com/copperpocket" class="text-accent hover:underline">GitHub</a>
         <a href="https://linkedin.com" class="text-accent hover:underline">LinkedIn</a>

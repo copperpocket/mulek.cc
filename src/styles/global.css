@@ -23,6 +23,31 @@
   --background-image-horizonAnimated: url("src/assets/horizon-animated.svg");
 }
 
+@layer components {
+  .project-slide {
+    @apply flex-none w-[calc(100%-4rem)] mx-8 h-full flex flex-col rounded-2xl
+           overflow-hidden bg-[color:theme(colors.accent/20%)]
+           dark:bg-neutral-900 border-2 border-accent;
+  }
+
+  .project-content {
+    @apply flex-1 flex flex-col items-center justify-center text-center px-4;
+  }
+
+  .project-title {
+    @apply text-sm xtall:text-xl mb-1 text-neutral-800 dark:text-neutral-200;
+  }
+
+  .project-text {
+    @apply text-xs xtall:text-base text-neutral-600 dark:text-neutral-400;
+  }
+
+  .project-button {
+    @apply mt-2 px-3 py-1 bg-accent text-white rounded-lg text-xs xtall:text-base
+           hover:bg-accent/90 transition;
+  }
+}
+
 html {
   scroll-behavior: smooth;
 }

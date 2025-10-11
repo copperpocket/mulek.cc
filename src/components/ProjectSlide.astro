@@ -1,0 +1,12 @@
+---
+const { title, text, image, link } = Astro.props;
+---
+<div class="project-slide">
+  <div class="w-full h-20 tall:h-1/2 xtall:h-1/2 bg-cover bg-center"
+       style={`background-image: url('${image}')`}></div>
+  <div class="project-content">
+    <h2 class="project-title">{title}</h2>
+    <p class="project-text">{text}</p>
+    <a href={link} class="project-button">See More</a>
+  </div>
+</div>

@@ -1,4 +1,5 @@
 ---
+// src/pages/projects/index.astro
 import MainLayout from "@/layouts/MainLayout.astro";
 import BackgroundParticles from "@/components/BackgroundParticles.astro";
 import Header from "@/components/Header.astro";
@@ -196,6 +197,9 @@ const categories = ["WebDev", "DevOps", "GameDev"]; // Explicit list of filter b
                 
                 setActiveButton(buttonElement);
                 filterProjects(category ?? 'All');
+
+                // 🔁 Notify BackgroundParticles that layout changed
+                window.dispatchEvent(new Event('particles:refresh'));
             });
         });
         
