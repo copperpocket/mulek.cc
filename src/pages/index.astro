@@ -9,6 +9,9 @@ import ProjectSlider from "@/components/ProjectSlider.astro";
 import "@/styles/global.css";
 import Footer from "@/components/Footer.astro";
 
+import { setupFormHandler } from "@/scripts/contactFormHandler.js";
+import { initHeroHeight, initSmoothScroll, initParticleObserver } from "@/scripts/pageHelpers.js";
+
 const HCAPTCHA_SITE_KEY = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY;
 ---
 <MainLayout>
@@ -133,29 +136,47 @@ const HCAPTCHA_SITE_KEY = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY;
   </div>
   </section>
   
-  <section id="section-contact" class="scroll-mt-12 relative w-full min-h-[calc(100vh-3rem)] max-h-[calc(100vh-3rem)] mx-auto text-neutral-800 dark:text-neutral-200 flex flex-col justify-between">
+  <section
+    id="section-contact"
+    class="scroll-mt-12 relative w-full min-h-[calc(100vh-3rem)] max-h-[calc(100vh-3rem)] mx-auto text-neutral-800 dark:text-neutral-200 flex flex-col justify-between"
+  >
     <div class="absolute top-0 left-0 w-full h-8 bg-accent"></div>
     <div id="last-accent-bar" class="absolute bottom-0 left-0 w-full h-8 bg-accent"></div>
-    <BackgroundParticles minHeight="32px" maxHeight="100%" particleCount={50} bounceIds={["card-contact","last-accent-bar"]} />
+    
     <div class="flex flex-col items-center flex-1 justify-center">
       <h2 class="text-md tall:text-lg xtall:text-3xl font-semibold mb-2">Get in Touch</h2>
-      <div id="card-contact" class="rounded-2xl p-4 w-full max-w-xl flex flex-col space-y-4 bg-[color:theme(colors.accent/20%)] dark:bg-neutral-900">
+      
+      <div
+        id="card-contact"
+        class="rounded-2xl p-4 w-full max-w-xl flex flex-col space-y-4 bg-[color:theme(colors.accent/20%)] dark:bg-neutral-900"
+      >
         <p class="text-xs tall:text-sm xtall:text-base text-center">
           Have a question, a project idea, or just want to say hello?
           I'm always open to connecting with other developers and creators.
         </p>
 
         <form class="flex flex-col space-y-3" id="contact-form">
-          <input type="text" name="name" placeholder="Your Name" required class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-accent text-xs"/>
-          <input type="email" name="email" placeholder="Your Email" required class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-accent text-xs"/>
-          <textarea name="message" placeholder="Your Message" rows="4" required class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-accent text-xs resize-none"></textarea>
-
-          <div
-            id="h-captcha-container"
-            class="h-captcha"
-            data-sitekey={HCAPTCHA_SITE_KEY}
-            data-size="normal"
-          ></div>
+          <input
+            type="text"
+            name="name"
+            placeholder="Your Name"
+            required
+            class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-accent text-xs"
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Your Email"
+            required
+            class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-accent text-xs"
+          />
+          <textarea
+            name="message"
+            placeholder="Your Message"
+            rows="4"
+            required
+            class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-accent text-xs resize-none"
+          ></textarea>
 
           <button
             type="submit"
@@ -182,12 +203,13 @@ const HCAPTCHA_SITE_KEY = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY;
 </MainLayout>
 
 <script type="module">
-  import { initHeroHeight, initSmoothScroll, initParticleObserver } from "@/scripts/pageHelpers.js";
-  initHeroHeight();
-  initSmoothScroll();
-  initParticleObserver();
+  import { setupFormHandler } from "/scripts/contactFormHandler.js";
+  import { initHeroHeight, initSmoothScroll, initParticleObserver } from "/scripts/pageHelpers.js";
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initHeroHeight();
+    initSmoothScroll();
+    initParticleObserver();
+    setupFormHandler();
+  });
 </script>
-
-<script is:inline src={`https://js.hcaptcha.com/1/api.js?onload=hCaptchaLoaded`} async defer></script>
-
-<script type="module" src="/src/scripts/contactFormHandler.js"></script>

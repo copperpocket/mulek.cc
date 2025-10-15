@@ -1,17 +1,12 @@
 ---
-import { Image } from "astro:assets";
-
-import avatarUrl from "/src/assets/drawn.png";
+import "@/styles/global.css";
+import avatarUrl from "public/images/drawn.png";
 ---
 
-<div
-  class="flex justify-center items-center w-40 h-40 p-2 overflow-hidden z-30"
->
-  <Image
-    src={avatarUrl}
+<div class="flex justify-center items-center w-40 h-40 p-2 overflow-hidden z-30">
+  <img
+    src={avatarUrl.src}
     alt="Portrait of me"
-    width={144}
-    height={144}
     class="rounded-full object-contain w-full h-full bg-accent"
     loading="eager"
   />
