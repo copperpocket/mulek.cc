@@ -11,33 +11,41 @@ import ProjectSlide from '@/components/ProjectSlide.astro';
       <!-- Project 1 -->
       <ProjectSlide
         title="Quackshire"
-        text="A custom Minecraft creative server powered by PaperMC. Seamless experience with server-side plugins—no client mods needed."
+        description="A custom Minecraft creative server powered by PaperMC. Seamless experience with server-side plugins—no client mods needed."
         image="https://picsum.photos/200/300"
-        link="/projects/quackshire"
+        slug="/projects/quackshire"
+        tags={["Java", "Spigot"]}
+        category="GameDev"
       />
 
       <!-- Project 2 -->
       <ProjectSlide
         title="Duckcraft"
-        text="A Wrath of the Lich King private server built with AzerothCore. Features <em>playerbots</em> so you can quest and raid alongside AI players."
+        description="A Wrath of the Lich King private server built with AzerothCore. Features <em>playerbots</em> so you can quest and raid alongside AI players."
         image="https://picsum.photos/200/301"
-        link="/projects/duckcraft"
+        slug="/projects/duckcraft"
+        tags={["Open-source", "C++"]}
+        category="GameDev"
       />
 
       <!-- Project 3 -->
       <ProjectSlide
         title="Echo Protocol"
-        text="A work-in-progress digital card game using Godot + Dialogic. Inspired by Hearthstone & Gwent, focused on structure and UI foundation."
+        description="A work-in-progress digital card game using Godot + Dialogic. Inspired by Hearthstone & Gwent, focused on structure and UI foundation."
         image="https://picsum.photos/200/302"
-        link="/projects/cardgame"
+        slug="/projects/cardgame"
+        tags={["Godot", "GameDev"]}
+        category="GameDev"
       />
 
       <!-- Project 4 -->
       <ProjectSlide
         title="mulek.cc"
-        text="My personal Astro + Tailwind site. Showcases projects. Runs from my homelab behind a reverse proxy."
+        description="My personal Astro + Tailwind site. Showcases projects. Runs from my homelab behind a reverse proxy."
         image="https://picsum.photos/200/303"
-        link="/projects/mulekcc"
+        slug="/projects/mulekcc"
+        tags={["Astro.js", "TailwindCSS"]}
+        category="WebDev"
       />
 
     </div>

@@ -1,10 +1,10 @@
 ---
-layout: ../../layouts/BlogPostLayout.astro
-title: My Very First Astro Blog Post
-description: This is a test post to ensure the blog archive and post layout are working correctly.
-pubDate: 1980-01-01
-author: Your Name Here
-tags: ["astro", "testing", "markdown"]
+title: "My First Blog Post"
+description: "This is an example post for the Astro blog."
+pubDate: 2025-10-15
+author: "Michael Mulek"
+tags: ["astro", "blog"]
+image: "/images/blog-placeholder.jpg" # optional
 ---
 
 ## Welcome to the Blog!

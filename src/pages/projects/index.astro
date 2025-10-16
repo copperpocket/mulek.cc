@@ -4,9 +4,13 @@ import MainLayout from "@/layouts/MainLayout.astro";
 import BackgroundParticles from "@/components/BackgroundParticles.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
+
+import ProjectCard from "@/components/ProjectCard.astro";
+
 import "@/styles/global.css";
 
-// 1. Define your Project Data - ADDED 'slug' FIELD for linking
+
+// 1. Define your Project Data
 const projects = [
     // WebDev Category
     { title: "Portfolio Site v2", slug: "/blog/portfolio", category: "WebDev", tags: ["Astro.js", "TailwindCSS"], description: "The current site you are viewing, built with modern web technologies.", url: "#", github: "#" },
@@ -17,7 +21,7 @@ const projects = [
     
     // GameDev Category
     { title: "Duckcraft - World of Warcraft", slug: "world-of-warcraft", category: "GameDev", tags: ["Open-source", "C++"], description: "Powered by AzerothCore and Playerbots, a custom built WOTLK server.", url: "#", github: "#" },
-    { title: "Quackshire - Minecraft", slug: "minecraft", category: "GameDev", tags: ["Java", "Spigot"], description: "A custom Minecraft server with unique plugins and features.", url: "#", github: "#" },
+    { title: "Quackshire - Minecraft", slug: "/blog/minecraft.md", category: "GameDev", tags: ["Java", "Spigot"], description: "A custom Minecraft server with unique plugins and features.", url: "#", github: "#" },
     
     
     // Add more projects here
@@ -65,50 +69,7 @@ const categories = ["WebDev", "DevOps", "GameDev"]; // Explicit list of filter b
 
             <div id="project-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {projects.map(project => (
-                    <div 
-                        class="project-card bg-white dark:bg-neutral-900 rounded-lg shadow-xl p-6 transition-all duration-500 hover:shadow-2xl hover:scale-[1.02] flex flex-col"
-                        data-category={project.category} 
-                    >
-                        <h2 class="text-xl font-semibold mb-2">{project.title}</h2>
-                        <p class="text-neutral-600 dark:text-neutral-400 mb-4 text-sm flex-1">{project.description}</p>
-                        
-                        <div class="flex justify-between items-center mb-4">
-                            <div class="flex flex-wrap gap-1">
-                                {project.tags.map(tag => (
-                                    <span class="text-xs font-medium px-2 py-1 rounded-full bg-accent/20 dark:bg-accent/30 text-accent border border-accent/50">
-                                        {tag}
-                                    </span>
-                                ))}
-                            </div>
-
-                            <span class="text-xs font-medium px-3 py-1 rounded-full bg-secondary/20 dark:bg-secondary/30 text-secondary border border-secondary/50">
-                                {project.category}
-                            </span>
-                        </div>
-                        
-                        <div class="flex flex-col gap-3 mt-auto">
-                            
-                            <a 
-                                href={`${project.slug}`} 
-                                class="w-full text-center px-4 py-2 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition text-sm"
-                            >
-                                View Details &rarr;
-                            </a>
-
-                            <div class="flex justify-between text-sm">
-                                <a href={project.url} target="_blank"
-                                    class="text-accent hover:text-accent/80 font-medium transition"
-                                >
-                                    View Live
-                                </a>
-                                <a href={project.github} target="_blank"
-                                    class="text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 transition"
-                                >
-                                    GitHub
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    <ProjectCard {...project} />
                 ))}
             </div>
             

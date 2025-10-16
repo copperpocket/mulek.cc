@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/BlogPostLayout.astro
 title: "A Minimal, Open Source Portfolio Website"
 description: "Behind the design and development of mulek.cc, my personal website."
 pubDate: 2025-10-06

@@ -1,12 +1,29 @@
 ---
-const { title, text, image, link } = Astro.props;
+import ProjectCard from "@/components/ProjectCard.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  image: string;
+  slug: string;
+  tags?: string[];
+  category?: string;
+}
+
+const { title, description, image, slug, tags = [], category = "Project" } = Astro.props;
 ---
-<div class="project-slide">
-  <div class="w-full h-20 tall:h-1/2 xtall:h-1/2 bg-cover bg-center"
-       style={`background-image: url('${image}')`}></div>
-  <div class="project-content">
-    <h2 class="project-title">{title}</h2>
-    <p class="project-text">{text}</p>
-    <a href={link} class="project-button">See More</a>
-  </div>
+
+<!-- Each slide must not shrink so the flex layout scrolls correctly -->
+<div class="flex-shrink-0 w-full px-2">
+  <ProjectCard
+    {...({
+      title,
+      description,
+      tags,
+      category,
+      slug,
+      image,
+    } as any)}
+  />
+
 </div>
