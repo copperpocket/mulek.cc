@@ -13,14 +13,14 @@ import "@/styles/global.css";
 // 1. Define your Project Data
 const projects = [
     // WebDev Category
-    { title: "Portfolio Site v2", slug: "/blog/portfolio", category: "WebDev", tags: ["Astro.js", "TailwindCSS"], description: "The current site you are viewing, built with modern web technologies.", url: "#", github: "#" },
+    { title: "Portfolio Site v2", slug: "/blog/portfolio.md", category: "WebDev", tags: ["Astro.js", "TailwindCSS"], description: "The current site you are viewing, built with modern web technologies.", url: "#", github: "#" },
     { title: "Personal Blog", slug: "blog", category: "WebDev", tags: ["Astro.js", "Markdown"], description: "A blog where I share articles on various tech topics.", url: "#", github: "#" },
     // Automation/DevOps Category
-    { title: "Homelab Overview", slug: "personal-network-diagram", category: "DevOps", tags: ["Proxmox", "TrueNAS", "OPNsense"], description: "Network diagram of my homelab environment.", url: "#", github: "#" },
-    { title: "Mailcow", slug: "mailcow", category: "DevOps", tags: ["Mail server", "Self hosted"], description: "This article highlights my experience configuring mailcow server.", url: "#", github: "#" },
+    { title: "Homelab Overview", slug: "/blog/homelab-overview.md", category: "DevOps", tags: ["Proxmox", "TrueNAS", "OPNsense"], description: "Network diagram of my homelab environment.", url: "#", github: "#" },
+    { title: "Mailcow", slug: "/blog/mailcow.md", category: "DevOps", tags: ["Mail server", "Self hosted"], description: "This article highlights my experience configuring mailcow server.", url: "#", github: "#" },
     
     // GameDev Category
-    { title: "Duckcraft - World of Warcraft", slug: "world-of-warcraft", category: "GameDev", tags: ["Open-source", "C++"], description: "Powered by AzerothCore and Playerbots, a custom built WOTLK server.", url: "#", github: "#" },
+    { title: "Duckcraft - World of Warcraft", slug: "/blog/warcraft.md", category: "GameDev", tags: ["Open-source", "C++"], description: "Powered by AzerothCore and Playerbots, a custom built WOTLK server.", url: "#", github: "#" },
     { title: "Quackshire - Minecraft", slug: "/blog/minecraft.md", category: "GameDev", tags: ["Java", "Spigot"], description: "A custom Minecraft server with unique plugins and features.", url: "#", github: "#" },
     
     
@@ -39,17 +39,17 @@ const categories = ["WebDev", "DevOps", "GameDev"]; // Explicit list of filter b
         
         <div class="container mx-auto px-4 ">
             <h1 class="text-3xl font-bold text-center mb-8 text-neutral-800 dark:text-neutral-200">
-                My Projects
+                Project Archive
             </h1>
 
             <div id="filter-menu" class="flex flex-wrap justify-center gap-2 mb-8">
                 <button
                     data-category="All"
-                    class="filter-btn px-5 py-2 text-base font-bold rounded-full transition duration-300 
+                    class="filter-btn px-4 py-2 text-base font-bold rounded-full transition duration-300 
                         border-2 border-accent/70 shadow-md flex items-center gap-2
-                        all-btn-default min-h-11 min-w-28"
+                        all-btn-default min-h-9 min-w-21 max-h-9"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
                         <rect x="3" y="3" width="7" height="7"></rect>
                         <rect x="14" y="3" width="7" height="7"></rect>
                         <rect x="14" y="14" width="7" height="7"></rect>
@@ -60,7 +60,7 @@ const categories = ["WebDev", "DevOps", "GameDev"]; // Explicit list of filter b
                 {categories.map(category => (
                     <button
                         data-category={category}
-                        class="filter-btn px-4 py-2 text-sm font-semibold rounded-full transition duration-300 bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 min-h-11 min-w-28"
+                        class="filter-btn px-2 py-2 text-sm font-semibold rounded-full transition duration-300 bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 min-h-9 min-w-21 max-h-9"
                     >
                         {category}
                     </button>

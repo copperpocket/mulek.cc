@@ -8,9 +8,11 @@ interface Props {
   slug: string;
   tags?: string[];
   category?: string;
+  url?: string;
+  github?: string;
 }
 
-const { title, description, image, slug, tags = [], category = "Project" } = Astro.props;
+const { title, description, image, slug, tags = [], category = "Project", url, github } = Astro.props;
 ---
 
 <!-- Each slide must not shrink so the flex layout scrolls correctly -->
@@ -23,6 +25,8 @@ const { title, description, image, slug, tags = [], category = "Project" } = Ast
       category,
       slug,
       image,
+      url,
+      github
     } as any)}
   />
 
