@@ -21,11 +21,28 @@ export function setupFormHandler() {
 
     try {
       const formData = new FormData(form);
+
+      // 1. Check if hCaptcha script is even loaded yet
+      if (typeof hcaptcha === 'undefined') {
+        throw new Error('Security check is still loading. Please wait a moment and try again.');
+      }
+
+      // 2. Manually get the token from hCaptcha
+      const hCaptchaToken = hcaptcha.getResponse();
+
+      // 3. Check if the user actually did the captcha
+      if (!hCaptchaToken) {
+        throw new Error('Captcha missing. Please complete verification.');
+      }
+
+      // 4. Append it to your FormData object
+      formData.append('h-captcha-response', hCaptchaToken);
+
       const serializedBody = Array.from(formData.entries())
         .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
         .join('&');
 
-      console.log('Serialized form data:', serializedBody); // DEBUG
+      console.log('Serialized form data with token:', serializedBody); // DEBUG
 
       const apiResponse = await fetch('/api/contact', {
         method: 'POST',
@@ -41,6 +58,7 @@ export function setupFormHandler() {
         formStatus.textContent = result.message;
         formStatus.classList.add('text-green-500');
         form.reset();
+        hcaptcha.reset();
       } else {
         throw new Error(result.message || 'Server returned an error.');
       }

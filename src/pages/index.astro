@@ -180,6 +180,12 @@ const HCAPTCHA_SITE_KEY = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY;
             class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-accent text-xs resize-none"
           ></textarea>
 
+
+          <div
+            class="h-captcha"
+            data-sitekey={HCAPTCHA_SITE_KEY}> 
+          </div>
+
           <button
             type="submit"
             id="submit-button"
@@ -204,6 +210,7 @@ const HCAPTCHA_SITE_KEY = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY;
   <Footer />
 </MainLayout>
 
+<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 <script type="module">
   import { setupFormHandler } from "/scripts/contactFormHandler.js";
   import { initHeroHeight, initSmoothScroll, initParticleObserver } from "/scripts/pageHelpers.js";

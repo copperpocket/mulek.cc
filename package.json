@@ -11,16 +11,24 @@
   "dependencies": {
     "@astrojs/node": "^9.5.0",
     "@tailwindcss/vite": "^4.1.13",
-    "astro": "^5.13.7",
     "nodemailer": "^7.0.9",
     "tailwindcss": "^4.1.13"
   },
   "description": "```sh npm create astro@latest -- --template basics ```",
   "main": "index.js",
   "devDependencies": {
-    "@tailwindcss/typography": "^0.5.19"
+    "@tailwindcss/typography": "^0.5.19",
+    "astro": "^5.15.6"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/copperpocket/mulek.cc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/copperpocket/mulek.cc/issues"
+  },
+  "homepage": "https://github.com/copperpocket/mulek.cc#readme"
 }
