@@ -64,6 +64,8 @@ html, body {
   /* --svg-color: theme(colors.accent / 0.15); */
   --svg-color: theme(colors.neutral.800 / 0.15);
 
+  /* Floating dots */
+  --color-accent: #9792e3;
 }
 
 
@@ -74,6 +76,9 @@ html.dark {
   /* --particle-color-2: #eeff00; */
   --svg-color: theme(colors.accent / 0.15);
   /* --svg-color: theme(colors.neutral.200 / 0.15); */
+
+  /* Floating dots */
+  --color-accent: #9792e3;
 }
 
 

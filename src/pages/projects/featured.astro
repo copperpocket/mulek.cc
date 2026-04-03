@@ -1,0 +1,41 @@
+---
+import MainLayout from "@/layouts/MainLayout.astro";
+import FloatingDots from "@/components/FloatingDots.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import ProjectSlider from "@/components/ProjectSlider.astro";
+import "@/styles/global.css";
+---
+<MainLayout title="Featured Projects - mulek.cc" description="Featured projects showcase - web development, game development, and homelab projects.">
+  <FloatingDots />
+  <Header />
+
+  <main class="relative z-20 container mx-auto py-16 text-neutral-800 dark:text-neutral-200">
+    
+    <section id="featured-hero" class="pt-24 pb-12 flex flex-col items-center text-center">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-accent mb-4">Featured Projects</h1>
+      <p class="text-lg max-w-2xl">
+        A curated selection of my favorite projects. Swipe through to explore!
+      </p>
+    </section>
+
+    <section id="featured-slider" class="mt-8 mb-16 flex flex-col items-center">
+      <ProjectSlider />
+    </section>
+
+    <section id="featured-cta" class="mt-16 pt-12 border-t border-accent/30 flex flex-col items-center text-center">
+      <p class="text-lg mb-6">
+        Want to see more?
+      </p>
+      <a
+        href="/projects"
+        class="px-8 py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition shadow-lg"
+      >
+        View All Projects
+      </a>
+    </section>
+
+  </main>
+
+  <Footer />
+</MainLayout>

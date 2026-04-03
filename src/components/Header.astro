@@ -41,98 +41,103 @@ import HamburgerMenu from "./HamburgerMenu.astro";
     >
       <ul class="flex flex-col p-4 space-y-4 text-neutral-800 dark:text-neutral-200 text-2xl">
         <li><a href="/" class="hover:text-blue-500">Home</a></li>
+        <li><a href="/about" class="hover:text-blue-500">About</a></li>
         <li><a href="/projects" class="hover:text-blue-500">Projects</a></li>
         <li><a href="/blog" class="hover:text-blue-500">Blog</a></li>
-        <li><a href="/#section-contact" class="hover:text-blue-500">Contact</a></li>
+        <li><a href="/contact" class="hover:text-blue-500">Contact</a></li>
       </ul>
     </div>
   </div>
 </header>
 
 <script type="module">
-  const header = document.getElementById("site-header");
-  const logoWrapper = document.getElementById("logo-wrapper");
-  const themeWrapper = document.getElementById("theme-wrapper");
-  const menuWrapper = document.getElementById("menu-wrapper");
-  const navBorder = document.getElementById("nav-border"); 
-  // Add a variable to check if the current page is the root page
-  const isRootPage = window.location.pathname === '/';
+  document.addEventListener('astro:page-load', () => {
+    const header = document.getElementById("site-header");
+    const logoWrapper = document.getElementById("logo-wrapper");
+    const themeWrapper = document.getElementById("theme-wrapper");
+    const menuWrapper = document.getElementById("menu-wrapper");
+    const navBorder = document.getElementById("nav-border"); 
+    // Add a variable to check if the current page is the root page
+    const isRootPage = window.location.pathname === '/';
 
-  function updateHeader() {
-    // If not root page or scrolled down more than 30px, apply the styles
-    if (!isRootPage || window.scrollY > 30) {
-      // Move elements up
-      logoWrapper.classList.remove("translate-y-[32px]");
-      logoWrapper.classList.add("translate-y-0");
-      themeWrapper.classList.remove("translate-y-[32px]");
-      themeWrapper.classList.add("translate-y-0");
-      menuWrapper.classList.remove("translate-y-[32px]");
-      menuWrapper.classList.add("translate-y-0");
+    function updateHeader() {
+      // If not root page or scrolled down more than 30px, apply the styles
+      if (!isRootPage || window.scrollY > 30) {
+        // Move elements up
+        logoWrapper.classList.remove("translate-y-[32px]");
+        logoWrapper.classList.add("translate-y-0");
+        themeWrapper.classList.remove("translate-y-[32px]");
+        themeWrapper.classList.add("translate-y-0");
+        menuWrapper.classList.remove("translate-y-[32px]");
+        menuWrapper.classList.add("translate-y-0");
 
-      // Scale down elements
-      logoWrapper.classList.add("scale-75");
-      themeWrapper.classList.add("scale-75");
-      menuWrapper.classList.add("scale-75");
+        // Scale down elements
+        logoWrapper.classList.add("scale-75");
+        themeWrapper.classList.add("scale-75");
+        menuWrapper.classList.add("scale-75");
 
-      // Animate border
-      navBorder.classList.remove("opacity-0", "translate-y-25");
-      navBorder.classList.add("opacity-90", "translate-y-6");  
+        // Animate border
+        navBorder.classList.remove("opacity-0", "translate-y-25");
+        navBorder.classList.add("opacity-90", "translate-y-6");  
 
-      // Add background
-      header.classList.add("bg-body", "dark:bg-body-dark");
-    } else {
-      // Reset transforms
-      logoWrapper.classList.add("translate-y-[32px]");
-      logoWrapper.classList.remove("translate-y-0");
-      themeWrapper.classList.add("translate-y-[32px]");
-      themeWrapper.classList.remove("translate-y-0");
-      menuWrapper.classList.add("translate-y-[32px]");
-      menuWrapper.classList.remove("translate-y-0");
+        // Add background
+        header.classList.add("bg-body", "dark:bg-body-dark");
+      } else {
+        // Reset transforms
+        logoWrapper.classList.add("translate-y-[32px]");
+        logoWrapper.classList.remove("translate-y-0");
+        themeWrapper.classList.add("translate-y-[32px]");
+        themeWrapper.classList.remove("translate-y-0");
+        menuWrapper.classList.add("translate-y-[32px]");
+        menuWrapper.classList.remove("translate-y-0");
 
-      // Reset scale
-      logoWrapper.classList.remove("scale-75");
-      themeWrapper.classList.remove("scale-75");
-      menuWrapper.classList.remove("scale-75");
+        // Reset scale
+        logoWrapper.classList.remove("scale-75");
+        themeWrapper.classList.remove("scale-75");
+        menuWrapper.classList.remove("scale-75");
 
-      // Remove background
-      header.classList.remove("bg-body", "dark:bg-body-dark");
+        // Remove background
+        header.classList.remove("bg-body", "dark:bg-body-dark");
 
-      // Remove border
-      navBorder.classList.remove("opacity-90", "translate-y-6");
-      navBorder.classList.add("opacity-0", "translate-y-25");
+        // Remove border
+        navBorder.classList.remove("opacity-90", "translate-y-6");
+        navBorder.classList.add("opacity-0", "translate-y-25");
+      }
     }
-  }
 
-  // Then keep updating on scroll
-  window.addEventListener("scroll", updateHeader );
+    // Then keep updating on scroll
+    window.addEventListener("scroll", updateHeader );
 
-  // ✅ Run once right away so refresh matches scroll position
-  updateHeader();
+    // ✅ Run once right away so refresh matches scroll position
+    updateHeader();
+  });
 </script>
 
 <script>
-  // Get a reference to the checkbox from the HamburgerMenu component
-  const menuBtn = document.getElementById('menu-btn');
-  const body = document.body;
+  document.addEventListener('astro:page-load', () => {
+    // Get a reference to the checkbox from the HamburgerMenu component
+    const menuBtn = document.getElementById('menu-btn');
+    const body = document.body;
 
-  if (menuBtn) {
-    // Listen for changes on the checkbox (when the burger is clicked)
-    menuBtn.addEventListener('change', () => {
-      if ((menuBtn as HTMLInputElement).checked) {
-        // Checkbox is checked (menu is opening)
-        body.classList.add('menu-open');
-      } else {
-        // Checkbox is unchecked (menu is closing)
-        body.classList.remove('menu-open');
-      }
-    });
+    if (menuBtn) {
+      // Listen for changes on the checkbox (when the burger is clicked)
+      menuBtn.addEventListener('change', () => {
+        if ((menuBtn as HTMLInputElement).checked) {
+          // Checkbox is checked (menu is opening)
+          body.classList.add('menu-open');
+        } else {
+          // Checkbox is unchecked (menu is closing)
+          body.classList.remove('menu-open');
+        }
+      });
 
-    // OPTIONAL: Add listeners to close the menu when a link is clicked
-    document.querySelectorAll('#hidden-menu a').forEach(link => {
-        link.addEventListener('click', () => {
-            (menuBtn as HTMLInputElement).checked = false; // Uncheck the box (closes the burger icon)
-            body.classList.remove('menu-open'); // Remove class (hides the menu)
-        });
-    });
-  }
+      // OPTIONAL: Add listeners to close the menu when a link is clicked
+      document.querySelectorAll('#hidden-menu a').forEach(link => {
+          link.addEventListener('click', () => {
+              (menuBtn as HTMLInputElement).checked = false; // Uncheck the box (closes the burger icon)
+              body.classList.remove('menu-open'); // Remove class (hides the menu)
+          });
+      });
+    }
+  });
 </script>

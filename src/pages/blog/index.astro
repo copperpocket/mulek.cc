@@ -2,7 +2,7 @@
 import MainLayout from "@/layouts/MainLayout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
-import BackgroundParticles from "@/components/BackgroundParticles.astro";
+import FloatingDots from "@/components/FloatingDots.astro";
 import "@/styles/global.css";
 
 import { getCollection } from "astro:content";
@@ -18,7 +18,7 @@ const pageTitle = "Blog Archive";
 ---
 
 <MainLayout title={pageTitle}>
-  <BackgroundParticles minHeight="0" maxHeight="100%" particleCount={150} />
+  <FloatingDots />
   <Header />
 
   <div class="relative z-10 pt-20 pb-16 min-h-screen">

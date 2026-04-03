@@ -1,6 +1,6 @@
 ---
 import MainLayout from "@/layouts/MainLayout.astro";
-import BackgroundParticles from "@/components/BackgroundParticles.astro";
+import FloatingDots from "@/components/FloatingDots.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import "@/styles/global.css";
@@ -25,7 +25,7 @@ const project = {
 ---
 
 <MainLayout>
-    <BackgroundParticles minHeight="0" maxHeight="100%" particleCount={120} />
+    <FloatingDots />
     <Header />
 
     <main class="relative z-20 container mx-auto px-4 py-16 min-h-screen">

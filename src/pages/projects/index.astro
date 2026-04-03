@@ -1,7 +1,7 @@
 ---
 // src/pages/projects/index.astro
 import MainLayout from "@/layouts/MainLayout.astro";
-import BackgroundParticles from "@/components/BackgroundParticles.astro";
+import FloatingDots from "@/components/FloatingDots.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 
@@ -32,7 +32,7 @@ const categories = ["WebDev", "DevOps", "GameDev"]; // Explicit list of filter b
 ---
 
 <MainLayout>
-    <BackgroundParticles minHeight="0" maxHeight="100%" particleCount={150} />
+    <FloatingDots />
     <Header />
 
     <div id="projects-container" class="relative z-20 py-8 min-h-screen">
@@ -84,7 +84,7 @@ const categories = ["WebDev", "DevOps", "GameDev"]; // Explicit list of filter b
 </MainLayout>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('astro:page-load', () => {
         const filterButtons = document.querySelectorAll('.filter-btn');
         const projectCards = document.querySelectorAll('.project-card');
         const emptyState = document.getElementById('empty-state');
@@ -158,9 +158,6 @@ const categories = ["WebDev", "DevOps", "GameDev"]; // Explicit list of filter b
                 
                 setActiveButton(buttonElement);
                 filterProjects(category ?? 'All');
-
-                // 🔁 Notify BackgroundParticles that layout changed
-                window.dispatchEvent(new Event('particles:refresh'));
             });
         });
         

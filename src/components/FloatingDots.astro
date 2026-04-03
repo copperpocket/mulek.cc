@@ -1,0 +1,138 @@
+---
+// FloatingDots.astro - CSS-only animated floating dots with smooth star flickering
+const { 
+  dotCount = 200,
+  minSize = 2,
+  maxSize = 5,
+  peakOpacityMin = 0.15,
+  peakOpacityMax = 0.5,
+  floorOpacityMin = 0.0,
+  floorOpacityMax = 0.15,
+  minDuration = 8,
+  maxDuration = 20,
+  clipArea = "full",  // "full" | "top-half" | "hero"
+} = Astro.props;
+
+function randomInRange(min: number, max: number) {
+  return Math.random() * (max - min) + min;
+}
+
+const dots = Array.from({ length: dotCount }, () => {
+  const size = randomInRange(minSize, maxSize);
+  const maxOpacity = randomInRange(peakOpacityMin, peakOpacityMax);
+  const minOpacity = randomInRange(floorOpacityMin, floorOpacityMax);
+  const left = Math.random() * 100;
+  const top = Math.random() * 100;
+  const duration = randomInRange(minDuration, maxDuration);
+  const delay = -Math.random() * duration; // Random starting point
+  const tx = (Math.random() - 0.5) * 60;
+  const ty = (Math.random() - 0.5) * 80;
+  const colorType = Math.random() > 0.3 ? 'accent' : 'neutral';
+  const hasJitter = Math.random() < 0.5; // 35% chance of jitter
+  const jx1 = (Math.random() - 0.5) * 10;
+  const jy1 = (Math.random() - 0.5) * 10;
+  const jx2 = (Math.random() - 0.5) * 10;
+  const jy2 = (Math.random() - 0.5) * 10;
+  const jx3 = (Math.random() - 0.5) * 10;
+  const jy3 = (Math.random() - 0.5) * 10;
+  
+  return { size, maxOpacity, minOpacity, left, top, duration, delay, tx, ty, colorType, hasJitter, jx1, jy1, jx2, jy2, jx3, jy3 };
+});
+---
+
+<div class="floating-dots-container absolute inset-0 overflow-hidden pointer-events-none z-10" data-clip-area={clipArea}>
+  {dots.map((dot, i) => (
+    <div
+      class="floating-dot rounded-full"
+      style={`
+        width: ${dot.size}px;
+        height: ${dot.size}px;
+        left: ${dot.left}%;
+        top: ${dot.top}%;
+        --dot-max-opacity: ${dot.maxOpacity};
+        --dot-min-opacity: ${dot.minOpacity};
+        --dot-duration: ${dot.duration}s;
+        --dot-delay: ${dot.delay}s;
+        --dot-tx: ${dot.tx}px;
+        --dot-ty: ${dot.ty}px;
+        --jx1: ${dot.jx1}px;
+        --jy1: ${dot.jy1}px;
+        --jx2: ${dot.jx2}px;
+        --jy2: ${dot.jy2}px;
+        --jx3: ${dot.jx3}px;
+        --jy3: ${dot.jy3}px;
+      `}
+      data-color={dot.colorType}
+      data-jitter={dot.hasJitter ? "true" : undefined}
+    />
+  ))}
+</div>
+
+<style>
+  .floating-dot {
+    position: absolute;
+    /* TODO: TEMP TEST COLOR - REVERT: background-color: var(--color-accent); */
+    background-color: oklch(58.951% 0.15471 317.725);
+  }
+
+  .floating-dot:not([data-jitter]) {
+    animation: twinkle var(--dot-duration) ease-in-out var(--dot-delay) infinite;
+    animation-fill-mode: both;
+  }
+
+  .floating-dot[data-jitter] {
+    animation: 
+      twinkle var(--dot-duration) ease-in-out var(--dot-delay) infinite,
+      jitter var(--dot-duration) ease-in-out var(--dot-delay) infinite;
+    animation-fill-mode: both;
+  }
+
+  @keyframes jitter {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(var(--jx1), var(--jy1)); }
+    50% { transform: translate(var(--jx2), var(--jy2)); }
+    75% { transform: translate(var(--jx3), var(--jy3)); }
+  }
+
+  .floating-dot[data-color="neutral"] {
+    background-color: oklch(5% 0 0 / 0.95);
+  }
+
+  :global(html.dark) .floating-dot {
+    /* background-color: var(--color-accent); */
+    background-color: oklch(58.951% 0.15471 317.725);
+  }
+
+  :global(html.dark) .floating-dot[data-color="neutral"] {
+    /* TODO: TEMP TEST COLOR - REVERT: background-color: oklch(70% 0 0 / 0.5); */
+    background-color: oklch(95% 0 0 / 0.95);
+  }
+
+  /* Clip areas - hide dots outside defined regions */
+  .floating-dots-container[data-clip-area="top-half"] {
+    clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
+  }
+
+  .floating-dots-container[data-clip-area="hero"] {
+    clip-path: polygon(0 0, 100% 0, 100% 65%, 0 65%);
+  }
+
+  /* Smooth oscillating star effect */
+  @keyframes twinkle {
+    0% {
+      opacity: var(--dot-max-opacity);
+    }
+    25% {
+      opacity: var(--dot-min-opacity);
+    }
+    50% {
+      opacity: var(--dot-max-opacity);
+    }
+    75% {
+      opacity: var(--dot-min-opacity);
+    }
+    100% {
+      opacity: var(--dot-max-opacity);
+    }
+  }
+</style>
