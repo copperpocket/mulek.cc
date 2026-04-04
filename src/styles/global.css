@@ -106,3 +106,10 @@ body.menu-open #hidden-menu {
   transform: none;
   pointer-events: auto;
 }
+
+.nav-link {
+  @apply text-neutral-800 dark:text-neutral-200 hover:text-accent transition-colors;
+}
+.nav-link.active {
+  @apply text-accent;
+}

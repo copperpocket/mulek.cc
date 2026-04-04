@@ -11,7 +11,7 @@ const { title, description } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" class="h-full">
+<html lang="en" class="h-full dark">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width" />
@@ -19,6 +19,21 @@ const { title, description } = Astro.props;
         <meta name="generator" content={Astro.generator} />
         <title>{title || 'mulek.cc'}</title>
         <meta name="description" content={description || 'Personal website of Michael Scott Mulek'} />
+        <script is:inline>
+          (function() {
+            const saved = localStorage.getItem("theme");
+            const html = document.documentElement;
+            if (saved === "light") {
+              html.classList.remove("dark");
+            } else if (saved === "dark") {
+              html.classList.add("dark");
+            } else {
+              if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+                html.classList.add("dark");
+              }
+            }
+          })();
+        </script>
         <ClientRouter />
     </head>
   <body class="bg-body dark:bg-body-dark text-neutral-800 dark:text-neutral-200 h-full">

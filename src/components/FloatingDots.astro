@@ -28,7 +28,7 @@ const dots = Array.from({ length: dotCount }, () => {
   const tx = (Math.random() - 0.5) * 60;
   const ty = (Math.random() - 0.5) * 80;
   const colorType = Math.random() > 0.3 ? 'accent' : 'neutral';
-  const hasJitter = Math.random() < 0.5; // 35% chance of jitter
+  const hasJitter = Math.random() < 0.35; // 35% chance of jitter
   const jx1 = (Math.random() - 0.5) * 10;
   const jy1 = (Math.random() - 0.5) * 10;
   const jx2 = (Math.random() - 0.5) * 10;

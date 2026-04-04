@@ -22,3 +22,7 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# misc
+deploy.sh
+.git-commit-template.txt
