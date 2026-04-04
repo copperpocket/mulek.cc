@@ -11,6 +11,7 @@ const {
   minDuration = 8,
   maxDuration = 20,
   clipArea = "full",  // "full" | "top-half" | "hero"
+  clipPercent,
 } = Astro.props;
 
 function randomInRange(min: number, max: number) {
@@ -38,9 +39,17 @@ const dots = Array.from({ length: dotCount }, () => {
   
   return { size, maxOpacity, minOpacity, left, top, duration, delay, tx, ty, colorType, hasJitter, jx1, jy1, jx2, jy2, jx3, jy3 };
 });
+
+const clipPath = clipPercent !== undefined 
+  ? `polygon(0 0, 100% 0, 100% ${clipPercent}%, 0 ${clipPercent}%)`
+  : undefined;
 ---
 
-<div class="floating-dots-container absolute inset-0 overflow-hidden pointer-events-none z-10" data-clip-area={clipArea}>
+<div 
+  class="floating-dots-container absolute inset-0 overflow-hidden pointer-events-none z-10" 
+  data-clip-area={clipArea}
+  style={clipPath ? `clip-path: ${clipPath}` : undefined}
+>
   {dots.map((dot, i) => (
     <div
       class="floating-dot rounded-full"

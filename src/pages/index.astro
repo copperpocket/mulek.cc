@@ -13,40 +13,43 @@ import { initHeroHeight, initSmoothScroll } from "@/scripts/pageHelpers.js";
 <MainLayout title="mulek.cc - Home">
   <TwSizeIndicator />
   <Header />
-  <FloatingDots dotCount={160} clipArea="top-half" />
 
-  <section
-    id="hero-section"
-    class="relative flex items-center justify-center w-full bg-body dark:bg-body-dark overflow-hidden min-h-[calc(100vh-3rem)] scroll-mt-12"
-  >
-    <div class="absolute inset-0 z-10">
-      <BackgroundSVG />
-    </div>
+  <div class="relative w-full overflow-hidden" style="height: calc(100vh - 3rem);">
+    <FloatingDots dotCount={160} clipPercent={50} />
 
-    <div
-      class="relative z-20 flex flex-col items-center text-center text-neutral-800 dark:text-neutral-200 space-y-2 px-4"
+    <section
+      id="hero-section"
+      class="absolute inset-0 flex items-center justify-center bg-body dark:bg-body-dark"
     >
-      <Avatar />
-      <h1 class="text-2xl xtall:text-3xl">Hi, I'm Mike.</h1>
-      <p class="text-sm xtall:text-base">Systems Engineer I</p>
-      <p class="text-sm xtall:text-base">Let's dive into what I've been working on! 🚀💻</p>
-
-      <div class="flex flex-col space-y-3 mt-4">
-        <a
-          href="/about"
-          class="px-6 py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition"
-        >
-          About Me
-        </a>
-        <a
-          href="/projects"
-          class="px-6 py-3 border border-accent text-accent font-semibold rounded-lg hover:bg-accent/10 transition"
-        >
-          Projects
-        </a>
+      <div class="absolute inset-0 z-10">
+        <BackgroundSVG />
       </div>
-    </div>
-  </section>
+
+      <div
+        class="relative z-20 flex flex-col items-center text-center text-neutral-800 dark:text-neutral-200 space-y-2 px-4"
+      >
+        <Avatar />
+        <h1 class="text-2xl xtall:text-3xl">Hi, I'm Mike.</h1>
+        <p class="text-sm xtall:text-base">Systems Engineer I</p>
+        <p class="text-sm xtall:text-base">Let's dive into what I've been working on! 🚀💻</p>
+
+        <div class="flex flex-col space-y-3 mt-4">
+          <a
+            href="/about"
+            class="px-6 py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition"
+          >
+            About Me
+          </a>
+          <a
+            href="/projects"
+            class="px-6 py-3 border border-accent text-accent font-semibold rounded-lg hover:bg-accent/10 transition"
+          >
+            Projects
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
 
 </MainLayout>
 
