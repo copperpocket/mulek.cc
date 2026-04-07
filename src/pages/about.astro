@@ -1,5 +1,6 @@
 ---
 import MainLayout from "@/layouts/MainLayout.astro";
+import Avatar from "@/components/Avatar.astro";
 import FloatingDots from "@/components/FloatingDots.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
@@ -13,7 +14,8 @@ import "@/styles/global.css";
   <main class="relative z-20 container mx-auto py-16 text-neutral-800 dark:text-neutral-200">
     
     <section id="about-hero" class="pt-24 pb-12 flex flex-col items-center text-center">
-      <h1 class="text-4xl md:text-5xl font-extrabold text-accent mb-4">About Me</h1>
+      <Avatar />
+      <h1 class="text-4xl md:text-5xl font-extrabold text-accent mb-4 mt-4">About Me</h1>
       <p class="text-lg max-w-3xl">
         This page goes deeper into my professional journey, technical background, and what drives my passion for systems engineering and development.
       </p>
@@ -24,7 +26,7 @@ import "@/styles/global.css";
       
       <div id="card-about-site"
         class="w-full max-w-3xl p-6 rounded-xl space-y-4 
-               bg-[color:theme(colors.accent/20%)] dark:bg-neutral-900 shadow-xl text-center"
+               bg-accent/20 dark:bg-neutral-900 shadow-xl text-center"
       >
         <p class="text-sm md:text-base">
           Welcome! This site showcases my projects, experience, and my passion for creating and exploring technology.
@@ -54,7 +56,7 @@ import "@/styles/global.css";
       
       <div id="card-about-me"
         class="w-full max-w-3xl p-6 rounded-xl space-y-4 
-               bg-[color:theme(colors.accent/20%)] dark:bg-neutral-900 shadow-xl"
+               bg-accent/20 dark:bg-neutral-900 shadow-xl"
       >
         <p class="text-sm md:text-base">
           Hi, I'm Mike. I'm from Minnesota, where I live with my partner Chelsea and our four pets - dogs Gertie and Ducky, and cats Salem and Oliver.
@@ -70,7 +72,7 @@ import "@/styles/global.css";
           helping businesses optimize their IT environments. I bring over 6 years of professional experience in the industry, with a background spanning infrastructure, automation, and technical support.
         </p>
         <p class="text-sm md:text-base">
-          Feel free to <a href="/contact" class="text-accent font-semibold hover:underline">reach out through my contact page</a> - I'd love to connect.
+          Feel free to reach out through my <a href="/contact" class="text-accent font-semibold hover:underline">contact page</a> - I'd love to connect.
         </p>
       </div>
     </section>
@@ -80,7 +82,7 @@ import "@/styles/global.css";
       
       <div id="tech-card"
         class="w-full max-w-4xl p-6 md:p-10 rounded-xl space-y-6 
-               bg-[color:theme(colors.accent/20%)] dark:bg-neutral-900 shadow-xl"
+               bg-accent/20 dark:bg-neutral-900 shadow-xl"
       >
         <p class="text-sm md:text-base">
           As a Systems Engineer, my core philosophy is rooted in **automation, reliability, and security**. I believe that robust systems are built on strong fundamentals—infrastructure as code, proactive monitoring, and a security-first mindset.
