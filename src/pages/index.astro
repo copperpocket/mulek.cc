@@ -12,9 +12,9 @@ import { initHeroHeight, initSmoothScroll } from "@/scripts/pageHelpers.js";
 
 <MainLayout title="mulek.cc - Home">
   <TwSizeIndicator />
-  <Header />
+  <Header hideLogo={true} navBreakpoint="md" />
 
-  <div class="relative w-full overflow-hidden" style="height: calc(100vh - 3rem);">
+  <div class="relative w-full overflow-hidden min-h-screen md:h-[calc(100vh-3rem)]">
     <FloatingDots dotCount={160} clipPercent={50} />
 
     <section
