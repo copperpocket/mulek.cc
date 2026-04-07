@@ -5,11 +5,19 @@ import HamburgerMenu from "./HamburgerMenu.astro";
 interface Props {
   hideLogo?: boolean;
   navBreakpoint?: 'md' | 'lg';
-  sandwichBreakpoint?: 'sm';
   
 }
 
-const { hideLogo = false, navBreakpoint = 'md', sandwichBreakpoint = 'sm' } = Astro.props;
+const { hideLogo = false, navBreakpoint = 'md' } = Astro.props;
+
+// Map the prop to the full class string
+const breakpointClasses = {
+  md: 'md:flex',
+  lg: 'lg:flex',
+};
+
+// Use the mapped value
+const displayClass = breakpointClasses[navBreakpoint];
 
 const pathname = Astro.url.pathname;
 const isActive = (path: string) => 
@@ -18,7 +26,7 @@ const isActive = (path: string) =>
 
 <header
   id="site-header"
-  class="w-full sticky top-0 z-40 flex items-start"
+  class="w-full sticky top-0 z-40 flex items-center min-h-12"
 >
   <div id="header-nav"
        class="mx-auto flex items-center justify-between w-full 
@@ -35,7 +43,7 @@ const isActive = (path: string) =>
     )}
 
     <nav id="nav-links-wrapper" 
-         class={`hidden ${navBreakpoint}:flex items-center space-x-4 
+         class={`hidden ${displayClass} items-center space-x-4 
                 transform transition-all duration-300 h-0 translate-y-[32px]`}>
       <a href="/" class:list={["nav-link", { "active": isActive('/') }]}>Home</a>
       <a href="/about" class:list={["nav-link", { "active": isActive('/about') }]}>About</a>
@@ -85,40 +93,50 @@ const isActive = (path: string) =>
 
     function updateHeader() {
       if (!isRootPage || window.scrollY > 30) {
-        logoWrapper.classList.remove("translate-y-[32px]");
-        logoWrapper.classList.add("translate-y-0");
+        if (logoWrapper) {
+          logoWrapper.classList.remove("translate-y-[32px]");
+          logoWrapper.classList.add("translate-y-0");
+          logoWrapper.classList.add("scale-75");
+        }
         if (navLinksWrapper) {
           navLinksWrapper.classList.remove("translate-y-[32px]");
           navLinksWrapper.classList.add("translate-y-0");
         }
-        themeWrapper.classList.remove("translate-y-[32px]");
-        themeWrapper.classList.add("translate-y-0");
-        menuWrapper.classList.remove("translate-y-[32px]");
-        menuWrapper.classList.add("translate-y-0");
-
-        logoWrapper.classList.add("scale-75");
-        themeWrapper.classList.add("scale-75");
-        menuWrapper.classList.add("scale-75");
+        if (themeWrapper) {
+          themeWrapper.classList.remove("translate-y-[32px]");
+          themeWrapper.classList.add("translate-y-0");
+          themeWrapper.classList.add("scale-75");
+        }
+        if (menuWrapper) {
+          menuWrapper.classList.remove("translate-y-[32px]");
+          menuWrapper.classList.add("translate-y-0");
+          menuWrapper.classList.add("scale-75");
+        }
 
         navBorder.classList.remove("opacity-0", "translate-y-25");
         navBorder.classList.add("opacity-90", "translate-y-6");  
 
         header.classList.add("bg-body", "dark:bg-body-dark");
       } else {
-        logoWrapper.classList.add("translate-y-[32px]");
-        logoWrapper.classList.remove("translate-y-0");
+        if (logoWrapper) {
+          logoWrapper.classList.add("translate-y-[32px]");
+          logoWrapper.classList.remove("translate-y-0");
+          logoWrapper.classList.remove("scale-75");
+        }
         if (navLinksWrapper) {
           navLinksWrapper.classList.add("translate-y-[32px]");
           navLinksWrapper.classList.remove("translate-y-0");
         }
-        themeWrapper.classList.add("translate-y-[32px]");
-        themeWrapper.classList.remove("translate-y-0");
-        menuWrapper.classList.add("translate-y-[32px]");
-        menuWrapper.classList.remove("translate-y-0");
-
-        logoWrapper.classList.remove("scale-75");
-        themeWrapper.classList.remove("scale-75");
-        menuWrapper.classList.remove("scale-75");
+        if (themeWrapper) {
+          themeWrapper.classList.add("translate-y-[32px]");
+          themeWrapper.classList.remove("translate-y-0");
+          themeWrapper.classList.remove("scale-75");
+        }
+        if (menuWrapper) {
+          menuWrapper.classList.add("translate-y-[32px]");
+          menuWrapper.classList.remove("translate-y-0");
+          menuWrapper.classList.remove("scale-75");
+        }
 
         header.classList.remove("bg-body", "dark:bg-body-dark");
 
