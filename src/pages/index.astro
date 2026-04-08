@@ -2,7 +2,8 @@
 import MainLayout from "@/layouts/MainLayout.astro";
 import FloatingDots from "@/components/FloatingDots.astro";
 import BackgroundSVG from "@/components/BackgroundSVG.astro";
-import Header from "@/components/Header.astro";
+import ThemeIcon from "@/components/Theme.astro";
+import HamburgerMenu from "@/components/HamburgerMenu.astro";
 import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
 import "@/styles/global.css";
 
@@ -12,10 +13,23 @@ import { initHeroHeight, initSmoothScroll } from "@/scripts/pageHelpers.js";
 
 <MainLayout title="mulek.cc - Home">
   <TwSizeIndicator />
-  <Header hideLogo={true} navBreakpoint="md" />
 
   <div class="relative w-full overflow-hidden min-h-screen md:h-[calc(100vh-3rem)]">
+
     <FloatingDots dotCount={160} clipPercent={50} />
+
+    <div class="md:hidden absolute top-24 left-0 w-full z-60 px-16 pointer-events-none">
+      <div class="flex justify-end items-center w-full pointer-events-auto">
+        <div class="flex items-center space-x-6">
+          <div id="theme-wrapper" class="inline-flex items-center">
+            <ThemeIcon />
+          </div>
+          <div id="menu-wrapper" class="inline-flex items-center">
+            <HamburgerMenu /> 
+          </div>
+        </div>
+      </div>
+    </div>
 
     <section
       id="hero-section"
@@ -28,26 +42,35 @@ import { initHeroHeight, initSmoothScroll } from "@/scripts/pageHelpers.js";
       <div class="relative z-20 w-full max-w-7xl mx-auto px-16 grid grid-cols-1 lg:grid-cols-2 gap-8 pt-24 md:pt-32">
         
         <!-- Left Column: Hero Info -->
-        <div class="flex flex-col items-start text-neutral-800 dark:text-neutral-200 space-y-2">
-          <h1 class="text-2xl xtall:text-3xl">Michael Mulek</h1>
+        <div class="flex flex-col md:flex-row lg:flex-col items-start md:justify-between lg:justify-start text-neutral-800 dark:text-neutral-200 md:gap-12 lg:gap-0">
+  
+        <div class="flex flex-col space-y-2 w-full">
+          <div class="flex items-center justify-between w-full">
+            <h1 class="text-2xl xtall:text-3xl">Michael Mulek</h1>
+            
+          </div>
+
           <p class="text-sm xtall:text-base">Systems Engineer</p>
           <p class="text-sm xtall:text-base">Let's dive into what I've been working on! 🚀💻</p>
 
           <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mt-4">
-            <a
-              href="/about"
-              class="px-6 py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition"
-            >
+            <a href="/about" class="px-6 py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition">
               Learn More
             </a>
-            <a
-              href="/projects"
-              class="px-6 py-3 border border-accent text-accent font-semibold rounded-lg hover:bg-accent/10 transition"
-            >
+            <a href="/projects" class="px-6 py-3 border border-accent text-accent font-semibold rounded-lg hover:bg-accent/10 transition">
               View Projects
             </a>
           </div>
         </div>
+        
+        <nav class="hidden md:flex flex-col space-y-2 md:mt-0 lg:mt-8 pt-8 border-t border-neutral-300 dark:border-neutral-700 min-w-[120px]">
+          <a href="/" class="nav-link active">Home</a>
+          <a href="/about" class="nav-link">About</a>
+          <a href="/projects" class="nav-link">Projects</a>
+          <a href="/blog" class="nav-link">Blog</a>
+          <a href="/contact" class="nav-link">Contact</a>
+        </nav>
+      </div>
 
         <!-- Right Column: About Summary -->
         <div class="flex flex-col items-center md:items-start text-center md:text-left text-neutral-800 dark:text-neutral-200">
@@ -77,6 +100,21 @@ import { initHeroHeight, initSmoothScroll } from "@/scripts/pageHelpers.js";
     </section>
   </div>
 
+  <div
+    id="hidden-menu"
+    class="hidden-menu fixed inset-0 bg-neutral-100/60 dark:bg-neutral-900/60 backdrop-blur-sm
+          flex items-center justify-center overflow-auto z-50 md:hidden"
+  >
+    <ul class="flex flex-col p-4 space-y-4 text-neutral-800 dark:text-neutral-200 text-2xl">
+      <li><a href="/" class="hover:text-blue-500">Home</a></li>
+      <li><a href="/about" class="hover:text-blue-500">About</a></li>
+      <li><a href="/projects" class="hover:text-blue-500">Projects</a></li>
+      <li><a href="/blog" class="hover:text-blue-500">Blog</a></li>
+      <li><a href="/contact" class="hover:text-blue-500">Contact</a></li>
+    </ul>
+  </div>
+</div>
+
 </MainLayout>
 <script type="module">
   import { initHeroHeight, initSmoothScroll } from "/scripts/pageHelpers.js";
@@ -85,4 +123,33 @@ import { initHeroHeight, initSmoothScroll } from "@/scripts/pageHelpers.js";
     initHeroHeight();
     initSmoothScroll();
   });
+</script>
+
+<script>
+  function setupMobileMenu() {
+    const menuBtn = document.getElementById('menu-btn') as HTMLInputElement;
+    const body = document.body;
+    const hiddenMenu = document.getElementById('hidden-menu');
+
+    if (menuBtn && hiddenMenu) {
+      menuBtn.addEventListener('change', (e) => {
+        const target = e.target as HTMLInputElement;
+        
+        if (target.checked) {
+          body.classList.add('menu-open');
+        } else {
+          body.classList.remove('menu-open');
+        }
+      });
+
+      hiddenMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          menuBtn.checked = false;
+          body.classList.remove('menu-open');
+        });
+      });
+    }
+  }
+
+  document.addEventListener('astro:page-load', setupMobileMenu);
 </script>
