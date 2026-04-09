@@ -9,24 +9,22 @@ import "@/styles/global.css";
 
 // import { initHeroHeight, initSmoothScroll } from "@/scripts/pageHelpers.js";
 
-// Helper to calculate age based on a birthdate
+// Helper to check for birthday and calculate age
 const getAge = (birthDate: string) => {
   const today = new Date();
-  const birth = new Date(birthDate);
+  const [year, month, day] = birthDate.split('-').map(Number);
+  const birth = new Date(year, month - 1, day);
   let age = today.getFullYear() - birth.getFullYear();
-  const monthDiff = today.getMonth() - birth.getMonth();
-  
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-    age--;
-  }
+  if (today < new Date(today.getFullYear(), month - 1, day)) age--;
   return age;
 };
 
-// Enter the birthdates here (YYYY-MM-DD)
-const gertieAge = getAge("2022-09-11");
-const duckyAge = getAge("2023-04-06");
-const salemAge = getAge("2018-07-17");
-const oliverAge = getAge("2019-02-08");
+const pets = [
+  { name: 'Gertie', bday: '09-11', age: getAge("2022-09-11") },
+  { name: 'Ducky', bday: '04-06', age: getAge("2023-04-06") },
+  { name: 'Salem', bday: '07-17', age: getAge("2018-07-17") },
+  { name: 'Oliver', bday: '02-08', age: getAge("2019-02-08") },
+];
 
 
 ---
@@ -93,8 +91,13 @@ const oliverAge = getAge("2019-02-08");
           <div class="space-y-4 text-sm xtall:text-base">
             <p class="text-sm md:text-base">
               Hi, I'm Mike. I'm from 
-              <a href="https://www.exploreminnesota.com" target="_blank" rel="noopener noreferrer" class="text-accent font-semibold hover:underline">Minnesota</a>, 
-              where I live with my partner Chelsea. We share our home with two dogs, Gertie ({gertieAge}) and Ducky ({duckyAge}), and two cats, Salem ({salemAge}) and Oliver ({oliverAge}).
+              <a href="https://www.exploreminnesota.com" target="_blank" rel="noopener noreferrer" class="text-accent font-semibold hover:underline">
+        Minnesota</a><span class="inline-block text-yellow-500 dark:text-yellow-400 animate-pulse ml-1" title="L'Étoile du Nord">⭐</span>,
+              where I live with my partner Chelsea. We share our home with our dogs, 
+              Gertie ({pets[0].age}<span data-bday={pets[0].bday}></span>) & 
+              Ducky ({pets[1].age}<span data-bday={pets[1].bday}></span>), and cats,
+              Salem ({pets[2].age}<span data-bday={pets[2].bday}></span>) &
+              Oliver ({pets[3].age}<span data-bday={pets[3].bday}></span>).
             </p>
             <p class="text-sm md:text-base">
               I'm passionate about self-hosting and home lab projects.
@@ -137,40 +140,4 @@ const oliverAge = getAge("2019-02-08");
 </div>
 
 </MainLayout>
-<script type="module">
-  import { initHeroHeight, initSmoothScroll } from "/scripts/pageHelpers.js";
 
-  document.addEventListener('astro:page-load', () => {
-    // initHeroHeight();
-    initSmoothScroll();
-  });
-</script>
-
-<script>
-  function setupMobileMenu() {
-    const menuBtn = document.getElementById('menu-btn') as HTMLInputElement;
-    const body = document.body;
-    const hiddenMenu = document.getElementById('hidden-menu');
-
-    if (menuBtn && hiddenMenu) {
-      menuBtn.addEventListener('change', (e) => {
-        const target = e.target as HTMLInputElement;
-        
-        if (target.checked) {
-          body.classList.add('menu-open');
-        } else {
-          body.classList.remove('menu-open');
-        }
-      });
-
-      hiddenMenu.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-          menuBtn.checked = false;
-          body.classList.remove('menu-open');
-        });
-      });
-    }
-  }
-
-  document.addEventListener('astro:page-load', setupMobileMenu);
-</script>
