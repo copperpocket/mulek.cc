@@ -84,6 +84,7 @@ const isActive = (path: string) =>
 <script type="module">
   document.addEventListener('astro:page-load', () => {
     const header = document.getElementById("site-header");
+    if (!header) return;
     const logoWrapper = document.getElementById("logo-wrapper");
     const navLinksWrapper = document.getElementById("nav-links-wrapper");
     const themeWrapper = document.getElementById("theme-wrapper");
