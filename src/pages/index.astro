@@ -7,7 +7,7 @@ import HamburgerMenu from "@/components/HamburgerMenu.astro";
 import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
 import "@/styles/global.css";
 
-import { initHeroHeight, initSmoothScroll } from "@/scripts/pageHelpers.js";
+// import { initHeroHeight, initSmoothScroll } from "@/scripts/pageHelpers.js";
 
 ---
 
@@ -18,15 +18,10 @@ import { initHeroHeight, initSmoothScroll } from "@/scripts/pageHelpers.js";
 
     <FloatingDots dotCount={160} clipPercent={50} />
 
-    <div class="md:hidden absolute top-24 left-0 w-full z-60 px-16 pointer-events-none">
+    <div class="md:hidden absolute top-12 sm:top-32 left-0 w-full z-60 px-6 sm:px-16 pointer-events-none">
       <div class="flex justify-end items-center w-full pointer-events-auto">
-        <div class="flex items-center space-x-6">
-          <div id="theme-wrapper" class="inline-flex items-center">
-            <ThemeIcon />
-          </div>
-          <div id="menu-wrapper" class="inline-flex items-center">
-            <HamburgerMenu /> 
-          </div>
+        <div id="menu-wrapper" class="inline-flex items-center">
+          <HamburgerMenu /> 
         </div>
       </div>
     </div>
@@ -39,25 +34,25 @@ import { initHeroHeight, initSmoothScroll } from "@/scripts/pageHelpers.js";
         <BackgroundSVG />
       </div>
 
-      <div class="relative z-20 w-full max-w-7xl mx-auto px-16 grid grid-cols-1 lg:grid-cols-2 gap-8 pt-24 md:pt-32">
+      <div class="relative z-20 w-full max-w-7xl mx-auto px-6 sm:px-16 grid grid-cols-1 lg:grid-cols-2 gap-8 pt-12 sm:pt-32">
         
         <!-- Left Column: Hero Info -->
         <div class="flex flex-col md:flex-row lg:flex-col items-start md:justify-between lg:justify-start text-neutral-800 dark:text-neutral-200 md:gap-12 lg:gap-0">
   
         <div class="flex flex-col space-y-2 w-full">
           <div class="flex items-center justify-between w-full">
-            <h1 class="text-2xl xtall:text-3xl">Michael Mulek</h1>
+            <h1 class="text-2xl xtall:text-3xl font-bold">Michael Mulek</h1>
             
           </div>
 
-          <p class="text-sm xtall:text-base">Systems Engineer</p>
+          <p class="text-base xtall:text-base font-medium">Systems Engineer</p>
           <p class="text-sm xtall:text-base">Let's dive into what I've been working on! 🚀💻</p>
 
-          <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mt-4">
-            <a href="/about" class="px-6 py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition">
+          <div class="flex flex-row space-x-3 sm:space-x-4 mt-4">
+            <a href="/about" class="px-2 py-2 md:px-6 md:py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition">
               Learn More
             </a>
-            <a href="/projects" class="px-6 py-3 border border-accent text-accent font-semibold rounded-lg hover:bg-accent/10 transition">
+            <a href="/projects" class="px-2 py-2 md:px-6 md:py-3 border border-accent text-accent font-semibold rounded-lg hover:bg-accent/10 transition">
               View Projects
             </a>
           </div>
@@ -73,7 +68,7 @@ import { initHeroHeight, initSmoothScroll } from "@/scripts/pageHelpers.js";
       </div>
 
         <!-- Right Column: About Summary -->
-        <div class="flex flex-col items-center md:items-start text-center md:text-left text-neutral-800 dark:text-neutral-200">
+        <div class="hidden md:flex flex-col items-center md:items-start text-center md:text-left text-neutral-800 dark:text-neutral-200">
           <h2 class="text-xl font-semibold mb-4 text-accent">About Me</h2>
           <div class="space-y-4 text-sm xtall:text-base">
             <p class="text-sm md:text-base">
@@ -102,16 +97,20 @@ import { initHeroHeight, initSmoothScroll } from "@/scripts/pageHelpers.js";
 
   <div
     id="hidden-menu"
-    class="hidden-menu fixed inset-0 bg-neutral-100/60 dark:bg-neutral-900/60 backdrop-blur-sm
-          flex items-center justify-center overflow-auto z-50 md:hidden"
+    class="hidden-menu fixed inset-0 bg-neutral-100/90 dark:bg-neutral-900/90 backdrop-blur-md
+          flex flex-col items-center justify-center overflow-auto z-50 md:hidden"
   >
-    <ul class="flex flex-col p-4 space-y-4 text-neutral-800 dark:text-neutral-200 text-2xl">
-      <li><a href="/" class="hover:text-blue-500">Home</a></li>
-      <li><a href="/about" class="hover:text-blue-500">About</a></li>
-      <li><a href="/projects" class="hover:text-blue-500">Projects</a></li>
-      <li><a href="/blog" class="hover:text-blue-500">Blog</a></li>
-      <li><a href="/contact" class="hover:text-blue-500">Contact</a></li>
+    <ul class="flex flex-col p-4 space-y-6 text-neutral-800 dark:text-neutral-200 text-3xl font-bold text-center">
+      <li><a href="/" class="hover:text-accent transition">Home</a></li>
+      <li><a href="/about" class="hover:text-accent transition">About</a></li>
+      <li><a href="/projects" class="hover:text-accent transition">Projects</a></li>
+      <li><a href="/blog" class="hover:text-accent transition">Blog</a></li>
+      <li><a href="/contact" class="hover:text-accent transition">Contact</a></li>
     </ul>
+
+    <div class="mt-12 pt-8 border-t border-neutral-300 dark:border-neutral-700 w-24 flex justify-center">
+      <ThemeIcon />
+    </div>
   </div>
 </div>
 
@@ -120,7 +119,7 @@ import { initHeroHeight, initSmoothScroll } from "@/scripts/pageHelpers.js";
   import { initHeroHeight, initSmoothScroll } from "/scripts/pageHelpers.js";
 
   document.addEventListener('astro:page-load', () => {
-    initHeroHeight();
+    // initHeroHeight();
     initSmoothScroll();
   });
 </script>
