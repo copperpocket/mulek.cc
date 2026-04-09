@@ -9,6 +9,26 @@ import "@/styles/global.css";
 
 // import { initHeroHeight, initSmoothScroll } from "@/scripts/pageHelpers.js";
 
+// Helper to calculate age based on a birthdate
+const getAge = (birthDate: string) => {
+  const today = new Date();
+  const birth = new Date(birthDate);
+  let age = today.getFullYear() - birth.getFullYear();
+  const monthDiff = today.getMonth() - birth.getMonth();
+  
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+    age--;
+  }
+  return age;
+};
+
+// Enter the birthdates here (YYYY-MM-DD)
+const gertieAge = getAge("2022-09-11");
+const duckyAge = getAge("2023-04-06");
+const salemAge = getAge("2018-07-17");
+const oliverAge = getAge("2019-02-08");
+
+
 ---
 
 <MainLayout title="mulek.cc - Home">
@@ -72,7 +92,9 @@ import "@/styles/global.css";
           <h2 class="text-xl font-semibold mb-4 text-accent">About Me</h2>
           <div class="space-y-4 text-sm xtall:text-base">
             <p class="text-sm md:text-base">
-              Hi, I'm Mike. I'm from Minnesota, where I live with my partner Chelsea and our four pets - dogs Gertie and Ducky, and cats Salem and Oliver.
+              Hi, I'm Mike. I'm from 
+              <a href="https://www.exploreminnesota.com" target="_blank" rel="noopener noreferrer" class="text-accent font-semibold hover:underline">Minnesota</a>, 
+              where I live with my partner Chelsea. We share our home with two dogs, Gertie ({gertieAge}) and Ducky ({duckyAge}), and two cats, Salem ({salemAge}) and Oliver ({oliverAge}).
             </p>
             <p class="text-sm md:text-base">
               I'm passionate about self-hosting and home lab projects.
