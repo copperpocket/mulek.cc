@@ -151,26 +151,6 @@ const isActive = (path: string) =>
   });
 </script>
 
-<script>
-  document.addEventListener('astro:page-load', () => {
-    const menuBtn = document.getElementById('menu-btn');
-    const body = document.body;
-
-    if (menuBtn) {
-      menuBtn.addEventListener('change', () => {
-        if ((menuBtn as HTMLInputElement).checked) {
-          body.classList.add('menu-open');
-        } else {
-          body.classList.remove('menu-open');
-        }
-      });
-
-      document.querySelectorAll('#hidden-menu a').forEach(link => {
-          link.addEventListener('click', () => {
-              (menuBtn as HTMLInputElement).checked = false;
-              body.classList.remove('menu-open');
-          });
-      });
-    }
-  });
+<script type="module">
+  import "/scripts/menu-toggle.js";
 </script>

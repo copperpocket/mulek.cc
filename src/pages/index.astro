@@ -9,7 +9,28 @@ import "@/styles/global.css";
 
 // import { initHeroHeight, initSmoothScroll } from "@/scripts/pageHelpers.js";
 
+// Helper to check for birthday and calculate age
+const getAge = (birthDate: string) => {
+  const today = new Date();
+  const [year, month, day] = birthDate.split('-').map(Number);
+  const birth = new Date(year, month - 1, day);
+  let age = today.getFullYear() - birth.getFullYear();
+  if (today < new Date(today.getFullYear(), month - 1, day)) age--;
+  return age;
+};
+
+const pets = [
+  { name: 'Gertie', bday: '09-11', age: getAge("2022-09-11") },
+  { name: 'Ducky', bday: '04-06', age: getAge("2023-04-06") },
+  { name: 'Salem', bday: '07-17', age: getAge("2018-07-17") },
+  { name: 'Oliver', bday: '02-08', age: getAge("2019-02-08") },
+];
+
 ---
+
+<script type="module">
+  import "/scripts/menu-toggle.js";
+</script>
 
 <MainLayout title="mulek.cc - Home">
   <TwSizeIndicator />
@@ -72,7 +93,14 @@ import "@/styles/global.css";
           <h2 class="text-xl font-semibold mb-4 text-accent">About Me</h2>
           <div class="space-y-4 text-sm xtall:text-base">
             <p class="text-sm md:text-base">
-              Hi, I'm Mike. I'm from Minnesota, where I live with my partner Chelsea and our four pets - dogs Gertie and Ducky, and cats Salem and Oliver.
+              Hi, I'm Mike. I'm from 
+              <a href="https://www.exploreminnesota.com" target="_blank" rel="noopener noreferrer" class="text-accent font-semibold hover:underline">
+              Minnesota</a><span class="inline-block text-yellow-500 dark:text-yellow-400 animate-pulse ml-1">⭐</span>,
+              where I live with my partner Chelsea. We share our home with our dogs, 
+              Gertie ({pets[0].age}<span data-bday={pets[0].bday}></span>) & 
+              Ducky ({pets[1].age}<span data-bday={pets[1].bday}></span>), and cats,
+              Salem ({pets[2].age}<span data-bday={pets[2].bday}></span>) &
+              Oliver ({pets[3].age}<span data-bday={pets[3].bday}></span>).
             </p>
             <p class="text-sm md:text-base">
               I'm passionate about self-hosting and home lab projects.
@@ -115,40 +143,27 @@ import "@/styles/global.css";
 </div>
 
 </MainLayout>
-<script type="module">
-  import { initHeroHeight, initSmoothScroll } from "/scripts/pageHelpers.js";
-
-  document.addEventListener('astro:page-load', () => {
-    // initHeroHeight();
-    initSmoothScroll();
-  });
-</script>
 
 <script>
-  function setupMobileMenu() {
-    const menuBtn = document.getElementById('menu-btn') as HTMLInputElement;
-    const body = document.body;
-    const hiddenMenu = document.getElementById('hidden-menu');
-
-    if (menuBtn && hiddenMenu) {
-      menuBtn.addEventListener('change', (e) => {
-        const target = e.target as HTMLInputElement;
-        
-        if (target.checked) {
-          body.classList.add('menu-open');
-        } else {
-          body.classList.remove('menu-open');
-        }
-      });
-
-      hiddenMenu.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-          menuBtn.checked = false;
-          body.classList.remove('menu-open');
-        });
-      });
-    }
+  function checkBirthdays() {
+    const today = new Date();
+    const currentMonthDay = `${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    
+    const birthdaySpans = document.querySelectorAll('[data-bday]');
+    
+    birthdaySpans.forEach(span => {
+      // Clear previous content to avoid double emojis if the event fires twice
+      span.textContent = ''; 
+      
+      if (span.getAttribute('data-bday') === currentMonthDay) {
+        span.textContent = ' 🎂';
+        span.classList.add('animate-bounce', 'inline-block');
+      }
+    });
   }
 
-  document.addEventListener('astro:page-load', setupMobileMenu);
+  // Listen for Astro's page load event to handle View Transitions
+  document.addEventListener('astro:page-load', () => {
+    checkBirthdays();
+  });
 </script>
