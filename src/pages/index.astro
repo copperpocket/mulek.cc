@@ -39,60 +39,63 @@ const pets = [
 
     <FloatingDots dotCount={160} clipPercent={50} />
 
-    <div class="md:hidden absolute top-12 sm:top-32 left-0 w-full z-60 px-6 sm:px-16 pointer-events-none">
+    <div class="sm:hidden fixed top-8 left-0 w-full z-60 px-12 pointer-events-none">
       <div class="flex justify-end items-center w-full pointer-events-auto">
-        <div id="menu-wrapper" class="inline-flex items-center">
+        
+        <div class="p-2 rounded-full">
+          <ThemeIcon />
+        </div>
+
+        <div id="menu-wrapper" class="inline-flex items-center p-2 rounded-full">
           <HamburgerMenu /> 
         </div>
+        
       </div>
     </div>
 
     <section
       id="hero-section"
-      class="absolute inset-0 flex items-start bg-body dark:bg-body-dark"
+      class="absolute inset-0 flex items-center justify-center bg-body dark:bg-body-dark"
     >
       <div class="absolute inset-0 z-10">
         <BackgroundSVG />
       </div>
 
-      <div class="relative z-20 w-full max-w-7xl mx-auto px-6 sm:px-16 grid grid-cols-1 lg:grid-cols-2 gap-8 pt-12 sm:pt-32">
+      <div class="relative z-20 w-full max-w-7xl mx-auto px-6 sm:px-16 grid grid-cols-1 lg:grid-cols-2 gap-8">
         
         <!-- Left Column: Hero Info -->
-        <div class="flex flex-col md:flex-row lg:flex-col items-start md:justify-between lg:justify-start text-neutral-800 dark:text-neutral-200 md:gap-12 lg:gap-0">
+        <div class="flex flex-col sm:flex-row lg:flex-col items-center sm:items-start sm:justify-between lg:justify-start text-neutral-800 dark:text-neutral-200 sm:gap-12 lg:gap-0">
   
-        <div class="flex flex-col space-y-2 w-full">
-          <div class="flex items-center justify-between w-full">
-            <h1 class="text-2xl xtall:text-3xl font-bold">Michael Mulek</h1>
-            
-          </div>
+          <div class="flex flex-col space-y-3 w-fit sm:w-full text-left">
+            <div class="flex items-center justify-between w-full">
+              <h1 class="text-4xl font-bold">Michael Mulek</h1>
+            </div>
 
-          <p class="text-base xtall:text-base font-medium">Systems Engineer</p>
-          <p class="text-sm xtall:text-base">Let's dive into what I've been working on! 🚀💻</p>
+            <p class="text-lg font-medium">Systems Engineer</p>
+            <p class="text-base">Let's dive into what I've been working on! 🚀💻</p>
 
-          <div class="flex flex-row space-x-3 sm:space-x-4 mt-4">
-            <a href="/about" class="px-2 py-2 md:px-6 md:py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition">
-              Learn More
-            </a>
-            <a href="/projects" class="px-2 py-2 md:px-6 md:py-3 border border-accent text-accent font-semibold rounded-lg hover:bg-accent/10 transition">
-              View Projects
-            </a>
+            <div class="flex flex-row space-x-3 sm:space-x-4 mt-4">
+              <a href="/about" class="px-4 py-2 sm:px-6 sm:py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition">
+                Learn More
+              </a>
+              <a href="/projects" class="px-4 py-2 sm:px-6 sm:py-3 border border-accent text-accent font-semibold rounded-lg hover:bg-accent/10 transition">
+                View Projects
+              </a>
+            </div>
           </div>
+          
+          <nav class="hidden sm:flex flex-col space-y-2 md:mt-0 lg:mt-8 pt-8 border-t border-neutral-300 dark:border-neutral-700 min-w-[120px]">
+            <a href="/about" class="nav-link">About</a>
+            <a href="/blog" class="nav-link">Blog</a>
+            <a href="/contact" class="nav-link">Contact</a>
+            <a href="/projects" class="nav-link">Projects</a>
+          </nav>
         </div>
-        
-        <nav class="hidden md:flex flex-col space-y-2 md:mt-0 lg:mt-8 pt-8 border-t border-neutral-300 dark:border-neutral-700 min-w-[120px]">
-          <a href="/" class="nav-link active">Home</a>
-          <a href="/about" class="nav-link">About</a>
-          <a href="/projects" class="nav-link">Projects</a>
-          <a href="/blog" class="nav-link">Blog</a>
-          <a href="/contact" class="nav-link">Contact</a>
-        </nav>
-      </div>
 
         <!-- Right Column: About Summary -->
-        <div class="hidden md:flex flex-col items-center md:items-start text-center md:text-left text-neutral-800 dark:text-neutral-200">
-          <h2 class="text-xl font-semibold mb-4 text-accent">About Me</h2>
-          <div class="space-y-4 text-sm xtall:text-base">
-            <p class="text-sm md:text-base">
+        <div class="hidden sm:flex flex-col items-center sm:items-start text-center sm:text-left text-neutral-800 dark:text-neutral-200">
+          <div class="space-y-4 sm:text-base text-xs">
+            <p>
               Hi, I'm Mike. I'm from 
               <a href="https://www.exploreminnesota.com" target="_blank" rel="noopener noreferrer" class="text-accent font-semibold hover:underline">
               Minnesota</a><span class="inline-block text-yellow-500 dark:text-yellow-400 animate-pulse ml-1">⭐</span>,
@@ -102,20 +105,19 @@ const pets = [
               Salem ({pets[2].age}<span data-bday={pets[2].bday}></span>) &
               Oliver ({pets[3].age}<span data-bday={pets[3].bday}></span>).
             </p>
-            <p class="text-sm md:text-base">
-              I'm passionate about self-hosting and home lab projects.
+            <p>
+              I'm passionate about self-hosting and home lab <a href="/contact" class="text-accent font-semibold hover:underline">projects.</a>
               I love experimenting with new tools, managing my own infrastructure, and learning through
               hands-on projects that push me to understand systems at a deeper level.
             </p>
-            <p class="text-sm md:text-base">
+            <p>
               I work as a Systems Engineer at
               <a href="https://www.vc3.com" target="_blank" rel="noopener noreferrer" class="text-accent font-semibold hover:underline">VC3</a>,
               helping businesses optimize their IT environments. I bring over 6 years of professional experience in the industry, with a background spanning infrastructure, automation, and technical support.
             </p>
-            <p class="text-sm md:text-base">
+            <p>
               Feel free to reach out through my <a href="/contact" class="text-accent font-semibold hover:underline">contact page</a> - I'd love to connect.
             </p>
-            <a href="/about" class="inline-block text-accent font-semibold hover:underline text-sm">Learn more →</a>
           </div>
         </div>
 
@@ -136,9 +138,6 @@ const pets = [
       <li><a href="/contact" class="hover:text-accent transition">Contact</a></li>
     </ul>
 
-    <div class="mt-12 pt-8 border-t border-neutral-300 dark:border-neutral-700 w-24 flex justify-center">
-      <ThemeIcon />
-    </div>
   </div>
 </div>
 
