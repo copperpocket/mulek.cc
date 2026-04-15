@@ -1,8 +1,6 @@
 import nodemailer from 'nodemailer';
 
 export const POST = async ({ request }) => {
-  const isDev = import.meta.env.DEV; // Detects if dev environment
-  
   // Environment variables
   const host = import.meta.env.SMTP_HOST;
   const port = parseInt(import.meta.env.SMTP_PORT) || 2525;
@@ -15,27 +13,23 @@ export const POST = async ({ request }) => {
     const { name, email, message, captcha } = data;
 
     // --- hCaptcha Verification ---
-    if (!isDev) {
-      const verifyUrl = 'https://hcaptcha.com/siteverify';
-      const response = await fetch(verifyUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          response: captcha,
-          secret: secret,
-        }).toString(),
-      });
-      const verification = await response.json();
+    const verifyUrl = 'https://hcaptcha.com/siteverify';
+    const response = await fetch(verifyUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        response: captcha,
+        secret: secret,
+      }).toString(),
+    });
+    const verification = await response.json();
 
-      if (!verification.success) {
-        console.error("hCaptcha REJECTED the request. Error codes:", verification['error-codes']);
-        return new Response(JSON.stringify({ 
-          success: false, 
-          message: `Captcha rejected by server: ${verification['error-codes']?.join(', ')}`
-        }), { status: 403 });
-      }
-    } else {
-      console.log("Localhost detected: Skipping hCaptcha verification.");
+    if (!verification.success) {
+      console.error("hCaptcha REJECTED the request. Error codes:", verification['error-codes']);
+      return new Response(JSON.stringify({ 
+        success: false, 
+        message: `Captcha rejected by server: ${verification['error-codes']?.join(', ')}`
+      }), { status: 403 });
     }
 
     // --- Mail Sending Logic ---

@@ -9,10 +9,18 @@ export function setupFormHandler() {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    const captchaToken = hcaptcha.getResponse();
+
+    if (!captchaToken) {
+      statusDiv.textContent = 'Please complete the captcha puzzle.';
+      return;
+    }
+
     const data = {
       name: form.name.value.trim(),
       email: form.email.value.trim(),
       message: form.message.value.trim(),
+      captcha: captchaToken,
     };
 
     // Basic validation

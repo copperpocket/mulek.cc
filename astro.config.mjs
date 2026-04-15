@@ -11,8 +11,11 @@ export default defineConfig({
   },
 
   output: 'server',
-
   adapter: node({
     mode: "standalone",
   }),
+  server: {
+    host: true, // Same as --host 0.0.0.0
+    allowedHosts: ['mulek.cc'],
+  },
 });
