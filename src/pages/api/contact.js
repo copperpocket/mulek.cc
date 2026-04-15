@@ -20,7 +20,10 @@ export const POST = async ({ request }) => {
       const response = await fetch(verifyUrl, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: params.toString(),
+        body: new URLSearchParams({
+          response: captcha,
+          secret: secret,
+        }).toString(),
       });
       const verification = await response.json();
 
