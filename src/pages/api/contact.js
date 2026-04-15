@@ -1,59 +1,59 @@
 import nodemailer from 'nodemailer';
 
-const RECIPIENT_EMAIL = 'info@mulek.cc';
-
-// Use msmtp/sendmail or SMTP
-const transporter = nodemailer.createTransport({
-  sendmail: true,
-  newline: 'unix',
-  path: '/usr/bin/msmtp', // adjust if needed
-});
-
 export const POST = async ({ request }) => {
+  // Environment variables
+  const host = import.meta.env.SMTP_HOST;
+  const port = parseInt(import.meta.env.SMTP_PORT) || 2525;
+  const user = import.meta.env.SMTP_USER;
+  const pass = import.meta.env.SMTP_PASS;
+  const secret = import.meta.env.HCAPTCHA_SECRET_KEY;
+
   try {
-    const data = await request.json(); // parse JSON payload
+    const data = await request.json();
+    const { name, email, message, captcha } = data;
 
-    const name = data.name?.trim();
-    const email = data.email?.trim();
-    const message = data.message?.trim();
+    // --- hCaptcha Verification ---
+    const verifyUrl = 'https://hcaptcha.com/siteverify';
+    const response = await fetch(verifyUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        response: captcha,
+        secret: secret,
+      }).toString(),
+    });
+    const verification = await response.json();
 
-    if (!name || !email || !message) {
-      return new Response(JSON.stringify({ success: false, message: 'Missing required fields.' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
+    if (!verification.success) {
+      console.error("hCaptcha REJECTED the request. Error codes:", verification['error-codes']);
+      return new Response(JSON.stringify({ 
+        success: false, 
+        message: `Captcha rejected by server: ${verification['error-codes']?.join(', ')}`
+      }), { status: 403 });
     }
 
-    // Validate email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return new Response(JSON.stringify({ success: false, message: 'Invalid email address.' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
+    // --- Mail Sending Logic ---
+    const transporter = nodemailer.createTransport({
+      host: host,
+      port: port,
+      secure: port === 465 || port === 8465, // Only true for "Implicit" ports
+      auth: { user, pass },
+      requireTLS: true, // Forces encryption
+      proxy: false 
+    });
 
-    // Send email
     await transporter.sendMail({
       from: 'info@mulek.cc',
       replyTo: `"${name}" <${email}>`,
-      to: RECIPIENT_EMAIL,
+      to: 'info@mulek.cc',
       subject: `Contact Form Submission from ${name}`,
       text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
-      html: `<p><strong>Name:</strong> ${name}</p>
-             <p><strong>Email:</strong> ${email}</p>
-             <p><strong>Message:</strong> ${message.replace(/\n/g, '<br>')}</p>`,
     });
 
-    return new Response(
-      JSON.stringify({ success: true, message: 'Your message has been sent successfully!' }),
-      { status: 200, headers: { 'Content-Type': 'application/json' } }
-    );
+    return new Response(JSON.stringify({ success: true, message: "Sent!" }), { status: 200 });
+    
   } catch (error) {
-    console.error('Email submission error:', error);
-    return new Response(
-      JSON.stringify({ success: false, message: 'Internal server error. Please try again later.' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
+    console.error('API Error:', error);
+    return new Response(JSON.stringify({ success: false, message: error.message }), { status: 500 });
   }
 };

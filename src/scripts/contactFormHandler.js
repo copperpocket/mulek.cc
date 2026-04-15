@@ -1,6 +1,5 @@
 /**
  * Setup form submission for the contact form.
- * Debug-enabled version
  */
 export function setupFormHandler() {
   const form = document.getElementById('contact-form');
@@ -12,58 +11,56 @@ export function setupFormHandler() {
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    console.log('Form submit intercepted!'); // DEBUG
-
     submitButton.disabled = true;
     submitButton.textContent = 'Sending...';
     formStatus.textContent = '';
     formStatus.classList.remove('text-green-500', 'text-red-500');
 
     try {
-      const formData = new FormData(form);
-
-      // 1. Check if hCaptcha script is even loaded yet
+      // 1. Check if hCaptcha script is loaded
       if (typeof hcaptcha === 'undefined') {
-        throw new Error('Security check is still loading. Please wait a moment and try again.');
+        throw new Error('Security check is still loading. Please wait a moment.');
       }
 
-      // 2. Manually get the token from hCaptcha
+      // 2. Get the token
       const hCaptchaToken = hcaptcha.getResponse();
 
-      // 3. Check if the user actually did the captcha
+      // 3. Verify user completed captcha
       if (!hCaptchaToken) {
-        throw new Error('Captcha missing. Please complete verification.');
+        throw new Error('Please complete the captcha verification.');
       }
 
-      // 4. Append it to your FormData object
-      formData.append('h-captcha-response', hCaptchaToken);
+      // 4. Build a clean JSON payload
+      const formData = new FormData(form);
+      const payload = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        message: formData.get('message'),
+        captcha: hCaptchaToken, // This matches the 'captcha' variable in your contact.js
+      };
 
-      const serializedBody = Array.from(formData.entries())
-        .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-        .join('&');
-
-      console.log('Serialized form data with token:', serializedBody); // DEBUG
-
+      // 5. Send as JSON
       const apiResponse = await fetch('/api/contact', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: serializedBody,
+        headers: { 
+          'Content-Type': 'application/json' 
+        },
+        body: JSON.stringify(payload),
       });
 
-      console.log('API response status:', apiResponse.status); // DEBUG
       const result = await apiResponse.json();
-      console.log('API response JSON:', result); // DEBUG
 
-      if (result.success) {
-        formStatus.textContent = result.message;
+      if (apiResponse.ok && result.success) {
+        formStatus.textContent = result.message || 'Message sent successfully!';
         formStatus.classList.add('text-green-500');
         form.reset();
         hcaptcha.reset();
       } else {
+        // Handle 403 (Captcha fail) or 500 (Mail fail)
         throw new Error(result.message || 'Server returned an error.');
       }
     } catch (error) {
-      console.error('Form handler error:', error); // DEBUG
+      console.error('Form handler error:', error);
       formStatus.textContent = error instanceof Error ? error.message : 'A network error occurred.';
       formStatus.classList.add('text-red-500');
     } finally {

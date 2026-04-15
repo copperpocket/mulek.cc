@@ -5,20 +5,43 @@ import FloatingDots from "@/components/FloatingDots.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import "@/styles/global.css";
+import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
 ---
 
 <MainLayout title="About - mulek.cc" description="Learn more about Michael Scott Mulek - Systems Engineer, homelab enthusiast, and developer.">
+  <TwSizeIndicator />
   <FloatingDots />
   <Header />
 
-  <main class="relative z-20 container mx-auto py-16 text-neutral-800 dark:text-neutral-200">
+  <main class="relative z-20 container mx-auto pt-8 sm:pt-16 pb-8 px-4 text-neutral-800 dark:text-neutral-200">
     
-    <section id="about-hero" class="pt-24 pb-12 flex flex-col items-center text-center">
+    <section id="about-hero" class="flex flex-col items-center text-center">
       <Avatar />
       <h1 class="text-4xl md:text-5xl font-extrabold text-accent mb-4 mt-4">About Me</h1>
-      <p class="text-lg max-w-3xl">
-        This page goes deeper into my professional journey, technical background, and what drives my passion for systems engineering and development.
-      </p>
+    </section>
+
+    <section id="about-me" class="flex flex-col items-center">
+      <div id="card-about-me"
+        class="w-full max-w-3xl p-6 rounded-xl space-y-4 
+               bg-accent/20 dark:bg-neutral-900 shadow-xl"
+      >
+        <p class="text-sm md:text-base">
+          Hi, I'm Mike. I'm from Minnesota, where I live with my partner Chelsea and our four pets - dogs Gertie and Ducky, and cats Salem and Oliver.
+        </p>
+        <p class="text-sm md:text-base">
+          I'm passionate about self-hosting and home lab projects.
+          I love experimenting with new tools, managing my own infrastructure, and learning through
+          hands-on projects that push me to understand systems at a deeper level.
+        </p>
+        <p class="text-sm md:text-base">
+          I work as a Systems Engineer at
+          <a href="https://www.vc3.com" target="_blank" rel="noopener noreferrer" class="text-accent font-semibold hover:underline">VC3</a>,
+          helping businesses optimize their IT environments. I bring over 6 years of professional experience in the industry, with a background spanning infrastructure, automation, and technical support.
+        </p>
+        <p class="text-sm md:text-base">
+          Feel free to reach out through my <a href="/contact" class="text-accent font-semibold hover:underline">contact page</a> - I'd love to connect.
+        </p>
+      </div>
     </section>
 
     <section id="about-site" class="mt-16 mb-24 flex flex-col items-center">
@@ -51,31 +74,7 @@ import "@/styles/global.css";
       </div>
     </section>
 
-    <section id="about-me" class="mt-16 mb-24 flex flex-col items-center">
-      <h2 class="text-2xl font-semibold mb-4 text-center">Who I Am</h2>
-      
-      <div id="card-about-me"
-        class="w-full max-w-3xl p-6 rounded-xl space-y-4 
-               bg-accent/20 dark:bg-neutral-900 shadow-xl"
-      >
-        <p class="text-sm md:text-base">
-          Hi, I'm Mike. I'm from Minnesota, where I live with my partner Chelsea and our four pets - dogs Gertie and Ducky, and cats Salem and Oliver.
-        </p>
-        <p class="text-sm md:text-base">
-          I'm passionate about self-hosting and home lab projects.
-          I love experimenting with new tools, managing my own infrastructure, and learning through
-          hands-on projects that push me to understand systems at a deeper level.
-        </p>
-        <p class="text-sm md:text-base">
-          I work as a Systems Engineer at
-          <a href="https://www.vc3.com" target="_blank" rel="noopener noreferrer" class="text-accent font-semibold hover:underline">VC3</a>,
-          helping businesses optimize their IT environments. I bring over 6 years of professional experience in the industry, with a background spanning infrastructure, automation, and technical support.
-        </p>
-        <p class="text-sm md:text-base">
-          Feel free to reach out through my <a href="/contact" class="text-accent font-semibold hover:underline">contact page</a> - I'd love to connect.
-        </p>
-      </div>
-    </section>
+
 
     <section id="about-technical" class="mt-16 mb-24 flex flex-col items-center">
       <h2 class="text-2xl font-semibold mb-4 text-center">My Technical Foundation</h2>

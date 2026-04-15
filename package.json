@@ -4,6 +4,7 @@
   "version": "0.0.2",
   "scripts": {
     "dev": "astro dev",
+    "start": "node ./dist/server/entry.mjs",
     "build": "astro build",
     "start": "node ./dist/server/entry.mjs",
     "preview": "astro preview",
