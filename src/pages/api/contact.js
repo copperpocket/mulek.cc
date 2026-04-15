@@ -20,14 +20,15 @@ export const POST = async ({ request }) => {
       const response = await fetch(verifyUrl, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `response=${captcha}&secret=${secret}`,
+        body: params.toString(),
       });
       const verification = await response.json();
 
       if (!verification.success) {
+        console.error("hCaptcha REJECTED the request. Error codes:", verification['error-codes']);
         return new Response(JSON.stringify({ 
           success: false, 
-          message: "Captcha verification failed." 
+          message: `Captcha rejected by server: ${verification['error-codes']?.join(', ')}`
         }), { status: 403 });
       }
     } else {
