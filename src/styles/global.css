@@ -113,3 +113,13 @@ body.menu-open #hidden-menu {
 .nav-link.active {
   @apply text-accent;
 }
+
+/* Reusable card container */
+.card {
+  @apply bg-accent/20 dark:bg-neutral-900 shadow-xl rounded-xl;
+}
+
+/* Optional size variants */
+.card-padding {
+  @apply p-6 md:p-10;
+}

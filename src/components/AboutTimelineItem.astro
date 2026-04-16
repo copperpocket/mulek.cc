@@ -1,0 +1,26 @@
+---
+const {
+  title,
+  company,
+  description,
+  side = "left", // "left" | "right"
+} = Astro.props;
+
+const isRight = side === "right";
+---
+
+<div class={`relative mb-12 flex justify-between items-center w-full ${isRight ? "flex-row-reverse" : ""}`}>
+  
+  <!-- Content -->
+  <div class={`w-full sm:w-[45%] ${isRight ? "sm:pl-8 text-left sm:text-right" : "sm:pr-8"}`}>
+    <h4 class="font-bold text-lg text-accent">{title}</h4>
+    <p class="text-sm font-semibold opacity-80">{company}</p>
+    <p class="text-xs mt-2 leading-relaxed">{description}</p>
+  </div>
+
+  <!-- Timeline node -->
+  <div class="z-10 w-4 h-4 rounded-full bg-accent ring-4 ring-accent/20 absolute left-1/2 transform -translate-x-1/2 hidden sm:block"></div>
+
+  <!-- Spacer -->
+  <div class="hidden sm:block w-[45%]"></div>
+</div>

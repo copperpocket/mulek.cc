@@ -1,30 +1,14 @@
 ---
+// src/pages/index.astro
+
 import MainLayout from "@/layouts/MainLayout.astro";
 import FloatingDots from "@/components/FloatingDots.astro";
 import BackgroundSVG from "@/components/BackgroundSVG.astro";
 import ThemeIcon from "@/components/Theme.astro";
 import HamburgerMenu from "@/components/HamburgerMenu.astro";
 import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
+import AboutSummary from "@/components/AboutSummary.astro";
 import "@/styles/global.css";
-
-// import { initHeroHeight, initSmoothScroll } from "@/scripts/pageHelpers.js";
-
-// Helper to check for birthday and calculate age
-const getAge = (birthDate: string) => {
-  const today = new Date();
-  const [year, month, day] = birthDate.split('-').map(Number);
-  const birth = new Date(year, month - 1, day);
-  let age = today.getFullYear() - birth.getFullYear();
-  if (today < new Date(today.getFullYear(), month - 1, day)) age--;
-  return age;
-};
-
-const pets = [
-  { name: 'Gertie', bday: '09-11', age: getAge("2022-09-11") },
-  { name: 'Ducky', bday: '04-06', age: getAge("2023-04-06") },
-  { name: 'Salem', bday: '07-17', age: getAge("2018-07-17") },
-  { name: 'Oliver', bday: '02-08', age: getAge("2019-02-08") },
-];
 
 ---
 
@@ -94,31 +78,7 @@ const pets = [
 
         <!-- Right Column: About Summary -->
         <div class="hidden sm:flex flex-col items-center sm:items-start text-center sm:text-left text-neutral-800 dark:text-neutral-200">
-          <div class="space-y-4 sm:text-base text-xs">
-            <p>
-              Hi, I'm Mike. I'm from 
-              <a href="https://www.exploreminnesota.com" target="_blank" rel="noopener noreferrer" class="text-accent font-semibold hover:underline">
-              Minnesota</a><span class="inline-block text-yellow-500 dark:text-yellow-400 animate-pulse ml-1">⭐</span>,
-              where I live with my partner Chelsea. We share our home with our dogs, 
-              Gertie ({pets[0].age}<span data-bday={pets[0].bday}></span>) & 
-              Ducky ({pets[1].age}<span data-bday={pets[1].bday}></span>), and cats,
-              Salem ({pets[2].age}<span data-bday={pets[2].bday}></span>) &
-              Oliver ({pets[3].age}<span data-bday={pets[3].bday}></span>).
-            </p>
-            <p>
-              I'm passionate about self-hosting and home lab <a href="/contact" class="text-accent font-semibold hover:underline">projects.</a>
-              I love experimenting with new tools, managing my own infrastructure, and learning through
-              hands-on projects that push me to understand systems at a deeper level.
-            </p>
-            <p>
-              I work as a Systems Engineer at
-              <a href="https://www.vc3.com" target="_blank" rel="noopener noreferrer" class="text-accent font-semibold hover:underline">VC3</a>,
-              helping businesses optimize their IT environments. I bring over 6 years of professional experience in the industry, with a background spanning infrastructure, automation, and technical support.
-            </p>
-            <p>
-              Feel free to reach out through my <a href="/contact" class="text-accent font-semibold hover:underline">contact page</a> - I'd love to connect.
-            </p>
-          </div>
+          <AboutSummary />
         </div>
 
       </div>

@@ -1,0 +1,125 @@
+---
+// src/components/AboutSummary.astro
+
+const getAge = (birthDate: string) => {
+  const today = new Date();
+  const [year, month, day] = birthDate.split('-').map(Number);
+  const birth = new Date(year, month - 1, day);
+  let age = today.getFullYear() - birth.getFullYear();
+  if (today < new Date(today.getFullYear(), month - 1, day)) age--;
+  return age;
+};
+
+const pets = [
+  { name: 'Gertie', bday: '09-11', age: getAge("2022-09-11"), img: '/images/gertie1.jpeg' },
+  { name: 'Ducky', bday: '04-06', age: getAge("2023-04-06"), img: '/images/ducky1.jpeg' },
+  { name: 'Salem', bday: '07-17', age: getAge("2018-07-17") },
+  { name: 'Oliver', bday: '02-08', age: getAge("2019-02-08") },
+];
+---
+
+<div class="space-y-4 text-sm md:text-base">
+  <p>
+    Hi, I'm Mike. I'm from 
+    <a href="https://www.exploreminnesota.com" target="_blank" rel="noopener noreferrer" class="text-accent font-semibold hover:underline">
+    Minnesota</a><span class="inline-block text-yellow-500 dark:text-yellow-400 animate-pulse ml-1">⭐</span>,
+    where I live with my partner Chelsea. We share our home with our dogs, 
+    <button class="pet-link text-accent font-semibold hover:underline" data-img={pets[0].img}>{pets[0].name}</button>
+    ({pets[0].age}<span data-bday={pets[0].bday}></span>) & 
+    <button class="pet-link text-accent font-semibold hover:underline" data-img={pets[1].img}>{pets[1].name}</button>
+    ({pets[1].age}<span data-bday={pets[1].bday}></span>), and cats,
+    Salem ({pets[2].age}<span data-bday={pets[2].bday}></span>) &
+    Oliver ({pets[3].age}<span data-bday={pets[3].bday}></span>).
+  </p>
+  <p>
+    I'm passionate about self-hosting and home lab <a href="/contact" class="text-accent font-semibold hover:underline">projects.</a>
+    I love experimenting with new tools, managing my own infrastructure, and learning through
+    hands-on projects that push me to understand systems at a deeper level.
+  </p>
+  <p>
+    I work as a Systems Engineer at
+    <a href="https://www.vc3.com" target="_blank" rel="noopener noreferrer" class="text-accent font-semibold hover:underline">VC3</a>,
+    helping businesses optimize their IT environments. I bring over 6 years of professional experience in the industry, with a background spanning infrastructure, automation, and technical support.
+  </p>
+  <p>
+    Feel free to reach out through my <a href="/contact" class="text-accent font-semibold hover:underline">contact page</a> - I'd love to connect.
+  </p>
+</div>
+
+<div id="pet-modal" class="fixed inset-0 z-100 hidden items-center justify-center p-4 bg-black/70 backdrop-blur-md transition-opacity">
+  <div class="relative max-w-lg w-full bg-neutral-100 dark:bg-neutral-800 rounded-xl overflow-hidden shadow-2xl transform transition-all scale-25 opacity-0" id="modal-content">
+    
+    <button 
+      id="close-modal" 
+      class="absolute top-4 right-4 z-20 p-2 
+             bg-white dark:bg-neutral-900
+             rounded-full shadow-lg border border-neutral-300 dark:border-neutral-700
+             transition-all duration-200 hover:scale-110 active:scale-95 group"
+      aria-label="Close modal"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="3" stroke-linecap="round"></line>
+        <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="3" stroke-linecap="round"></line>
+      </svg>
+    </button>
+    
+    <img id="modal-img" src="" alt="Pet Photo" class="w-full h-auto object-cover max-h-[75vh]" />
+    
+    <div class="p-5 text-center bg-white dark:bg-neutral-800">
+      <p id="modal-caption" class="font-bold text-xl text-neutral-800 dark:text-neutral-100"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function initPetModal() {
+    const modal = document.getElementById('pet-modal');
+    const modalContent = document.getElementById('modal-content');
+    const modalImg = document.getElementById('modal-img') as HTMLImageElement;
+    const modalCaption = document.getElementById('modal-caption');
+    const closeBtn = document.getElementById('close-modal');
+    const petLinks = document.querySelectorAll('.pet-link');
+
+    const openModal = (imgSrc: string, name: string) => {
+      if (!modal || !modalImg || !modalCaption || !modalContent) return;
+      
+      modalImg.src = imgSrc;
+      modalCaption.textContent = name;
+      
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      
+      // Small timeout to allow transition to trigger
+      setTimeout(() => {
+        modalContent.classList.remove('scale-25', 'opacity-0');
+        modalContent.classList.add('scale-100', 'opacity-100');
+      }, 10);
+    };
+
+    const closeModal = () => {
+      if (!modal || !modalContent) return;
+      modalContent.classList.add('scale-25', 'opacity-0');
+      modalContent.classList.remove('scale-100', 'opacity-100');
+      
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }, 200);
+    };
+
+    petLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        const target = e.currentTarget as HTMLButtonElement;
+        openModal(target.dataset.img || '', target.textContent || '');
+      });
+    });
+
+    closeBtn?.addEventListener('click', closeModal);
+    modal?.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+  }
+
+  // Support for Astro View Transitions
+  document.addEventListener('astro:page-load', initPetModal);
+</script>
