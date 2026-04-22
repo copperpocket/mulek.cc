@@ -1,26 +1,38 @@
 ---
+// src/components/AboutTimelineItem.astro
 const {
   title,
   company,
   description,
-  side = "left", // "left" | "right"
+  date,
+  side = "left",
 } = Astro.props;
 
 const isRight = side === "right";
 ---
 
-<div class={`relative mb-12 flex justify-between items-center w-full ${isRight ? "flex-row-reverse" : ""}`}>
+<div class={`group relative mb-12 flex justify-between items-center w-full ${isRight ? "sm:flex-row-reverse" : ""}`}>
   
-  <!-- Content -->
-  <div class={`w-full sm:w-[45%] ${isRight ? "sm:pl-8 text-left sm:text-right" : "sm:pr-8"}`}>
-    <h4 class="font-bold text-lg text-accent">{title}</h4>
+  <div class={`w-full sm:w-[45%] transition-all duration-500 ease-out 
+    group-hover:translate-x-2 
+    ${isRight ? "sm:text-right sm:group-hover:-translate-x-2" : "text-left sm:group-hover:translate-x-2"}`}>
+    
+    <span class="inline-block text-xs font-mono font-bold text-neutral-500 dark:text-neutral-400 group-hover:text-accent transition-colors duration-500">
+      {date}
+    </span>
+
+    <h4 class="font-bold text-lg text-accent mt-1 transition-transform duration-500">{title}</h4>
     <p class="text-sm font-semibold opacity-80">{company}</p>
-    <p class="text-xs mt-2 leading-relaxed">{description}</p>
+    
+    <p class="text-xs mt-2 leading-relaxed opacity-70 group-hover:opacity-100 transition-opacity duration-500">
+      {description}
+    </p>
   </div>
 
-  <!-- Timeline node -->
-  <div class="z-10 w-4 h-4 rounded-full bg-accent ring-4 ring-accent/20 absolute left-1/2 transform -translate-x-1/2 hidden sm:block"></div>
+  <div class="z-10 w-4 h-4 rounded-full bg-accent absolute left-1/2 transform -translate-x-1/2 hidden sm:block">
+    <div class="absolute inset-0 rounded-full bg-accent ring-4 ring-accent/20 group-hover:scale-125 group-hover:ring-accent/40 transition-all duration-500"></div>
+    <div class="absolute inset-0 rounded-full bg-accent opacity-0 group-hover:animate-ping"></div>
+  </div>
 
-  <!-- Spacer -->
   <div class="hidden sm:block w-[45%]"></div>
 </div>
