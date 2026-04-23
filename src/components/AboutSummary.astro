@@ -21,9 +21,13 @@ const pets = [
 <div class="space-y-4 text-sm md:text-base">
   <p>
     Hi, I'm Mike. I'm based in 
-    <a href="https://www.exploreminnesota.com" target="_blank" rel="noopener noreferrer" class="text-accent font-semibold hover:underline">
-    Minnesota</a><span class="inline-block text-yellow-500 dark:text-yellow-400 animate-pulse ml-1">⭐</span>,
-    where I live with my partner Chelsea. We share our home with our companions: 
+    <a href="https://www.exploreminnesota.com/" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center text-accent font-semibold hover:underline">
+      Minnesota
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="ml-0.5 opacity-70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">
+        <line x1="7" y1="17" x2="17" y2="7"></line>
+        <polyline points="7 7 17 7 17 17"></polyline>
+      </svg>
+    </a>, where I live with my fiancé Chelsea<span class="inline-block text-yellow-500 dark:text-yellow-400 animate-pulse ml-1">❤️</span>. We share our home with our companions: 
     <button class="pet-link text-accent font-semibold hover:underline" data-img={pets[0].img}>{pets[0].name}</button>
     ({pets[0].age}<span data-bday={pets[0].bday}></span>), 
     <button class="pet-link text-accent font-semibold hover:underline" data-img={pets[1].img}>{pets[1].name}</button>
@@ -33,13 +37,19 @@ const pets = [
   </p>
   <p>
     I spend much of my time focused on self-hosting and home lab 
-    <a href="/contact" class="text-accent font-semibold hover:underline">projects.</a>
-    I prioritize experimenting with new tools and managing my own infrastructure to keep my 
+    <a href="/projects" class="text-accent font-semibold hover:underline">projects.</a>
+    I experiment with new tools and manage my own infrastructure to keep my 
     technical skills sharp and stay current with emerging technologies.
   </p>
   <p>
     I work as a Systems Engineer at
-    <a href="https://www.vc3.com" target="_blank" rel="noopener noreferrer" class="text-accent font-semibold hover:underline">VC3</a>,
+    <a href="https://www.vc3.com" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center text-accent font-semibold hover:underline">
+      VC3
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="ml-0.5 opacity-70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">
+        <line x1="7" y1="17" x2="17" y2="7"></line>
+        <polyline points="7 7 17 7 17 17"></polyline>
+      </svg>
+    </a>,
     supporting businesses within a fast-paced MSP environment. With over 6 years in the industry, my background is built on managing diverse infrastructures, automation, and high-level technical support.
   </p>
   <p>
