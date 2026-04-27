@@ -99,6 +99,9 @@ const pets = [
       modalImg.src = imgSrc;
       modalCaption.textContent = name;
       
+      // Stop background scrolling
+      document.body.style.overflow = 'hidden';
+      
       modal.classList.remove('hidden');
       modal.classList.add('flex');
       
@@ -117,6 +120,9 @@ const pets = [
       setTimeout(() => {
         modal.classList.add('hidden');
         modal.classList.remove('flex');
+        
+        // Re-enable background scrolling
+        document.body.style.overflow = '';
       }, 200);
     };
 
