@@ -16,6 +16,22 @@ import "@/styles/global.css";
   import "/scripts/menu-toggle.js";
 </script>
 
+<script is:inline>
+  const getTheme = () => {
+    if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+      return localStorage.getItem('theme');
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  };
+
+  const theme = getTheme();
+  if (theme === 'light') {
+    document.documentElement.classList.remove('dark');
+  } else {
+    document.documentElement.classList.add('dark');
+  }
+</script>
+
 <MainLayout title="mulek.cc - Home">
   <TwSizeIndicator />
 
@@ -48,7 +64,7 @@ import "@/styles/global.css";
       <div class="relative z-20 w-full max-w-7xl mx-auto px-6 sm:px-16 grid grid-cols-1 lg:grid-cols-2 gap-8">
         
         <!-- Left Column: Hero Info -->
-        <div class="flex flex-col sm:flex-row lg:flex-col items-center sm:items-start sm:justify-between lg:justify-start text-neutral-800 dark:text-neutral-200 sm:gap-12 lg:gap-0">
+        <div class="flex flex-col sm:flex-row lg:flex-col z-30 items-center sm:items-start sm:justify-between lg:justify-start text-neutral-800 dark:text-neutral-200 sm:gap-12 lg:gap-0">
   
           <div class="flex flex-col space-y-3 w-fit sm:w-full text-left">
             <div class="flex items-center justify-between w-full">
@@ -73,6 +89,7 @@ import "@/styles/global.css";
             <a href="/blog" class="nav-link">Blog</a>
             <a href="/contact" class="nav-link">Contact</a>
             <a href="/projects" class="nav-link">Projects</a>
+            <ThemeIcon />
           </nav>
         </div>
 
