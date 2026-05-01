@@ -39,7 +39,7 @@ import "@/styles/global.css";
 
     <FloatingDots dotCount={160} clipPercent={50} />
 
-    <div class="sm:hidden fixed top-8 left-0 w-full z-60 px-12 pointer-events-none">
+    <div class="fixed top-8 left-0 w-full z-60 px-12 pointer-events-none">
       <div class="flex justify-end items-center w-full pointer-events-auto">
         
         <div class="p-2 rounded-full">
@@ -83,22 +83,11 @@ import "@/styles/global.css";
               </a>
             </div>
           </div>
-          
-          <nav class="hidden sm:flex flex-col md:mt-0 lg:mt-8 pt-8 border-t border-neutral-300 dark:border-neutral-700 min-w-[120px]">
-            <a href="/about" class="nav-link">About</a>
-            <a href="/blog" class="nav-link">Blog</a>
-            <a href="/contact" class="nav-link">Contact</a>
-            <a href="/projects" class="nav-link pb-8 border-b border-neutral-300 dark:border-neutral-700">Projects</a>
-            
-            <div class="mt-6">
-              <ThemeIcon />
-            </div>
-          </nav>
         </div>
 
         <!-- Right Column: About Summary -->
         <div class="hidden sm:flex flex-col items-center sm:items-start text-center sm:text-left text-neutral-800 dark:text-neutral-200">
-          <AboutSummary />
+          <AboutSummary short={true} />
         </div>
 
       </div>
@@ -108,7 +97,7 @@ import "@/styles/global.css";
   <div
     id="hidden-menu"
     class="hidden-menu fixed inset-0 bg-neutral-100/60 dark:bg-neutral-900/60 backdrop-blur-sm
-          flex flex-col items-center justify-center overflow-auto z-50 md:hidden"
+          flex flex-col items-center justify-center overflow-auto z-50"
   >
     <ul class="flex flex-col p-4 space-y-6 text-neutral-800 dark:text-neutral-200 text-3xl font-bold text-center">
       <li><a href="/" class="hover:text-accent transition">Home</a></li>
