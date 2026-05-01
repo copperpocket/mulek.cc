@@ -6,6 +6,7 @@
     "dev": "astro dev",
     "start": "node ./dist/server/entry.mjs",
     "build": "astro build",
+    "start": "node ./dist/server/entry.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },
