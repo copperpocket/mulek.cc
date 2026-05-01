@@ -1,6 +1,15 @@
 ---
 // src/components/AboutSummary.astro
 
+interface Props {
+  short?: boolean;
+}
+
+const { short = false } = Astro.props;
+
+// Career Start Date
+const careerStartDate = "2018-12-30"; // Update this to your actual start date
+
 const getAge = (birthDate: string) => {
   const today = new Date();
   const [year, month, day] = birthDate.split('-').map(Number);
@@ -9,6 +18,17 @@ const getAge = (birthDate: string) => {
   if (today < new Date(today.getFullYear(), month - 1, day)) age--;
   return age;
 };
+
+// Logic for a decimal representation (e.g., 6.2)
+const getUptime = (startDate: string) => {
+  const start = new Date(startDate);
+  const now = new Date();
+  const diffInMs = now.getTime() - start.getTime();
+  const diffInYears = diffInMs / (1000 * 60 * 60 * 24 * 365.25);
+  return diffInYears.toFixed(1);
+};
+
+const uptime = getUptime(careerStartDate);
 
 const pets = [
   { name: 'Gertie', bday: '09-11', age: getAge("2022-09-11"), img: '/images/gertie1.jpeg' },
@@ -19,44 +39,136 @@ const pets = [
 ---
 
 <div class="space-y-4 text-sm md:text-base">
-  <p>
-    Hi, I'm Mike. I'm based in 
-    <a href="https://www.exploreminnesota.com/" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center text-accent font-semibold hover:underline">
-      Minnesota
-      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="ml-0.5 opacity-70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">
-        <line x1="7" y1="17" x2="17" y2="7"></line>
-        <polyline points="7 7 17 7 17 17"></polyline>
-      </svg>
-    </a>, where I live with my fiancé Chelsea<span class="inline-block text-yellow-500 dark:text-yellow-400 animate-pulse ml-1">❤️</span>. We share our home with our companions: 
-    <button class="pet-link text-accent font-semibold hover:underline" data-img={pets[0].img}>{pets[0].name}</button>
-    ({pets[0].age}<span data-bday={pets[0].bday}></span>), 
-    <button class="pet-link text-accent font-semibold hover:underline" data-img={pets[1].img}>{pets[1].name}</button>
-    ({pets[1].age}<span data-bday={pets[1].bday}></span>),
-    Salem ({pets[2].age}<span data-bday={pets[2].bday}></span>), and
-    Oliver ({pets[3].age}<span data-bday={pets[3].bday}></span>).
-  </p>
-  <p>
-    I spend much of my time focused on self-hosting and home lab 
-    <a href="/projects" class="text-accent font-semibold hover:underline">projects.</a>
-    I experiment with new tools and manage my own infrastructure to keep my 
-    technical skills sharp and stay current with emerging technologies.
-  </p>
-  <p>
-    I work as a Systems Engineer at
-    <a href="https://www.vc3.com" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center text-accent font-semibold hover:underline">
-      VC3
-      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="ml-0.5 opacity-70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">
-        <line x1="7" y1="17" x2="17" y2="7"></line>
-        <polyline points="7 7 17 7 17 17"></polyline>
-      </svg>
-    </a>,
-    supporting businesses within a fast-paced MSP environment. With over 6 years in the industry, my background is built on managing diverse infrastructures, automation, and high-level technical support.
-  </p>
-  <p>
-    I'd love to hear from you! You can reach me through my 
-    <a href="/contact" class="text-accent font-semibold hover:underline">contact page</a> 
-    if you want to chat or just say hello.
-  </p>
+  {short ? (
+    /* Top intro remains the same - you liked the pet links */
+    <p>
+      I'm based in 
+      <a href="https://www.exploreminnesota.com/" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center text-accent font-semibold hover:underline">
+        Minnesota
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="ml-0.5 opacity-70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">
+          <line x1="7" y1="17" x2="17" y2="7"></line>
+          <polyline points="7 7 17 7 17 17"></polyline>
+        </svg>
+      </a>, where I live with my fiancé Chelsea<span class="inline-block text-yellow-500 dark:text-yellow-400 animate-pulse ml-1">❤️</span> and our companions: 
+      <button class="pet-link text-accent font-semibold hover:underline" data-img={pets[0].img}>{pets[0].name}</button>, 
+      <button class="pet-link text-accent font-semibold hover:underline" data-img={pets[1].img}>{pets[1].name}</button>,
+      Salem, and Oliver.
+    </p>
+
+    <div class="hidden sm:flex flex-col space-y-6 mt-4">
+  <!-- "The Console" Grid -->
+  <div class="grid grid-cols-2 gap-4">
+    <!-- Pinned Time (Central Time) -->
+    <div class="p-3 border border-neutral-200 dark:border-neutral-800 rounded-lg bg-neutral-50/50 dark:bg-neutral-900/30">
+      <span class="text-[10px] uppercase tracking-widest opacity-50 font-bold block mb-1">Local Time (CDT/CST)</span>
+      <p class="font-mono text-lg text-accent" id="local-time-display">--:--:--</p>
+    </div>
+
+    <!-- Professional Uptime -->
+    <div class="p-3 border border-neutral-200 dark:border-neutral-800 rounded-lg bg-neutral-50/50 dark:bg-neutral-900/30">
+      <span class="text-[10px] uppercase tracking-widest opacity-50 font-bold block mb-1">Professional Uptime</span>
+      <p class="font-medium">{uptime} Years</p>
+    </div>
+
+    <!-- Current Playthrough (YouTube Link) -->
+    <a 
+      href="https://www.youtube.com/@copperpocket/playlists" 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      class="group p-3 border border-neutral-200 dark:border-neutral-800 rounded-lg bg-neutral-50/50 dark:bg-neutral-900/30 hover:border-accent/50 transition-colors"
+    >
+      <span class="text-[10px] uppercase tracking-widest opacity-50 font-bold flex justify-between items-center">
+        Current Playthrough
+        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-hover:opacity-100 transition-opacity">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+          <polyline points="15 3 21 3 21 9"></polyline>
+          <line x1="10" y1="14" x2="21" y2="3"></line>
+        </svg>
+      </span>
+      <p class="font-medium truncate group-hover:text-accent transition-colors">Factorio: Space Age</p>
+    </a>
+
+    <!-- Current Project (GitHub Link) -->
+    <a 
+      href="https://github.com/copperpocket/mulek.cc" 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      class="group p-3 border border-neutral-200 dark:border-neutral-800 rounded-lg bg-neutral-50/50 dark:bg-neutral-900/30 hover:border-accent/50 transition-colors"
+    >
+      <span class="text-[10px] uppercase tracking-widest opacity-50 font-bold flex justify-between items-center">
+        Current Project
+        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-hover:opacity-100 transition-opacity">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+          <polyline points="15 3 21 3 21 9"></polyline>
+          <line x1="10" y1="14" x2="21" y2="3"></line>
+        </svg>
+      </span>
+      <p class="font-medium truncate group-hover:text-accent transition-colors">Personal Website</p>
+    </a>
+  </div>
+
+  <!-- Monochrome Tech Tags -->
+  <div class="flex flex-wrap gap-2 opacity-60">
+    {[
+      'Azure', 
+      'Active Directory', 
+      'Microsoft 365', 
+      'PowerShell',
+      'Proxmox', 
+      'OPNsense', 
+      'TrueNAS Scale', 
+      'MikroTik', 
+      'Arch Linux', 
+      'AstroJS'
+    ].map(tech => (
+      <span class="px-2 py-0.5 text-[10px] font-mono border border-neutral-300 dark:border-neutral-700 rounded-full">
+        {tech}
+      </span>
+    ))}
+  </div>
+</div>
+  ) : (
+    <>
+      <p>
+        Hi, I'm Michael. I'm based in 
+        <a href="https://www.exploreminnesota.com/" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center text-accent font-semibold hover:underline">
+          Minnesota
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="ml-0.5 opacity-70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">
+            <line x1="7" y1="17" x2="17" y2="7"></line>
+            <polyline points="7 7 17 7 17 17"></polyline>
+          </svg>
+        </a>, where I live with my fiancé Chelsea<span class="inline-block text-yellow-500 dark:text-yellow-400 animate-pulse ml-1">❤️</span>. We share our home with our companions: 
+        <button class="pet-link text-accent font-semibold hover:underline" data-img={pets[0].img}>{pets[0].name}</button>
+        ({pets[0].age}<span data-bday={pets[0].bday}></span>), 
+        <button class="pet-link text-accent font-semibold hover:underline" data-img={pets[1].img}>{pets[1].name}</button>
+        ({pets[1].age}<span data-bday={pets[1].bday}></span>),
+        Salem ({pets[2].age}<span data-bday={pets[2].bday}></span>), and
+        Oliver ({pets[3].age}<span data-bday={pets[3].bday}></span>).
+      </p>
+      <p>
+        I spend much of my time focused on self-hosting and home lab 
+        <a href="/projects" class="text-accent font-semibold hover:underline">projects.</a>
+        I experiment with new tools and manage my own infrastructure to keep my 
+        technical skills sharp and stay current with emerging technologies.
+      </p>
+      <p>
+        I work as a Systems Engineer at
+        <a href="https://www.vc3.com" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center text-accent font-semibold hover:underline">
+          VC3
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="ml-0.5 opacity-70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">
+            <line x1="7" y1="17" x2="17" y2="7"></line>
+            <polyline points="7 7 17 7 17 17"></polyline>
+          </svg>
+        </a>,
+        supporting businesses within a fast-paced MSP environment. With over 6 years in the industry, my background is built on managing diverse infrastructures, automation, and high-level technical support.
+      </p>
+      <p>
+        I'd love to hear from you! You can reach me through my 
+        <a href="/contact" class="text-accent font-semibold hover:underline">contact page</a> 
+        if you want to chat or just say hello.
+      </p>
+    </>
+  )}
 </div>
 
 <div id="pet-modal" class="fixed inset-0 z-100 hidden items-center justify-center p-4 bg-black/70 backdrop-blur-md transition-opacity">
@@ -99,6 +211,9 @@ const pets = [
       modalImg.src = imgSrc;
       modalCaption.textContent = name;
       
+      // Stop background scrolling
+      document.body.style.overflow = 'hidden';
+      
       modal.classList.remove('hidden');
       modal.classList.add('flex');
       
@@ -117,6 +232,9 @@ const pets = [
       setTimeout(() => {
         modal.classList.add('hidden');
         modal.classList.remove('flex');
+        
+        // Re-enable background scrolling
+        document.body.style.overflow = '';
       }, 200);
     };
 
@@ -135,4 +253,29 @@ const pets = [
 
   // Support for Astro View Transitions
   document.addEventListener('astro:page-load', initPetModal);
+
+  // Simple local time updater for the "fun" desktop section
+  function updateTime() {
+    const timeEl = document.getElementById('local-time-display');
+    if (timeEl) {
+      const now = new Date();
+      // Specifically targeting America/Chicago for Central Time
+      timeEl.textContent = now.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true,
+        timeZone: 'America/Chicago' 
+      });
+    }
+  }
+
+  // Handle Astro View Transitions
+  document.addEventListener('astro:page-load', () => {
+    const interval = setInterval(updateTime, 1000);
+    updateTime();
+    
+    // Cleanup interval on page navigate to prevent memory leaks
+    document.addEventListener('astro:before-preparation', () => clearInterval(interval), { once: true });
+  });
 </script>
