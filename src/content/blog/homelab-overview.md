@@ -4,7 +4,6 @@ description: "A self-hosted ecosystem that powers my personal services, experime
 pubDate: 2025-10-19
 author: "Michael Mulek"
 tags: ["homelab", "self-hosting", "infrastructure", "projects"]
-image: "/images/homelab.jpg"
 ---
 
 My **homelab** is a self-contained environment designed to power my personal services, test new technologies, and host private projects. It’s a mix of practical infrastructure and ongoing experimentation — blending automation, virtualization, and network management into a compact, efficient setup.

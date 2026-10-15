@@ -4,7 +4,6 @@ description: "A cross-genre project combining an isometric exploration game with
 pubDate: 2025-11-14
 author: "Michael Mulek"
 tags: ["game-design", "collectible", "gacha-mechanics", "rpg", "projects"]
-image: "/images/echo-protocol-concept.jpg" # Optional: A concept art or UI sketch
 ---
 
 **Echo Protocol** is a comprehensive game design project that centers around the **joy of the rare pull** and the **status of collection**. It’s built on a dual-experience foundation: an **isometric world** of exploration and activity, seamlessly tied to a deep, competitive **digital card game**.
@@ -67,4 +66,4 @@ The ultimate reward is **Status and Pride** derived from assembling a **cohesive
 
 ---
 
-This design outlines a rich meta-game where the competitive card game is both a core feature and one of the many ways a player can demonstrate their power and earn the next big pull.
+This design outlines a rich meta-game where the competitive card game is both a core feature and one of the many ways a player can demonstrate their power and earn the next big pull.

@@ -4,7 +4,6 @@ description: "A private Minecraft server that hosts builds from my friends and f
 pubDate: 2025-10-15
 author: "Michael Mulek"
 tags: ["minecraft", "gaming", "projects"]
-image: "/images/minecraft.jpg" # optional, remove if not needed
 ---
 
 My **Minecraft server**, called **Quackshire**, is a private creative world that I host myself for friends and family. It’s designed to be simple, stable, and always available — a small but personal online space for shared creativity.
