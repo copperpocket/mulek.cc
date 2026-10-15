@@ -11,20 +11,17 @@ const project = {
     description: "The current site you are viewing, built with modern web technologies including Astro.js and TailwindCSS. It showcases my projects, experience, and portfolio in a minimal and responsive design.",
     longDescription: `
         This portfolio was designed to be lightweight, fast, and fully responsive. 
-        It uses Astro.js for static site generation and TailwindCSS for utility-first styling.
+        It uses Astro.js, server-rendered on Node, and TailwindCSS for utility-first styling.
         The site also features custom particle backgrounds, smooth scrolling, and interactive project cards.
     `,
     techStack: ["Astro.js", "TailwindCSS", "JavaScript", "HTML", "CSS"],
-    screenshots: [
-        "/images/screenshots/portfolio-1.png",
-        "/images/screenshots/portfolio-2.png"
-    ],
-    url: "#",
-    github: "#"
+    screenshots: [] as string[],
+    url: "https://mulek.cc",
+    github: "https://github.com/copperpocket/mulek.cc"
 };
 ---
 
-<MainLayout>
+<MainLayout title={`${project.title} - mulek.cc`} description={project.description}>
     <FloatingDots />
     <Header />
 

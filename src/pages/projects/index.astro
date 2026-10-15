@@ -13,15 +13,15 @@ import "@/styles/global.css";
 // 1. Define your Project Data
 const projects = [
     // WebDev Category
-    { title: "Portfolio Site v2", slug: "/blog/portfolio.md", category: "WebDev", tags: ["Astro.js", "TailwindCSS"], description: "The current site you are viewing, built with modern web technologies.", url: "#", github: "#" },
-    { title: "Personal Blog", slug: "blog", category: "WebDev", tags: ["Astro.js", "Markdown"], description: "A blog where I share articles on various tech topics.", url: "#", github: "#" },
+    { title: "Portfolio Site v2", slug: "/blog/portfolio", category: "WebDev", tags: ["Astro.js", "TailwindCSS"], description: "The current site you are viewing, built with modern web technologies.", github: "https://github.com/copperpocket/mulek.cc" },
+    { title: "Personal Blog", slug: "/blog", category: "WebDev", tags: ["Astro.js", "Markdown"], description: "A blog where I share articles on various tech topics." },
     // Automation/DevOps Category
-    { title: "Homelab Overview", slug: "/blog/homelab-overview.md", category: "DevOps", tags: ["Proxmox", "TrueNAS", "OPNsense"], description: "Network diagram of my homelab environment.", url: "#", github: "#" },
-    { title: "Mailcow", slug: "/blog/mailcow.md", category: "DevOps", tags: ["Mail server", "Self hosted"], description: "This article highlights my experience configuring mailcow server.", url: "#", github: "#" },
+    { title: "Homelab Overview", slug: "/blog/homelab-overview", category: "DevOps", tags: ["Proxmox", "TrueNAS", "OPNsense"], description: "Network diagram of my homelab environment." },
+    { title: "Mailcow", slug: "/blog/mailcow", category: "DevOps", tags: ["Mail server", "Self hosted"], description: "This article highlights my experience configuring mailcow server." },
     
     // GameDev Category
-    { title: "Duckcraft - World of Warcraft", slug: "/blog/warcraft.md", category: "GameDev", tags: ["Open-source", "C++"], description: "Powered by AzerothCore and Playerbots, a custom built WOTLK server.", url: "#", github: "#" },
-    { title: "Quackshire - Minecraft", slug: "/blog/minecraft.md", category: "GameDev", tags: ["Java", "Spigot"], description: "A custom Minecraft server with unique plugins and features.", url: "#", github: "#" },
+    { title: "Duckcraft - World of Warcraft", slug: "/blog/warcraft", category: "GameDev", tags: ["Open-source", "C++"], description: "Powered by AzerothCore and Playerbots, a custom built WOTLK server." },
+    { title: "Quackshire - Minecraft", slug: "/blog/minecraft", category: "GameDev", tags: ["Java", "Spigot"], description: "A custom Minecraft server with unique plugins and features." },
     
     
     // Add more projects here
@@ -31,7 +31,7 @@ const projects = [
 const categories = ["WebDev", "DevOps", "GameDev"]; // Explicit list of filter buttons
 ---
 
-<MainLayout>
+<MainLayout title="Projects - mulek.cc" description="Projects by Michael Scott Mulek - web development, homelab infrastructure, and game servers.">
     <FloatingDots />
     <Header />
 
@@ -172,4 +172,4 @@ const categories = ["WebDev", "DevOps", "GameDev"]; // Explicit list of filter b
             filterProjects('All');
         }
     });
-</script>
+</script>
