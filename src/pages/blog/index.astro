@@ -17,7 +17,7 @@ allPosts.sort(
 const pageTitle = "Blog Archive";
 ---
 
-<MainLayout title={pageTitle}>
+<MainLayout title={`Blog - mulek.cc`} description="Articles on homelab infrastructure, self-hosting, and development by Michael Scott Mulek.">
   <FloatingDots />
   <Header />
 
@@ -30,11 +30,11 @@ const pageTitle = "Blog Archive";
 
         {allPosts.length > 0 ? (
           <ul role="list" class="space-y-6">
-            {allPosts.map(({ id, data }) => (
+            {allPosts.map(({ slug, data }) => (
               <li
                 class="post-preview bg-white dark:bg-neutral-900 rounded-lg shadow-xl p-6 transition-all duration-300 hover:shadow-2xl hover:scale-[1.01]"
               >
-                <a href={`/blog/${id}`} class="block">
+                <a href={`/blog/${slug}`} class="block">
                   <h2 class="text-xl font-semibold mb-2 text-accent">{data.title}</h2>
                   <p class="text-sm text-neutral-500 dark:text-neutral-400">
                     Published: {data.pubDate.toLocaleDateString()}

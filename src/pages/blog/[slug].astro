@@ -4,11 +4,16 @@ import { getCollection, render } from "astro:content";
 
 const { slug } = Astro.params;
 
+// Old URLs used the file name (/blog/post.md); send them to the clean slug
+if (slug?.endsWith(".md")) {
+  return Astro.redirect(`/blog/${slug.slice(0, -3)}`, 301);
+}
+
 const posts = await getCollection("blog");
-const post = posts.find((p) => p.id === slug);
+const post = posts.find((p) => p.slug === slug);
 
 if (!post) {
-  throw new Error(`Blog post not found: ${slug}`);
+  return Astro.rewrite("/404");
 }
 
 const { Content } = await render(post);
