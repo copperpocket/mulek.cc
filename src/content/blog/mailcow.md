@@ -4,7 +4,6 @@ description: "A self-hosted Mailcow instance for domain-based email and automate
 pubDate: 2025-10-19
 author: "Michael Mulek"
 tags: ["mailcow", "email", "infrastructure", "self-hosting"]
-image: "/images/mail.jpg" # optional, remove if not needed
 ---
 
 My **mail server** is powered by **Mailcow**, a complete mail system built on Docker that handles all mail-related services under my own domain — **mulek.cc**.  
