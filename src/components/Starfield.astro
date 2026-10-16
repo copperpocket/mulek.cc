@@ -48,6 +48,7 @@ const { density = 1, grid = false, horizon = 0.5, fixed = true } = Astro.props;
     vy: number;
     born: number; // ms timestamp
     life: number; // seconds
+    size: number; // 0-1: small, faint and short up to big, bright and long
     glow: StarColor;
   }
 
@@ -70,16 +71,22 @@ const { density = 1, grid = false, horizon = 0.5, fixed = true } = Astro.props;
   const COMET_FIRST_SECONDS = [8, 30]; // delay before the first one
   const COMET_GAP_SECONDS = [20, 50]; // delay between comets
   const COMET_LIFE_SECONDS = [1.2, 2];
-  const COMET_SPEED = [250, 450]; // px per second
-  const COMET_ANGLE_DEGREES = [15, 35]; // below horizontal
-  const COMET_TAIL_SECONDS = 0.35; // tail length, as time travelled
-  const COMET_MAX_ALPHA = 0.7;
+  const COMET_SPEED = [180, 330]; // px per second
+  const COMET_ANGLE_DEGREES = [10, 45]; // below horizontal
+  const COMET_RED_GLOW_CHANCE = 0.1; // otherwise an even split of accent and blue
+  // These scale with each comet's size, from smallest to biggest
+  const COMET_TAIL_SECONDS = [0.27, 0.75]; // tail length, as time travelled
+  const COMET_TAIL_WIDTH = [0.9, 1.8]; // px at the head
+  const COMET_HEAD_RADIUS = [0.9, 1.8];
+  const COMET_GLOW_BLUR = [6, 14];
+  const COMET_MAX_ALPHA = [0.4, 0.7];
 
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let stopAll: (() => void)[] = [];
 
   const rand = (min: number, max: number) => Math.random() * (max - min) + min;
   const randIn = ([min, max]: number[]) => rand(min, max);
+  const lerp = ([min, max]: number[], t: number) => min + (max - min) * t;
 
   function pickStarColor(): StarColor {
     const roll = Math.random();
@@ -208,6 +215,11 @@ const { density = 1, grid = false, horizon = 0.5, fixed = true } = Astro.props;
       ctx!.globalAlpha = 1;
     }
 
+    function pickCometGlow(): StarColor {
+      if (Math.random() < COMET_RED_GLOW_CHANCE) return "red";
+      return Math.random() < 0.5 ? "star" : "blue";
+    }
+
     function spawnComet(now: number) {
       const sky = height * horizon;
       const speed = randIn(COMET_SPEED);
@@ -220,7 +232,8 @@ const { density = 1, grid = false, horizon = 0.5, fixed = true } = Astro.props;
         vy: Math.sin(angle) * speed,
         born: now,
         life: randIn(COMET_LIFE_SECONDS),
-        glow: Math.random() < 0.5 ? "star" : "blue",
+        size: Math.random() ** 1.5, // skewed small, so big ones are rarer
+        glow: pickCometGlow(),
       };
     }
 
@@ -233,10 +246,11 @@ const { density = 1, grid = false, horizon = 0.5, fixed = true } = Astro.props;
       }
 
       // Quick fade in, long fade out
-      const fade = Math.min(1, progress / 0.15) * Math.min(1, (1 - progress) / 0.5) * COMET_MAX_ALPHA;
+      const fade = Math.min(1, progress / 0.15) * Math.min(1, (1 - progress) / 0.5) * lerp(COMET_MAX_ALPHA, c.size);
       const headX = c.x + c.vx * age;
       const headY = c.y + c.vy * age;
-      const tail = Math.min(COMET_TAIL_SECONDS, age); // don't trail back past where it appeared
+      const tail = Math.min(lerp(COMET_TAIL_SECONDS, c.size), age); // don't trail back past where it appeared
+      const tailWidth = lerp(COMET_TAIL_WIDTH, c.size);
 
       ctx!.save();
       // Keep it in the sky, above the grid
@@ -252,7 +266,7 @@ const { density = 1, grid = false, horizon = 0.5, fixed = true } = Astro.props;
         const from = i / segments;
         const to = (i + 1) / segments;
         ctx!.globalAlpha = fade * (1 - from) * 0.6;
-        ctx!.lineWidth = 0.3 + 1.2 * (1 - from);
+        ctx!.lineWidth = 0.3 + (tailWidth - 0.3) * (1 - from);
         ctx!.beginPath();
         ctx!.moveTo(headX - c.vx * tail * from, headY - c.vy * tail * from);
         ctx!.lineTo(headX - c.vx * tail * to, headY - c.vy * tail * to);
@@ -262,10 +276,10 @@ const { density = 1, grid = false, horizon = 0.5, fixed = true } = Astro.props;
       // Head with a soft colored glow
       ctx!.globalAlpha = fade;
       ctx!.shadowColor = colors[c.glow];
-      ctx!.shadowBlur = 10;
+      ctx!.shadowBlur = lerp(COMET_GLOW_BLUR, c.size);
       ctx!.fillStyle = colors.alt;
       ctx!.beginPath();
-      ctx!.arc(headX, headY, 1.6, 0, TAU);
+      ctx!.arc(headX, headY, lerp(COMET_HEAD_RADIUS, c.size), 0, TAU);
       ctx!.fill();
       ctx!.restore();
     }
