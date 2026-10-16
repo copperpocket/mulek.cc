@@ -18,7 +18,7 @@ const formattedDate = new Date(data.pubDate).toLocaleDateString("en-US", {
 });
 ---
 
-<MainLayout title={data.title} description={data.description}>
+<MainLayout title={data.title} description={data.description} image={data.image} type="article">
   <Starfield />
   <Header />
 
