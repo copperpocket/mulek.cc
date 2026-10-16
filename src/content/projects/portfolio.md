@@ -1,9 +1,11 @@
 ---
-title: "A Minimal, Open Source Portfolio Website"
+title: "Portfolio Site v2"
 description: "Behind the design and development of mulek.cc, my personal website."
 pubDate: 2025-10-06
-author: "Michael Mulek"
-tags: ["astro", "tailwind", "portfolio", "open-source", "webdev"]
+category: "WebDev"
+tags: ["Astro.js", "TailwindCSS"]
+url: "https://mulek.cc"
+github: "https://github.com/copperpocket/mulek.cc"
 ---
 
 ## Building **mulek.cc**

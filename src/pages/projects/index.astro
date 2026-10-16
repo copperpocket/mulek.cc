@@ -1,38 +1,26 @@
 ---
 // src/pages/projects/index.astro
 import MainLayout from "@/layouts/MainLayout.astro";
-import FloatingDots from "@/components/FloatingDots.astro";
+import Starfield from "@/components/Starfield.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 
 import ProjectCard from "@/components/ProjectCard.astro";
+import { getCollection } from "astro:content";
+import { projectCategories as categories } from "@/content/config";
 
 import "@/styles/global.css";
 
-
-// 1. Define your Project Data
-const projects = [
-    // WebDev Category
-    { title: "Portfolio Site v2", slug: "/blog/portfolio.md", category: "WebDev", tags: ["Astro.js", "TailwindCSS"], description: "The current site you are viewing, built with modern web technologies.", url: "#", github: "#" },
-    { title: "Personal Blog", slug: "blog", category: "WebDev", tags: ["Astro.js", "Markdown"], description: "A blog where I share articles on various tech topics.", url: "#", github: "#" },
-    // Automation/DevOps Category
-    { title: "Homelab Overview", slug: "/blog/homelab-overview.md", category: "DevOps", tags: ["Proxmox", "TrueNAS", "OPNsense"], description: "Network diagram of my homelab environment.", url: "#", github: "#" },
-    { title: "Mailcow", slug: "/blog/mailcow.md", category: "DevOps", tags: ["Mail server", "Self hosted"], description: "This article highlights my experience configuring mailcow server.", url: "#", github: "#" },
-    
-    // GameDev Category
-    { title: "Duckcraft - World of Warcraft", slug: "/blog/warcraft.md", category: "GameDev", tags: ["Open-source", "C++"], description: "Powered by AzerothCore and Playerbots, a custom built WOTLK server.", url: "#", github: "#" },
-    { title: "Quackshire - Minecraft", slug: "/blog/minecraft.md", category: "GameDev", tags: ["Java", "Spigot"], description: "A custom Minecraft server with unique plugins and features.", url: "#", github: "#" },
-    
-    
-    // Add more projects here
-];
-
-// 2. Define the Categories (for the buttons)
-const categories = ["WebDev", "DevOps", "GameDev"]; // Explicit list of filter buttons
+// Projects live in src/content/projects; group by category, newest first within each
+const projects = (await getCollection("projects")).sort(
+    (a, b) =>
+        categories.indexOf(a.data.category) - categories.indexOf(b.data.category) ||
+        b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
 ---
 
-<MainLayout>
-    <FloatingDots />
+<MainLayout title="Projects - mulek.cc" description="Projects by Michael Scott Mulek - web development, homelab infrastructure, and game servers.">
+    <Starfield />
     <Header />
 
     <div id="projects-container" class="relative z-20 py-8">
@@ -68,8 +56,8 @@ const categories = ["WebDev", "DevOps", "GameDev"]; // Explicit list of filter b
             </div>
 
             <div id="project-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {projects.map(project => (
-                    <ProjectCard {...project} />
+                {projects.map(({ slug, data }) => (
+                    <ProjectCard {...data} slug={`/projects/${slug}`} />
                 ))}
             </div>
             
@@ -172,4 +160,4 @@ const categories = ["WebDev", "DevOps", "GameDev"]; // Explicit list of filter b
             filterProjects('All');
         }
     });
-</script>
+</script>

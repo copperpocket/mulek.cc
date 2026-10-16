@@ -1,0 +1,217 @@
+---
+// Starfield.astro - twinkling stars drawn on a single canvas, with an optional
+// scrolling synthwave grid below a horizon line. Colors come from the
+// --starfield-* variables in global.css and follow the theme toggle.
+interface Props {
+  /** Stars per 100x100px of sky */
+  density?: number;
+  /** Draw the perspective grid below the horizon; stars stay above it */
+  grid?: boolean;
+  /** Horizon height as a fraction of the canvas (only used with grid) */
+  horizon?: number;
+  /** Pin to the viewport, or fill the nearest positioned parent */
+  fixed?: boolean;
+}
+
+const { density = 1, grid = false, horizon = 0.5, fixed = true } = Astro.props;
+---
+
+<canvas
+  class:list={["starfield inset-0 w-full h-full pointer-events-none z-10", fixed ? "fixed" : "absolute"]}
+  data-density={density}
+  data-grid={grid ? "" : undefined}
+  data-horizon={horizon}
+  aria-hidden="true"
+></canvas>
+
+<script>
+  interface Star {
+    x: number; // 0-1 across the sky
+    y: number; // 0-1 down the sky
+    r: number;
+    minAlpha: number;
+    maxAlpha: number;
+    period: number; // seconds per twinkle
+    phase: number;
+    alt: boolean; // neutral color instead of accent
+    jitter: number; // px of drift, 0 for most stars
+    jitterPeriod: number;
+    jitterPhase: number;
+  }
+
+  const TAU = Math.PI * 2;
+
+  // Grid shape, tuned to match the original SVG
+  const GRID_ROW_RATIO = 0.67; // each row sits this fraction as far from the horizon as the one in front
+  const GRID_ROWS = 14;
+  const GRID_ROW_SECONDS = 1; // time for a row to move into the next one's place
+  const GRID_COLUMNS = 10; // per side of the center line
+  const GRID_FAR_GAP = 0.0484; // column spacing at the horizon, as a fraction of the grid span
+  const GRID_NEAR_GAP = 0.2373; // column spacing at the bottom edge
+
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let stopAll: (() => void)[] = [];
+
+  const rand = (min: number, max: number) => Math.random() * (max - min) + min;
+
+  function makeStar(): Star {
+    const period = rand(4, 10);
+    return {
+      x: Math.random(),
+      y: Math.random(),
+      r: rand(1, 2.5),
+      minAlpha: rand(0, 0.15),
+      maxAlpha: rand(0.15, 0.5),
+      period,
+      phase: Math.random() * TAU,
+      alt: Math.random() < 0.3,
+      jitter: Math.random() < 0.35 ? rand(2, 5) : 0,
+      jitterPeriod: period * 2,
+      jitterPhase: Math.random() * TAU,
+    };
+  }
+
+  // Resolve a CSS variable to a color the canvas understands
+  function readColor(canvas: HTMLCanvasElement, name: string) {
+    canvas.style.color = `var(${name})`;
+    return getComputedStyle(canvas).color;
+  }
+
+  function start(canvas: HTMLCanvasElement) {
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return () => {};
+
+    const density = Number(canvas.dataset.density) || 1;
+    const hasGrid = canvas.dataset.grid !== undefined;
+    const horizon = hasGrid ? Number(canvas.dataset.horizon) || 0.5 : 1;
+
+    let width = 0;
+    let height = 0;
+    let frame = 0;
+    const stars: Star[] = [];
+    const colors = { star: "", alt: "", grid: "" };
+
+    function readColors() {
+      colors.star = readColor(canvas, "--starfield-star");
+      colors.alt = readColor(canvas, "--starfield-star-alt");
+      colors.grid = readColor(canvas, "--starfield-grid");
+    }
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      width = canvas.clientWidth;
+      height = canvas.clientHeight;
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      // Stars are stored in relative coordinates, so a resize (like a mobile
+      // URL bar collapsing) keeps them in place and only tops up or trims the count
+      const target = Math.round(((width * height * horizon) / 10000) * density);
+      while (stars.length < target) stars.push(makeStar());
+      stars.length = target;
+    }
+
+    function drawGrid(t: number) {
+      const top = height * horizon;
+      const floor = height - top;
+      // Size the grid as if the screen were at least 4:3, so narrow screens
+      // crop the sides instead of squeezing the columns together
+      const span = Math.max(width, height * (4 / 3));
+      const cx = width / 2;
+
+      ctx!.strokeStyle = colors.grid;
+      ctx!.lineWidth = 1;
+      ctx!.globalAlpha = 1;
+
+      ctx!.beginPath();
+      ctx!.moveTo(0, top);
+      ctx!.lineTo(width, top);
+      for (let i = -GRID_COLUMNS; i <= GRID_COLUMNS; i++) {
+        ctx!.moveTo(cx + i * span * GRID_FAR_GAP, top);
+        ctx!.lineTo(cx + i * span * GRID_NEAR_GAP, height);
+      }
+      ctx!.stroke();
+
+      // Rows are spaced geometrically and slide toward the viewer
+      const progress = (t / 1000 / GRID_ROW_SECONDS) % 1;
+      for (let n = 0; n < GRID_ROWS; n++) {
+        const depth = Math.pow(GRID_ROW_RATIO, n - progress);
+        if (depth > 1.1) continue;
+        const y = top + floor * depth;
+        ctx!.globalAlpha = Math.min(1, depth / 0.03); // fade in at the horizon
+        ctx!.beginPath();
+        ctx!.moveTo(0, y);
+        ctx!.lineTo(width, y);
+        ctx!.stroke();
+      }
+      ctx!.globalAlpha = 1;
+    }
+
+    function drawStars(t: number) {
+      const sky = height * horizon;
+      const seconds = t / 1000;
+      for (const s of stars) {
+        const twinkle = 0.5 + 0.5 * Math.cos((TAU * seconds) / s.period + s.phase);
+        let x = s.x * width;
+        let y = s.y * sky;
+        if (s.jitter) {
+          const a = (TAU * seconds) / s.jitterPeriod + s.jitterPhase;
+          x += s.jitter * Math.sin(a);
+          y += s.jitter * Math.sin(a * 1.3 + 1);
+        }
+        ctx!.globalAlpha = s.minAlpha + (s.maxAlpha - s.minAlpha) * twinkle;
+        ctx!.fillStyle = s.alt ? colors.alt : colors.star;
+        ctx!.beginPath();
+        ctx!.arc(x, y, s.r, 0, TAU);
+        ctx!.fill();
+      }
+      ctx!.globalAlpha = 1;
+    }
+
+    function draw(t: number) {
+      ctx!.clearRect(0, 0, width, height);
+      if (hasGrid) drawGrid(t);
+      drawStars(t);
+    }
+
+    function loop(now: number) {
+      draw(now);
+      frame = requestAnimationFrame(loop);
+    }
+
+    // With reduced motion, draw a single still frame and redraw only when something changes
+    const redrawIfStill = () => reducedMotion.matches && draw(0);
+
+    const observer = new ResizeObserver(() => {
+      resize();
+      redrawIfStill();
+    });
+    const onThemeChange = () => {
+      readColors();
+      redrawIfStill();
+    };
+
+    readColors();
+    resize();
+    observer.observe(canvas);
+    document.addEventListener("themechange", onThemeChange);
+    if (reducedMotion.matches) draw(0);
+    else frame = requestAnimationFrame(loop);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      document.removeEventListener("themechange", onThemeChange);
+    };
+  }
+
+  function init() {
+    stopAll.forEach((stop) => stop());
+    stopAll = [...document.querySelectorAll<HTMLCanvasElement>("canvas.starfield")].map(start);
+  }
+
+  // Runs on first load and after every view transition
+  document.addEventListener("astro:page-load", init);
+  reducedMotion.addEventListener("change", init);
+</script>
