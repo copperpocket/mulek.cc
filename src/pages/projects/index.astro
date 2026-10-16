@@ -1,7 +1,7 @@
 ---
 // src/pages/projects/index.astro
 import MainLayout from "@/layouts/MainLayout.astro";
-import FloatingDots from "@/components/FloatingDots.astro";
+import Starfield from "@/components/Starfield.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 
@@ -32,7 +32,7 @@ const categories = ["WebDev", "DevOps", "GameDev"]; // Explicit list of filter b
 ---
 
 <MainLayout title="Projects - mulek.cc" description="Projects by Michael Scott Mulek - web development, homelab infrastructure, and game servers.">
-    <FloatingDots />
+    <Starfield />
     <Header />
 
     <div id="projects-container" class="relative z-20 py-8">

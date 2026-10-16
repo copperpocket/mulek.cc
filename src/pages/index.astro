@@ -2,8 +2,7 @@
 // src/pages/index.astro
 
 import MainLayout from "@/layouts/MainLayout.astro";
-import FloatingDots from "@/components/FloatingDots.astro";
-import BackgroundSVG from "@/components/BackgroundSVG.astro";
+import Starfield from "@/components/Starfield.astro";
 import ThemeIcon from "@/components/Theme.astro";
 import HamburgerMenu from "@/components/HamburgerMenu.astro";
 import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
@@ -37,8 +36,6 @@ import "@/styles/global.css";
 
   <div class="relative w-full overflow-hidden min-h-screen md:h-[calc(100vh-3rem)]">
 
-    <FloatingDots dotCount={160} clipPercent={50} />
-
     <div class="fixed top-8 left-0 w-full z-60 px-12 pointer-events-none">
       <div class="flex justify-end items-center w-full pointer-events-auto">
         
@@ -57,9 +54,7 @@ import "@/styles/global.css";
       id="hero-section"
       class="absolute inset-0 flex items-center justify-center bg-body dark:bg-body-dark"
     >
-      <div class="absolute inset-0 z-10">
-        <BackgroundSVG />
-      </div>
+      <Starfield grid fixed={false} density={1.6} />
 
       <div class="relative z-20 w-full max-w-7xl mx-auto px-6 sm:px-16 grid grid-cols-1 lg:grid-cols-2 gap-8">
         
