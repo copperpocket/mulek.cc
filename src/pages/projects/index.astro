@@ -23,7 +23,7 @@ const projects = (await getCollection("projects")).sort(
     <Starfield />
     <Header />
 
-    <div id="projects-container" class="relative z-20 py-8">
+    <div id="projects-container" class="page-main">
         
         <div class="container mx-auto px-4 ">
             <h1 class="text-3xl font-bold text-center mb-8 text-neutral-800 dark:text-neutral-200">
@@ -55,6 +55,8 @@ const projects = (await getCollection("projects")).sort(
                 ))}
             </div>
 
+            <!-- Height is locked to the full list so filtering doesn't make the centered page jump -->
+            <div id="project-results">
             <div id="project-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {projects.map(({ slug, data }) => (
                     <ProjectCard {...data} slug={`/projects/${slug}`} />
@@ -63,6 +65,7 @@ const projects = (await getCollection("projects")).sort(
             
             <div id="empty-state" class="text-center py-10 text-neutral-600 dark:text-neutral-400 hidden">
                 No projects match the current filter.
+            </div>
             </div>
 
         </div>
@@ -76,6 +79,8 @@ const projects = (await getCollection("projects")).sort(
         const filterButtons = document.querySelectorAll('.filter-btn');
         const projectCards = document.querySelectorAll('.project-card');
         const emptyState = document.getElementById('empty-state');
+        const results = document.getElementById('project-results');
+        let currentCategory = 'All';
         
         // --- Define the four distinct state classes for robust management ---
         
@@ -107,6 +112,23 @@ const projects = (await getCollection("projects")).sort(
                 emptyState.style.display = matches === 0 ? 'block' : 'none';
             }
         }
+
+        // Lock the results area to its height with every card showing, so the page
+        // (centered vertically on tall screens) doesn't shift when a filter hides cards
+        function lockResultsHeight() {
+            if (!results) return;
+            results.style.minHeight = '';
+            filterProjects('All');
+            results.style.minHeight = `${results.offsetHeight}px`;
+            filterProjects(currentCategory);
+        }
+
+        // The card layout changes with the window width, so re-measure on resize.
+        // Removed before the next page swap so listeners don't pile up across navigations.
+        window.addEventListener('resize', lockResultsHeight);
+        document.addEventListener('astro:before-swap', () => {
+            window.removeEventListener('resize', lockResultsHeight);
+        }, { once: true });
 
         // --- Core Function to manage button state (now using classList) ---
         /**
@@ -144,8 +166,9 @@ const projects = (await getCollection("projects")).sort(
                 if (!buttonElement) return;
                 const category = buttonElement.getAttribute('data-category');
                 
+                currentCategory = category ?? 'All';
                 setActiveButton(buttonElement);
-                filterProjects(category ?? 'All');
+                filterProjects(currentCategory);
             });
         });
         
@@ -159,5 +182,6 @@ const projects = (await getCollection("projects")).sort(
             setActiveButton(allButton);
             filterProjects('All');
         }
+        lockResultsHeight();
     });
 </script>

@@ -19,6 +19,7 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [x] Link previews (Open Graph and Twitter tags, a 1200x630 preview image), canonical URLs, sitemap, `robots.txt`, and a single favicon
 - [x] New logo: the `>m_` prompt mark, an `m` tile for the favicon and iPhone icon, and the `mulek✦cc` wordmark
 - [x] Header expands at the top of the page and turns compact, with the accent line, once you scroll (this also fixed the scroll listener piling up on every navigation)
+- [x] Consistent page spacing: short pages center vertically when there's room, long pages start at the top
 
 ## Cleanup
 
