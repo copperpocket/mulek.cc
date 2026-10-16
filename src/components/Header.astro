@@ -1,6 +1,7 @@
 ---
 import ThemeIcon from "./Theme.astro";
 import HamburgerMenu from "./HamburgerMenu.astro";
+import Wordmark from "./Wordmark.astro";
 
 interface Props {
   hideLogo?: boolean;
@@ -38,7 +39,7 @@ const isActive = (path: string) =>
     {hideLogo !== true && (
     <div id="logo-wrapper" 
          class="inline-flex transform origin-left transition-all duration-300 h-0 translate-y-[32px] items-center xtall:pl-4">
-        <a href="/" class="flex items-center space-x-2 text-xl xtall:text-2xl text-neutral-800 dark:text-neutral-200">mulek.cc</a>
+        <a href="/" class="flex items-center"><Wordmark class="h-8 xtall:h-9 w-auto" /></a>
     </div>
     )}
 

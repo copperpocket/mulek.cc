@@ -36,11 +36,17 @@ html, body {
   --starfield-star-red: oklch(55% 0.2 25); /* rare */
   --starfield-star-blue: oklch(78% 0.16 220); /* rare, also a comet glow */
   --starfield-grid: theme(colors.neutral.800 / 0.15);
+
+  /* Logo colors (Wordmark.astro, LogoMark.astro). Light mode uses a deeper lavender for contrast. */
+  --logo-ink: #5b53c9;
+  --logo-star: oklch(55% 0.19 317.7);
 }
 
 html.dark {
   --starfield-star-alt: oklch(95% 0 0 / 0.95);
   --starfield-grid: theme(colors.accent / 0.15);
+  --logo-ink: theme(colors.accent);
+  --logo-star: oklch(65% 0.17 317.7);
 }
 
 

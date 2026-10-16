@@ -17,6 +17,7 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [x] MIT license for the code, with site content and images kept all rights reserved
 - [x] Contact form: per-IP rate limit, length limits, generic error messages, and a clear log line when SMTP or hCaptcha settings are missing
 - [x] Link previews (Open Graph and Twitter tags, a 1200x630 preview image), canonical URLs, sitemap, `robots.txt`, and a single favicon
+- [x] New logo: the `>m_` prompt mark, an `m` tile for the favicon and iPhone icon, and the `mulek✦cc` wordmark
 
 ## Cleanup
 
@@ -34,7 +35,8 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 ## SEO and sharing
 
 - [ ] Per-project preview images (set `image` in the frontmatter; the default card is used otherwise)
-- [ ] Delete the old `public/images/favicon.png` along with the other dead code
+- [ ] Delete the old logo files (`public/images/favicon.png`, `logo.png`, `logo-darkmode.png`, `mm.png`, and the copies in `src/assets/`) along with the other dead code
+- [ ] Use the logo on the home page (it has no header) and in the mobile menu
 
 ## Accessibility
 
