@@ -12,6 +12,7 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [x] Remove the LinkedIn link and the unused featured-projects slider
 - [x] Rebuild the home page background as a single canvas (`Starfield.astro`)
 - [x] Projects as a Markdown content collection with detail pages at `/projects/<name>`
+- [x] Rare red and blue stars, plus an occasional comet, in the starfield
 
 ## Cleanup
 

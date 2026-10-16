@@ -1,6 +1,6 @@
 ---
-// Starfield.astro - twinkling stars drawn on a single canvas, with an optional
-// scrolling synthwave grid below a horizon line. Colors come from the
+// Starfield.astro - twinkling stars and the occasional comet drawn on a single
+// canvas, with an optional scrolling synthwave grid below a horizon line. Colors come from the
 // --starfield-* variables in global.css and follow the theme toggle.
 interface Props {
   /** Stars per 100x100px of sky */
@@ -25,6 +25,8 @@ const { density = 1, grid = false, horizon = 0.5, fixed = true } = Astro.props;
 ></canvas>
 
 <script>
+  type StarColor = "star" | "alt" | "red" | "blue";
+
   interface Star {
     x: number; // 0-1 across the sky
     y: number; // 0-1 down the sky
@@ -33,10 +35,20 @@ const { density = 1, grid = false, horizon = 0.5, fixed = true } = Astro.props;
     maxAlpha: number;
     period: number; // seconds per twinkle
     phase: number;
-    alt: boolean; // neutral color instead of accent
+    color: StarColor;
     jitter: number; // px of drift, 0 for most stars
     jitterPeriod: number;
     jitterPhase: number;
+  }
+
+  interface Comet {
+    x: number; // starting point, px
+    y: number;
+    vx: number; // px per second
+    vy: number;
+    born: number; // ms timestamp
+    life: number; // seconds
+    glow: StarColor;
   }
 
   const TAU = Math.PI * 2;
@@ -49,10 +61,33 @@ const { density = 1, grid = false, horizon = 0.5, fixed = true } = Astro.props;
   const GRID_FAR_GAP = 0.0484; // column spacing at the horizon, as a fraction of the grid span
   const GRID_NEAR_GAP = 0.2373; // column spacing at the bottom edge
 
+  // Rare colored stars, as a fraction of all stars
+  const RED_STAR_CHANCE = 0.02;
+  const BLUE_STAR_CHANCE = 0.02;
+  const ALT_STAR_CHANCE = 0.3; // neutral white/black instead of the accent
+
+  // Comets: a faint streak every so often, never more than one at a time
+  const COMET_FIRST_SECONDS = [8, 30]; // delay before the first one
+  const COMET_GAP_SECONDS = [20, 50]; // delay between comets
+  const COMET_LIFE_SECONDS = [1.2, 2];
+  const COMET_SPEED = [250, 450]; // px per second
+  const COMET_ANGLE_DEGREES = [15, 35]; // below horizontal
+  const COMET_TAIL_SECONDS = 0.35; // tail length, as time travelled
+  const COMET_MAX_ALPHA = 0.7;
+
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let stopAll: (() => void)[] = [];
 
   const rand = (min: number, max: number) => Math.random() * (max - min) + min;
+  const randIn = ([min, max]: number[]) => rand(min, max);
+
+  function pickStarColor(): StarColor {
+    const roll = Math.random();
+    if (roll < RED_STAR_CHANCE) return "red";
+    if (roll < RED_STAR_CHANCE + BLUE_STAR_CHANCE) return "blue";
+    if (roll < RED_STAR_CHANCE + BLUE_STAR_CHANCE + ALT_STAR_CHANCE) return "alt";
+    return "star";
+  }
 
   function makeStar(): Star {
     const period = rand(4, 10);
@@ -64,7 +99,7 @@ const { density = 1, grid = false, horizon = 0.5, fixed = true } = Astro.props;
       maxAlpha: rand(0.15, 0.5),
       period,
       phase: Math.random() * TAU,
-      alt: Math.random() < 0.3,
+      color: pickStarColor(),
       jitter: Math.random() < 0.35 ? rand(2, 5) : 0,
       jitterPeriod: period * 2,
       jitterPhase: Math.random() * TAU,
@@ -89,11 +124,15 @@ const { density = 1, grid = false, horizon = 0.5, fixed = true } = Astro.props;
     let height = 0;
     let frame = 0;
     const stars: Star[] = [];
-    const colors = { star: "", alt: "", grid: "" };
+    const colors = { star: "", alt: "", red: "", blue: "", grid: "" };
+    let comet: Comet | null = null;
+    let nextCometAt = performance.now() + randIn(COMET_FIRST_SECONDS) * 1000;
 
     function readColors() {
       colors.star = readColor(canvas, "--starfield-star");
       colors.alt = readColor(canvas, "--starfield-star-alt");
+      colors.red = readColor(canvas, "--starfield-star-red");
+      colors.blue = readColor(canvas, "--starfield-star-blue");
       colors.grid = readColor(canvas, "--starfield-grid");
     }
 
@@ -161,7 +200,7 @@ const { density = 1, grid = false, horizon = 0.5, fixed = true } = Astro.props;
           y += s.jitter * Math.sin(a * 1.3 + 1);
         }
         ctx!.globalAlpha = s.minAlpha + (s.maxAlpha - s.minAlpha) * twinkle;
-        ctx!.fillStyle = s.alt ? colors.alt : colors.star;
+        ctx!.fillStyle = colors[s.color];
         ctx!.beginPath();
         ctx!.arc(x, y, s.r, 0, TAU);
         ctx!.fill();
@@ -169,13 +208,80 @@ const { density = 1, grid = false, horizon = 0.5, fixed = true } = Astro.props;
       ctx!.globalAlpha = 1;
     }
 
+    function spawnComet(now: number) {
+      const sky = height * horizon;
+      const speed = randIn(COMET_SPEED);
+      const angle = (randIn(COMET_ANGLE_DEGREES) * Math.PI) / 180;
+      const direction = Math.random() < 0.5 ? 1 : -1;
+      comet = {
+        x: rand(0.1, 0.9) * width,
+        y: rand(0, 0.5) * sky,
+        vx: Math.cos(angle) * speed * direction,
+        vy: Math.sin(angle) * speed,
+        born: now,
+        life: randIn(COMET_LIFE_SECONDS),
+        glow: Math.random() < 0.5 ? "star" : "blue",
+      };
+    }
+
+    function drawComet(c: Comet, now: number) {
+      const age = (now - c.born) / 1000;
+      const progress = age / c.life;
+      if (progress >= 1) {
+        comet = null;
+        return;
+      }
+
+      // Quick fade in, long fade out
+      const fade = Math.min(1, progress / 0.15) * Math.min(1, (1 - progress) / 0.5) * COMET_MAX_ALPHA;
+      const headX = c.x + c.vx * age;
+      const headY = c.y + c.vy * age;
+      const tail = Math.min(COMET_TAIL_SECONDS, age); // don't trail back past where it appeared
+
+      ctx!.save();
+      // Keep it in the sky, above the grid
+      ctx!.beginPath();
+      ctx!.rect(0, 0, width, height * horizon);
+      ctx!.clip();
+
+      // Tail: short segments that thin out and fade away from the head
+      const segments = 12;
+      ctx!.strokeStyle = colors.alt;
+      ctx!.lineCap = "round";
+      for (let i = 0; i < segments; i++) {
+        const from = i / segments;
+        const to = (i + 1) / segments;
+        ctx!.globalAlpha = fade * (1 - from) * 0.6;
+        ctx!.lineWidth = 0.3 + 1.2 * (1 - from);
+        ctx!.beginPath();
+        ctx!.moveTo(headX - c.vx * tail * from, headY - c.vy * tail * from);
+        ctx!.lineTo(headX - c.vx * tail * to, headY - c.vy * tail * to);
+        ctx!.stroke();
+      }
+
+      // Head with a soft colored glow
+      ctx!.globalAlpha = fade;
+      ctx!.shadowColor = colors[c.glow];
+      ctx!.shadowBlur = 10;
+      ctx!.fillStyle = colors.alt;
+      ctx!.beginPath();
+      ctx!.arc(headX, headY, 1.6, 0, TAU);
+      ctx!.fill();
+      ctx!.restore();
+    }
+
     function draw(t: number) {
       ctx!.clearRect(0, 0, width, height);
       if (hasGrid) drawGrid(t);
       drawStars(t);
+      if (comet) drawComet(comet, t);
     }
 
     function loop(now: number) {
+      if (!comet && now >= nextCometAt) {
+        spawnComet(now);
+        nextCometAt = now + randIn(COMET_GAP_SECONDS) * 1000;
+      }
       draw(now);
       frame = requestAnimationFrame(loop);
     }
