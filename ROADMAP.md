@@ -18,6 +18,7 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [x] Contact form: per-IP rate limit, length limits, generic error messages, and a clear log line when SMTP or hCaptcha settings are missing
 - [x] Link previews (Open Graph and Twitter tags, a 1200x630 preview image), canonical URLs, sitemap, `robots.txt`, and a single favicon
 - [x] New logo: the `>m_` prompt mark, an `m` tile for the favicon and iPhone icon, and the `mulek✦cc` wordmark
+- [x] Header expands at the top of the page and turns compact, with the accent line, once you scroll (this also fixed the scroll listener piling up on every navigation)
 
 ## Cleanup
 
@@ -26,7 +27,6 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [ ] Run the theme setup in one place instead of three (`MainLayout`, `index.astro`, `Theme.astro`)
 - [ ] Bundle the theme toggle CSS locally instead of loading it from jsDelivr
 - [ ] Move the shared page shell (header, footer, background, global CSS) into `MainLayout`
-- [ ] Fix the `Header.astro` scroll listener piling up on every page navigation
 
 ## Performance
 

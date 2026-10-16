@@ -45,6 +45,7 @@ The `/api/contact` endpoint needs a `.env` file, which is gitignored. The rest o
 - **Page layouts:**
   - `MainLayout.astro` holds `<head>`, including the canonical URL and the Open Graph/Twitter preview tags (props: `image`, a path under `public/` defaulting to `/og.png`; `type`, set to `article` on posts and projects; `noindex` for the 404 page), the inline theme setup script that prevents a flash of the wrong theme, and Astro's `<ClientRouter />` page transitions.
   - Pages compose their own shell, usually `<Starfield />`, `<Header />`, content and `<Footer />`, and each imports `global.css` itself.
+  - `Header.astro` is `fixed`, with a spacer element below it holding its place. A bundled script sets `data-scrolled` once the page scrolls past 24px; the scoped `<style>` switches between the tall, transparent top state and the compact scrolled state (solid background, accent line). The script runs once per full load, so it doesn't stack listeners across `ClientRouter` navigations.
   - The home page (`index.astro`) is the exception: it has no `Header`. It renders its own theme toggle, hamburger menu and `#hidden-menu` overlay, so nav links are defined there as well as in `Header.astro`.
   - `layouts/Layout.astro` is unused leftover Astro starter code.
 - **Client scripts and page transitions:** because of `ClientRouter`, page scripts must initialize on `document.addEventListener('astro:page-load', ...)`, not on the initial run alone. There are two ways scripts are loaded:
