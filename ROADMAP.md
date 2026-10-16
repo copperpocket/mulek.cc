@@ -13,6 +13,8 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [x] Rebuild the home page background as a single canvas (`Starfield.astro`)
 - [x] Projects as a Markdown content collection with detail pages at `/projects/<name>`
 - [x] Rare red and blue stars, plus an occasional comet, in the starfield
+- [x] Home page panel: whole-year uptime, live time zone and status, automatic Current Project link, open-source note in place of the tags
+- [x] MIT license for the code, with site content and images kept all rights reserved
 
 ## Cleanup
 
