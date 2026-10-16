@@ -15,6 +15,11 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [x] Rare red and blue stars, plus an occasional comet, in the starfield
 - [x] Home page panel: whole-year uptime, live time zone and status, automatic Current Project link, open-source note in place of the tags
 - [x] MIT license for the code, with site content and images kept all rights reserved
+- [x] Contact form: per-IP rate limit, length limits, generic error messages, and a clear log line when SMTP or hCaptcha settings are missing
+- [x] Link previews (Open Graph and Twitter tags, a 1200x630 preview image), canonical URLs, sitemap, `robots.txt`, and a single favicon
+- [x] New logo: the `>m_` prompt mark, an `m` tile for the favicon and iPhone icon, and the `mulek✦cc` wordmark
+- [x] Header expands at the top of the page and turns compact, with the accent line, once you scroll (this also fixed the scroll listener piling up on every navigation)
+- [x] Consistent page spacing: short pages center vertically when there's room, long pages start at the top
 
 ## Cleanup
 
@@ -23,7 +28,6 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [ ] Run the theme setup in one place instead of three (`MainLayout`, `index.astro`, `Theme.astro`)
 - [ ] Bundle the theme toggle CSS locally instead of loading it from jsDelivr
 - [ ] Move the shared page shell (header, footer, background, global CSS) into `MainLayout`
-- [ ] Fix the `Header.astro` scroll listener piling up on every page navigation
 
 ## Performance
 
@@ -31,9 +35,9 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 
 ## SEO and sharing
 
-- [ ] Open Graph and Twitter preview tags, plus canonical URLs
-- [ ] Sitemap and `robots.txt`
-- [ ] Pick one favicon (there are currently three)
+- [ ] Per-project preview images (set `image` in the frontmatter; the default card is used otherwise)
+- [ ] Delete the old logo files (`public/images/favicon.png`, `logo.png`, `logo-darkmode.png`, `mm.png`, and the copies in `src/assets/`) along with the other dead code
+- [ ] Use the logo on the home page (it has no header) and in the mobile menu
 
 ## Accessibility
 
@@ -41,9 +45,7 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 
 ## Contact form
 
-- [ ] Rate limiting and maximum lengths for name, email, and message
-- [ ] Return a generic error to visitors instead of the raw error message
-- [ ] Clear startup error when SMTP or hCaptcha settings are missing
+- [ ] Move the rate limit to the reverse proxy or a shared store if the site ever runs more than one instance (it's in memory today and resets on restart)
 - [ ] Add a Matrix or Fediverse link once the account exists
 
 ## Content

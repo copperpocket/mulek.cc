@@ -1,6 +1,7 @@
 ---
 import ThemeIcon from "./Theme.astro";
 import HamburgerMenu from "./HamburgerMenu.astro";
+import Wordmark from "./Wordmark.astro";
 
 interface Props {
   hideLogo?: boolean;
@@ -24,27 +25,23 @@ const isActive = (path: string) =>
   pathname === path || (path !== '/' && pathname.startsWith(path));
 ---
 
-<header
-  id="site-header"
-  class="w-full sticky top-0 z-40 flex items-center min-h-12"
->
-  <div id="header-nav"
-       class="mx-auto flex items-center justify-between w-full 
-              relative transition-all duration-300 px-8">
-  <span id="nav-border"
-      class="absolute bottom-0 left-0 h-[2px] w-full bg-accent opacity-0 translate-y-25 transition-all duration-300">
-  </span>
+<!--
+  Fixed header with two states, switched by data-scrolled:
+  - at the top of the page: taller and transparent, with larger, more spaced-out items
+  - scrolled: compact, solid background, accent line underneath
+  The spacer below keeps page content from sliding under the expanded header.
+-->
+<header id="site-header" class="site-header fixed inset-x-0 top-0 z-40" data-scrolled="false">
+  <div class="header-inner relative flex items-center justify-between w-full px-10 lg:px-16">
+    <span class="header-line absolute bottom-0 left-0 h-[2px] w-full bg-accent"></span>
 
     {hideLogo !== true && (
-    <div id="logo-wrapper" 
-         class="inline-flex transform origin-left transition-all duration-300 h-0 translate-y-[32px] items-center xtall:pl-4">
-        <a href="/" class="flex items-center space-x-2 text-xl xtall:text-2xl text-neutral-800 dark:text-neutral-200">mulek.cc</a>
-    </div>
+      <a href="/" class="header-logo flex items-center" aria-label="mulek.cc home">
+        <Wordmark class="h-full w-auto" />
+      </a>
     )}
 
-    <nav id="nav-links-wrapper" 
-         class={`hidden ${displayClass} items-center space-x-4 
-                transform transition-all duration-300 h-0 translate-y-[32px]`}>
+    <nav class={`header-nav hidden ${displayClass} items-center absolute left-1/2 -translate-x-1/2`}>
       <a href="/" class:list={["nav-link", { "active": isActive('/') }]}>Home</a>
       <a href="/about" class:list={["nav-link", { "active": isActive('/about') }]}>About</a>
       <a href="/projects" class:list={["nav-link", { "active": isActive('/projects') }]}>Projects</a>
@@ -52,18 +49,14 @@ const isActive = (path: string) =>
       <a href="/contact" class:list={["nav-link", { "active": isActive('/contact') }]}>Contact</a>
     </nav>
 
-    <div class="flex items-end space-x-6 xtall:space-x-10"> 
-      <div id="theme-wrapper" 
-            class="inline-flex transform transition-all duration-300 h-0 translate-y-[32px] items-center">
-            <ThemeIcon />
-        </div>
-
-        <div id="menu-wrapper" 
-            class="inline-flex z-50 transition-all duration-300 h-0 translate-y-[32px] items-center xtall:pr-4 md:hidden">
-            <HamburgerMenu /> 
-        </div>
+    <div class="header-actions flex items-center space-x-6">
+      <div class="inline-flex items-center">
+        <ThemeIcon />
+      </div>
+      <div class="inline-flex z-50 items-center md:hidden">
+        <HamburgerMenu />
+      </div>
     </div>
-
 
     <div
       id="hidden-menu"
@@ -81,75 +74,49 @@ const isActive = (path: string) =>
   </div>
 </header>
 
-<script type="module">
-  document.addEventListener('astro:page-load', () => {
+<div class="header-spacer" aria-hidden="true"></div>
+
+<script>
+  // Bundled scripts run once per full page load, so this listener is only ever added once,
+  // even with ClientRouter page transitions. astro:page-load re-syncs the new page's header.
+  const SCROLL_THRESHOLD = 24;
+
+  function updateHeader() {
     const header = document.getElementById("site-header");
-    if (!header) return;
-    const logoWrapper = document.getElementById("logo-wrapper");
-    const navLinksWrapper = document.getElementById("nav-links-wrapper");
-    const themeWrapper = document.getElementById("theme-wrapper");
-    const menuWrapper = document.getElementById("menu-wrapper");
-    const navBorder = document.getElementById("nav-border"); 
-    const isRootPage = window.location.pathname === '/';
+    if (header) header.dataset.scrolled = String(window.scrollY > SCROLL_THRESHOLD);
+  }
 
-    function updateHeader() {
-      if (!isRootPage || window.scrollY > 30) {
-        if (logoWrapper) {
-          logoWrapper.classList.remove("translate-y-[32px]");
-          logoWrapper.classList.add("translate-y-0");
-          logoWrapper.classList.add("scale-75");
-        }
-        if (navLinksWrapper) {
-          navLinksWrapper.classList.remove("translate-y-[32px]");
-          navLinksWrapper.classList.add("translate-y-0");
-        }
-        if (themeWrapper) {
-          themeWrapper.classList.remove("translate-y-[32px]");
-          themeWrapper.classList.add("translate-y-0");
-          themeWrapper.classList.add("scale-75");
-        }
-        if (menuWrapper) {
-          menuWrapper.classList.remove("translate-y-[32px]");
-          menuWrapper.classList.add("translate-y-0");
-          menuWrapper.classList.add("scale-75");
-        }
-
-        navBorder.classList.remove("opacity-0", "translate-y-25");
-        navBorder.classList.add("opacity-90", "translate-y-6");  
-
-        header.classList.add("bg-body", "dark:bg-body-dark");
-      } else {
-        if (logoWrapper) {
-          logoWrapper.classList.add("translate-y-[32px]");
-          logoWrapper.classList.remove("translate-y-0");
-          logoWrapper.classList.remove("scale-75");
-        }
-        if (navLinksWrapper) {
-          navLinksWrapper.classList.add("translate-y-[32px]");
-          navLinksWrapper.classList.remove("translate-y-0");
-        }
-        if (themeWrapper) {
-          themeWrapper.classList.add("translate-y-[32px]");
-          themeWrapper.classList.remove("translate-y-0");
-          themeWrapper.classList.remove("scale-75");
-        }
-        if (menuWrapper) {
-          menuWrapper.classList.add("translate-y-[32px]");
-          menuWrapper.classList.remove("translate-y-0");
-          menuWrapper.classList.remove("scale-75");
-        }
-
-        header.classList.remove("bg-body", "dark:bg-body-dark");
-
-        navBorder.classList.remove("opacity-90", "translate-y-6");
-        navBorder.classList.add("opacity-0", "translate-y-25");
-      }
-    }
-
-    window.addEventListener("scroll", updateHeader );
-    updateHeader();
-  });
+  window.addEventListener("scroll", updateHeader, { passive: true });
+  document.addEventListener("astro:page-load", updateHeader);
 </script>
+
+<style>
+  .site-header,
+  .header-inner,
+  .header-logo,
+  .header-nav,
+  .header-actions,
+  .header-line {
+    transition: all 300ms ease;
+  }
+
+  /* At the top of the page */
+  .header-inner { height: 5.5rem; }
+  .header-spacer { height: 5.5rem; }
+  .header-logo { height: 2.25rem; }
+  .header-nav { gap: 2rem; font-size: 1.125rem; }
+  .header-actions { transform: scale(1.15); transform-origin: right center; }
+  .header-line { opacity: 0; }
+
+  /* Scrolled */
+  .site-header[data-scrolled="true"] { background-color: var(--color-body); }
+  :global(html.dark) .site-header[data-scrolled="true"] { background-color: var(--color-body-dark); }
+  .site-header[data-scrolled="true"] .header-inner { height: 3.75rem; }
+  .site-header[data-scrolled="true"] .header-logo { height: 1.75rem; }
+  .site-header[data-scrolled="true"] .header-nav { gap: 1.5rem; font-size: 1rem; }
+  .site-header[data-scrolled="true"] .header-actions { transform: none; }
+  .site-header[data-scrolled="true"] .header-line { opacity: 0.9; }
+</style>
 
 <script type="module">
   import "/scripts/menu-toggle.js";

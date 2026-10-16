@@ -36,11 +36,17 @@ html, body {
   --starfield-star-red: oklch(55% 0.2 25); /* rare */
   --starfield-star-blue: oklch(78% 0.16 220); /* rare, also a comet glow */
   --starfield-grid: theme(colors.neutral.800 / 0.15);
+
+  /* Logo colors (Wordmark.astro, LogoMark.astro). Light mode uses a deeper lavender for contrast. */
+  --logo-ink: #5b53c9;
+  --logo-star: oklch(55% 0.19 317.7);
 }
 
 html.dark {
   --starfield-star-alt: oklch(95% 0 0 / 0.95);
   --starfield-grid: theme(colors.accent / 0.15);
+  --logo-ink: theme(colors.accent);
+  --logo-star: oklch(65% 0.17 317.7);
 }
 
 
@@ -74,6 +80,20 @@ body.menu-open #hidden-menu {
 }
 .nav-link.active {
   @apply text-accent;
+}
+
+/*
+  Main content area of a subpage, between the header spacer and the footer (the body is a
+  flex column). Mobile first: content starts near the top with modest padding.
+  - .page-main: short pages (lists, forms) center in any spare height, sitting a little
+    above true center. Content taller than the screen just flows from the top.
+  - .page-article: long reading pages (About, write-ups) always flow from the top.
+*/
+.page-main {
+  @apply relative z-20 flex flex-1 flex-col justify-center w-full pt-6 pb-12 md:pt-10 md:pb-28;
+}
+.page-article {
+  @apply relative z-20 flex-1 w-full pt-6 pb-12 md:pt-12;
 }
 
 /* Reusable card container */
