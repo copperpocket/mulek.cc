@@ -41,7 +41,7 @@ export function setupFormHandler() {
         body: JSON.stringify(data),
       });
 
-      const json = await res.json();
+      const json = await res.json().catch(() => ({}));
 
       if (res.ok) {
         statusDiv.textContent = json.message || 'Message sent successfully!';
@@ -54,6 +54,7 @@ export function setupFormHandler() {
       statusDiv.textContent = 'Error sending message. Try again later.';
     } finally {
       submitButton.disabled = false;
+      hcaptcha.reset(); // each captcha token only works once
     }
   });
 }

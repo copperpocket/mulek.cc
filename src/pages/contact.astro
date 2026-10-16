@@ -30,6 +30,7 @@ const HCAPTCHA_SITE_KEY = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY;
             type="text"
             name="name"
             placeholder="Your Name"
+            maxlength="100"
             required
             class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-accent text-sm"
           />
@@ -37,12 +38,14 @@ const HCAPTCHA_SITE_KEY = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY;
             type="email"
             name="email"
             placeholder="Your Email"
+            maxlength="254"
             required
             class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-accent text-sm"
           />
           <textarea
             name="message"
             placeholder="Your Message"
+            maxlength="5000"
             rows="4"
             required
             class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-accent text-sm resize-none"
