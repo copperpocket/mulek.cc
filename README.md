@@ -15,7 +15,7 @@ This site serves as both a home for documentation and a hub for ongoing experime
 - [Astro](https://astro.build) — Web framework, server-rendered via the [`@astrojs/node`](https://docs.astro.build/en/guides/integrations-guide/node/) adapter (standalone mode)  
 - [Tailwind CSS](https://tailwindcss.com) — Utility-first styling  
 - [TypeScript](https://www.typescriptlang.org) — Type-safe development  
-- Markdown-based content collections for blog posts  
+- Markdown-based content collections for blog posts and projects  
 - [Nodemailer](https://nodemailer.com) + [hCaptcha](https://www.hcaptcha.com) — Contact form API  
 
 ## 🧩 Project Structure
@@ -27,7 +27,7 @@ This site serves as both a home for documentation and a hub for ongoing experime
 │   ├── assets/       # Assets processed by Astro
 │   ├── components/   # UI components
 │   ├── config/       # Site configuration (site info, menu, social, theme)
-│   ├── content/      # Markdown blog posts + collection schema
+│   ├── content/      # Markdown blog posts & projects + collection schema
 │   ├── layouts/      # Page layouts
 │   ├── pages/        # Routes, including the /api/contact endpoint
 │   ├── scripts/      # Script files
