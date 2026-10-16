@@ -1,9 +1,10 @@
 ---
-title: "Minecraft Server"
+title: "Quackshire - Minecraft"
 description: "A private Minecraft server that hosts builds from my friends and family."
 pubDate: 2025-10-15
-author: "Michael Mulek"
-tags: ["minecraft", "gaming", "projects"]
+category: "GameDev"
+tags: ["Java", "Spigot"]
+github: "https://github.com/copperpocket/quackshire"
 ---
 
 My **Minecraft server**, called **Quackshire**, is a private creative world that I host myself for friends and family. It’s designed to be simple, stable, and always available — a small but personal online space for shared creativity.

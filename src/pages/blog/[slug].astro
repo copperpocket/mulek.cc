@@ -13,6 +13,11 @@ const posts = await getCollection("blog");
 const post = posts.find((p) => p.slug === slug);
 
 if (!post) {
+  // Project write-ups used to live in the blog
+  const projects = await getCollection("projects");
+  if (projects.some((p) => p.slug === slug)) {
+    return Astro.redirect(`/projects/${slug}`, 301);
+  }
   return Astro.rewrite("/404");
 }
 

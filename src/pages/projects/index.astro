@@ -6,29 +6,17 @@ import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 
 import ProjectCard from "@/components/ProjectCard.astro";
+import { getCollection } from "astro:content";
+import { projectCategories as categories } from "@/content/config";
 
 import "@/styles/global.css";
 
-
-// 1. Define your Project Data
-const projects = [
-    // WebDev Category
-    { title: "Portfolio Site v2", slug: "/blog/portfolio", category: "WebDev", tags: ["Astro.js", "TailwindCSS"], description: "The current site you are viewing, built with modern web technologies.", github: "https://github.com/copperpocket/mulek.cc" },
-    { title: "Personal Blog", slug: "/blog", category: "WebDev", tags: ["Astro.js", "Markdown"], description: "A blog where I share articles on various tech topics." },
-    // Automation/DevOps Category
-    { title: "Homelab Overview", slug: "/blog/homelab-overview", category: "DevOps", tags: ["Proxmox", "TrueNAS", "OPNsense"], description: "Network diagram of my homelab environment." },
-    { title: "Mailcow", slug: "/blog/mailcow", category: "DevOps", tags: ["Mail server", "Self hosted"], description: "This article highlights my experience configuring mailcow server." },
-    
-    // GameDev Category
-    { title: "Duckcraft - World of Warcraft", slug: "/blog/warcraft", category: "GameDev", tags: ["Open-source", "C++"], description: "Powered by AzerothCore and Playerbots, a custom built WOTLK server." },
-    { title: "Quackshire - Minecraft", slug: "/blog/minecraft", category: "GameDev", tags: ["Java", "Spigot"], description: "A custom Minecraft server with unique plugins and features." },
-    
-    
-    // Add more projects here
-];
-
-// 2. Define the Categories (for the buttons)
-const categories = ["WebDev", "DevOps", "GameDev"]; // Explicit list of filter buttons
+// Projects live in src/content/projects; group by category, newest first within each
+const projects = (await getCollection("projects")).sort(
+    (a, b) =>
+        categories.indexOf(a.data.category) - categories.indexOf(b.data.category) ||
+        b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
 ---
 
 <MainLayout title="Projects - mulek.cc" description="Projects by Michael Scott Mulek - web development, homelab infrastructure, and game servers.">
@@ -68,8 +56,8 @@ const categories = ["WebDev", "DevOps", "GameDev"]; // Explicit list of filter b
             </div>
 
             <div id="project-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {projects.map(project => (
-                    <ProjectCard {...project} />
+                {projects.map(({ slug, data }) => (
+                    <ProjectCard {...data} slug={`/projects/${slug}`} />
                 ))}
             </div>
             

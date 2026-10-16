@@ -1,9 +1,10 @@
 ---
-title: "Echo Protocol: Digital Collectible System"
+title: "Echo Protocol"
 description: "A cross-genre project combining an isometric exploration game with a competitive card game, driven by a collectible status system."
 pubDate: 2025-11-14
-author: "Michael Mulek"
-tags: ["game-design", "collectible", "gacha-mechanics", "rpg", "projects"]
+category: "GameDev"
+tags: ["Godot", "Dialogic"]
+github: "https://github.com/copperpocket/echo_protocol"
 ---
 
 **Echo Protocol** is a comprehensive game design project that centers around the **joy of the rare pull** and the **status of collection**. It’s built on a dual-experience foundation: an **isometric world** of exploration and activity, seamlessly tied to a deep, competitive **digital card game**.

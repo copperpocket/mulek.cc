@@ -45,8 +45,14 @@ const pageTitle = "Blog Archive";
             ))}
           </ul>
         ) : (
-          <div class="text-center py-10 text-neutral-600 dark:text-neutral-400">
-            <p>No blog posts found.</p>
+          <div class="text-center py-10 text-neutral-600 dark:text-neutral-400 space-y-4">
+            <p>No posts yet. The first one is in the works.</p>
+            <p>
+              In the meantime, see what I've been building on the
+              <a href="/projects" class="text-accent font-semibold hover:underline">Projects</a>
+              page, or follow the <a href="/rss.xml" class="text-accent font-semibold hover:underline">RSS feed</a>
+              to catch new posts.
+            </p>
           </div>
         )}
       </section>
