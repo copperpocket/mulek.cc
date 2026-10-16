@@ -6,6 +6,7 @@ category: "WebDev"
 tags: ["Astro.js", "TailwindCSS"]
 url: "https://mulek.cc"
 github: "https://github.com/copperpocket/mulek.cc"
+current: true
 ---
 
 ## Building **mulek.cc**
