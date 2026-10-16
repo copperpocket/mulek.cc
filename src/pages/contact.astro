@@ -1,6 +1,6 @@
 ---
 import MainLayout from "@/layouts/MainLayout.astro";
-import FloatingDots from "@/components/FloatingDots.astro";
+import Starfield from "@/components/Starfield.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import "@/styles/global.css";
@@ -8,7 +8,7 @@ import "@/styles/global.css";
 const HCAPTCHA_SITE_KEY = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY;
 ---
 <MainLayout title="Contact - mulek.cc" description="Get in touch with Michael Scott Mulek. Have a question, project idea, or just want to say hello?">
-  <FloatingDots />
+  <Starfield />
   <Header />
 
   <main class="relative z-20 container mx-auto py-16 text-neutral-800 dark:text-neutral-200">
@@ -67,8 +67,7 @@ const HCAPTCHA_SITE_KEY = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY;
         <div class="flex justify-center items-center space-x-6 mt-4 text-sm">
           <a href="https://copperpocket.bsky.social" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">Bluesky</a>
           <a href="https://github.com/copperpocket" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">GitHub</a>
-          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">LinkedIn</a>
-        </div>
+          <a href="/rss.xml" class="text-accent hover:underline">RSS</a>        </div>
       </div>
     </section>
 

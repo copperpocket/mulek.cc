@@ -4,7 +4,6 @@
   "version": "0.0.2",
   "scripts": {
     "dev": "astro dev",
-    "start": "node ./dist/server/entry.mjs",
     "build": "astro build",
     "start": "node ./dist/server/entry.mjs",
     "preview": "astro preview",
@@ -12,6 +11,7 @@
   },
   "dependencies": {
     "@astrojs/node": "^9.5.0",
+    "@astrojs/rss": "^4.0.19",
     "@tailwindcss/vite": "^4.1.13",
     "nodemailer": "^7.0.9",
     "tailwindcss": "^4.1.13"
