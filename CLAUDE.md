@@ -6,6 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Pushing to `master` deploys to production.** A Dokploy instance rebuilds mulek.cc whenever `master` changes. Day-to-day work happens on `dev`, which gets merged into `master` through PRs.
 - **Don't commit, branch, or push unless the user explicitly asks.** Leave changes in the working tree.
+- **`ROADMAP.md` is the running improvement list.** Check items off, or add new ones, as part of the same change.
 - **Commit messages use Conventional Commits:** `type(scope): short description`, where type is `feat`, `fix`, `docs`, `style`, `refactor`, `test` or `chore`. See `.git-commit-template.txt`.
 
 ## Commands
