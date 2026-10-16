@@ -77,3 +77,9 @@ yarn start      # runs the standalone Node server from dist/server/entry.mjs
 | `yarn build`   | Build the production server to `./dist/`      |
 | `yarn start`   | Run the built server                          |
 | `yarn preview` | Preview the build locally                     |
+
+## 📄 License
+
+The **code** in this repository is released under the [MIT License](LICENSE). Feel free to borrow anything useful; just keep the copyright notice.
+
+The **content** is not covered by that license and remains © Michael Scott Mulek, all rights reserved. That means the writing in `src/content/` and the personal images in `public/images/` and `src/assets/` (photos, avatar artwork and logos). Please don't reuse it without asking.

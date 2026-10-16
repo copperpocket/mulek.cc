@@ -28,6 +28,7 @@ const projectsCollection = defineCollection({
     url: z.string().url().optional(), // live site, if there is one
     github: z.string().url().optional(),
     image: z.string().optional(), // card image, path under public/
+    current: z.boolean().optional(), // shown as "Current Project" on the home page
   }),
 });
 

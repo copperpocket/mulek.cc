@@ -23,8 +23,8 @@
     "astro": "^5.15.6"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Michael Scott Mulek",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/copperpocket/mulek.cc.git"

@@ -1,5 +1,6 @@
 ---
 // src/components/AboutSummary.astro
+import { getCollection } from "astro:content";
 
 interface Props {
   short?: boolean;
@@ -7,8 +8,8 @@ interface Props {
 
 const { short = false } = Astro.props;
 
-// Career Start Date
-const careerStartDate = "2018-12-30"; // Update this to your actual start date
+// Career Start Date (drives "Professional Uptime" and the years on the About page)
+const careerStartDate = "2018-12-30";
 
 const getAge = (birthDate: string) => {
   const today = new Date();
@@ -19,16 +20,21 @@ const getAge = (birthDate: string) => {
   return age;
 };
 
-// Logic for a decimal representation (e.g., 6.2)
+// Whole years since a date, counting only completed years
 const getUptime = (startDate: string) => {
   const start = new Date(startDate);
   const now = new Date();
   const diffInMs = now.getTime() - start.getTime();
-  const diffInYears = diffInMs / (1000 * 60 * 60 * 24 * 365.25);
-  return diffInYears.toFixed(1);
+  return Math.floor(diffInMs / (1000 * 60 * 60 * 24 * 365.25));
 };
 
 const uptime = getUptime(careerStartDate);
+
+// Home page "Current Project": the project flagged `current: true`, or else the newest one
+const projects = await getCollection("projects");
+const currentProject =
+  projects.find((p) => p.data.current) ??
+  [...projects].sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())[0];
 
 const pets = [
   { name: 'Gertie', bday: '09-11', age: getAge("2022-09-11"), img: '/images/gertie1.jpeg' },
@@ -55,13 +61,16 @@ const pets = [
       Salem, and Oliver.
     </p>
 
-    <div class="hidden sm:flex flex-col space-y-6 mt-4">
+    <div class="hidden sm:flex flex-col gap-4">
   <!-- "The Console" Grid -->
   <div class="grid grid-cols-2 gap-4">
-    <!-- Pinned Time (Central Time) -->
+    <!-- Pinned Time (Central Time), with the zone abbreviation and a status filled in by the script below -->
     <div class="p-3 border border-neutral-200 dark:border-neutral-800 rounded-lg bg-neutral-50/50 dark:bg-neutral-900/30">
-      <span class="text-[10px] uppercase tracking-widest opacity-50 font-bold block mb-1">Local Time (CDT/CST)</span>
+      <span class="text-[10px] uppercase tracking-widest opacity-50 font-bold block mb-1">
+        Local Time (<span id="local-time-zone">CT</span>)
+      </span>
       <p class="font-mono text-lg text-accent" id="local-time-display">--:--:--</p>
+      <p class="text-xs opacity-60 italic min-h-4" id="local-time-status"></p>
     </div>
 
     <!-- Professional Uptime -->
@@ -70,62 +79,44 @@ const pets = [
       <p class="font-medium">{uptime} Years</p>
     </div>
 
-    <!-- Current Playthrough (YouTube Link) -->
-    <a 
-      href="https://www.youtube.com/@copperpocket/playlists" 
-      target="_blank" 
-      rel="noopener noreferrer" 
-      class="group p-3 border border-neutral-200 dark:border-neutral-800 rounded-lg bg-neutral-50/50 dark:bg-neutral-900/30 hover:border-accent/50 transition-colors"
-    >
-      <span class="text-[10px] uppercase tracking-widest opacity-50 font-bold flex justify-between items-center">
-        Current Playthrough
-        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-hover:opacity-100 transition-opacity">
-          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-          <polyline points="15 3 21 3 21 9"></polyline>
-          <line x1="10" y1="14" x2="21" y2="3"></line>
-        </svg>
-      </span>
-      <p class="font-medium truncate group-hover:text-accent transition-colors">Factorio: Space Age</p>
-    </a>
+    <!-- Current Playthrough -->
+    <div class="p-3 border border-neutral-200 dark:border-neutral-800 rounded-lg bg-neutral-50/50 dark:bg-neutral-900/30">
+      <span class="text-[10px] uppercase tracking-widest opacity-50 font-bold block mb-1">Current Playthrough</span>
+      <p class="font-medium truncate">WoW Forever</p>
+    </div>
 
-    <!-- Current Project (GitHub Link) -->
-    <a 
-      href="https://github.com/copperpocket/mulek.cc" 
-      target="_blank" 
-      rel="noopener noreferrer" 
-      class="group p-3 border border-neutral-200 dark:border-neutral-800 rounded-lg bg-neutral-50/50 dark:bg-neutral-900/30 hover:border-accent/50 transition-colors"
-    >
-      <span class="text-[10px] uppercase tracking-widest opacity-50 font-bold flex justify-between items-center">
-        Current Project
-        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-hover:opacity-100 transition-opacity">
-          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-          <polyline points="15 3 21 3 21 9"></polyline>
-          <line x1="10" y1="14" x2="21" y2="3"></line>
-        </svg>
-      </span>
-      <p class="font-medium truncate group-hover:text-accent transition-colors">Personal Website</p>
-    </a>
+    <!-- Current Project (from the projects collection) -->
+    {currentProject && (
+      <a
+        href={`/projects/${currentProject.slug}`}
+        class="group p-3 border border-neutral-200 dark:border-neutral-800 rounded-lg bg-neutral-50/50 dark:bg-neutral-900/30 hover:border-accent/50 transition-colors"
+      >
+        <span class="text-[10px] uppercase tracking-widest opacity-50 font-bold flex justify-between items-center mb-1">
+          Current Project
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity">&rarr;</span>
+        </span>
+        <p class="font-medium truncate group-hover:text-accent transition-colors">{currentProject.data.title}</p>
+      </a>
+    )}
   </div>
 
-  <!-- Monochrome Tech Tags -->
-  <div class="flex flex-wrap gap-2 opacity-60">
-    {[
-      'Azure', 
-      'Active Directory', 
-      'Microsoft 365', 
-      'PowerShell',
-      'Proxmox', 
-      'OPNsense', 
-      'TrueNAS Scale', 
-      'MikroTik', 
-      'Arch Linux', 
-      'AstroJS'
-    ].map(tech => (
-      <span class="px-2 py-0.5 text-[10px] font-mono border border-neutral-300 dark:border-neutral-700 rounded-full">
-        {tech}
-      </span>
-    ))}
-  </div>
+  <!-- Link to this site's source, styled as `git remote -v` output -->
+  <a
+    href="https://github.com/copperpocket/mulek.cc"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="group block w-fit font-mono text-xs leading-snug"
+  >
+    <span class="block opacity-50">$ git remote -v</span>
+    <span class="flex items-center gap-2">
+      <span class="opacity-50">origin</span>
+      <span class="text-accent opacity-80 group-hover:opacity-100 group-hover:underline transition">github.com/copperpocket/mulek.cc</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-accent opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition">
+        <line x1="7" y1="17" x2="17" y2="7"></line>
+        <polyline points="7 7 17 7 17 17"></polyline>
+      </svg>
+    </span>
+  </a>
 </div>
   ) : (
     <>
@@ -160,7 +151,7 @@ const pets = [
             <polyline points="7 7 17 7 17 17"></polyline>
           </svg>
         </a>,
-        supporting businesses within a fast-paced MSP environment. With over 6 years in the industry, my background is built on managing diverse infrastructures, automation, and high-level technical support.
+        supporting businesses within a fast-paced MSP environment. With over {uptime} years in the industry, my background is built on managing diverse infrastructures, automation, and high-level technical support.
       </p>
       <p>
         I'd love to hear from you! You can reach me through my 
@@ -254,20 +245,50 @@ const pets = [
   // Support for Astro View Transitions
   document.addEventListener('astro:page-load', initPetModal);
 
-  // Simple local time updater for the "fun" desktop section
+  // Local time for the "fun" desktop section, always in Central Time
+  const TIME_ZONE = 'America/Chicago';
+
+  // A rough guess at what I'm up to, by Central Time and day of the week
+  const at = (hour: number, minute = 0) => hour * 60 + minute;
+
+  function getStatus(minutes: number, weekday: string) {
+    const weekend = weekday === 'Sat' || weekday === 'Sun';
+    if (minutes < at(6)) return 'probably asleep';
+    if (minutes < at(8, 30)) return 'morning routine';
+    if (minutes < at(17, 30)) return weekend ? 'weekend projects' : 'at work';
+    if (minutes < at(22)) return weekend ? 'weekend gaming' : 'homelab hours';
+    return 'winding down';
+  }
+
   function updateTime() {
     const timeEl = document.getElementById('local-time-display');
-    if (timeEl) {
-      const now = new Date();
-      // Specifically targeting America/Chicago for Central Time
-      timeEl.textContent = now.toLocaleTimeString('en-US', { 
-        hour: '2-digit', 
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true,
-        timeZone: 'America/Chicago' 
-      });
-    }
+    if (!timeEl) return;
+
+    const now = new Date();
+    timeEl.textContent = now.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true,
+      timeZone: TIME_ZONE,
+    });
+
+    // Zone abbreviation (CDT in summer, CST in winter), time, and weekday in Central Time
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: TIME_ZONE,
+      timeZoneName: 'short',
+      hour: 'numeric',
+      minute: 'numeric',
+      hourCycle: 'h23',
+      weekday: 'short',
+    }).formatToParts(now);
+    const part = (type: string) => parts.find((p) => p.type === type)?.value ?? '';
+
+    const zoneEl = document.getElementById('local-time-zone');
+    if (zoneEl) zoneEl.textContent = part('timeZoneName');
+
+    const statusEl = document.getElementById('local-time-status');
+    if (statusEl) statusEl.textContent = getStatus(at(Number(part('hour')), Number(part('minute'))), part('weekday'));
   }
 
   // Handle Astro View Transitions
