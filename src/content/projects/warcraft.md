@@ -1,9 +1,9 @@
 ---
-title: "World of Warcraft Server"
+title: "Duckcraft - World of Warcraft"
 description: "A private Wrath of the Lich King server powered by AzerothCore and enhanced with playerbots."
 pubDate: 2025-10-19
-author: "Michael Mulek"
-tags: ["world of warcraft", "azerothcore", "gaming", "projects"]
+category: "GameDev"
+tags: ["AzerothCore", "C++"]
 ---
 
 My **World of Warcraft server**, called **Duckcraft**, is a private **Wrath of the Lich King (3.3.5a)** world powered by **AzerothCore**. It’s designed for solo and small-group play, featuring the **playerbots module** so the world always feels alive — even when playing alone.
