@@ -1,10 +1,9 @@
 ---
-// Theme.astro
+// Theme.astro: the theme toggle button. The theme itself is set in MainLayout; this only switches it.
+import "@/styles/theme-toggle.css";
 // Generate a random ID for each instance to prevent SVG clipPath collisions
 const uniqueId = `theme-toggle-cutout-${Math.random().toString(36).substr(2, 9)}`;
 ---
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/theme-toggles@4.10.1/css/expand.min.css">
 
 <label class="theme-toggle theme-toggle--expand text-neutral-800 dark:text-neutral-200 hover:text-highlight transition-colors" title="Toggle theme">
   <input type="checkbox" class="theme-toggle-input" />
@@ -27,34 +26,20 @@ const uniqueId = `theme-toggle-cutout-${Math.random().toString(36).substr(2, 9)}
 </label>
 
 <script>
+  // Every toggle on the page (there can be two: the header's and the site menu's) shows the current
+  // theme and switches it, saving the choice and telling the starfield to repaint
   document.addEventListener('astro:page-load', () => {
-    // Select ALL toggles on the page
-    const toggles = document.querySelectorAll(".theme-toggle-input") as NodeListOf<HTMLInputElement>;
+    const toggles = document.querySelectorAll<HTMLInputElement>(".theme-toggle-input");
     const html = document.documentElement;
-
-    function applyTheme(theme: string) {
-      html.classList.remove("light", "dark");
-      html.classList.add(theme);
-      
-      // Sync all checkboxes on the page
-      toggles.forEach(btn => {
-        btn.checked = theme === "light";
-      });
-
-      localStorage.setItem("theme", theme);
-      document.dispatchEvent(new Event("themechange"));
-    }
-
-    // Initialize
-    const saved = localStorage.getItem("theme") || 
-                 (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-    applyTheme(saved);
-
-    // Add listeners to every toggle found
-    toggles.forEach(btn => {
-      btn.addEventListener("change", () => {
-        const nextTheme = btn.checked ? "light" : "dark";
-        applyTheme(nextTheme);
+    const sync = () => toggles.forEach((toggle) => (toggle.checked = !html.classList.contains("dark")));
+    sync();
+    toggles.forEach((toggle) => {
+      toggle.addEventListener("change", () => {
+        const theme = toggle.checked ? "light" : "dark";
+        html.classList.toggle("dark", theme === "dark");
+        try { localStorage.setItem("theme", theme); } catch {}
+        sync();
+        document.dispatchEvent(new Event("themechange"));
       });
     });
   });

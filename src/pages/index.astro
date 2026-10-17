@@ -15,22 +15,6 @@ const panel = "rounded-xl bg-body dark:bg-body-dark border border-neutral-300 da
 
 ---
 
-<script is:inline>
-  const getTheme = () => {
-    if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-      return localStorage.getItem('theme');
-    }
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  };
-
-  const theme = getTheme();
-  if (theme === 'light') {
-    document.documentElement.classList.remove('dark');
-  } else {
-    document.documentElement.classList.add('dark');
-  }
-</script>
-
 <MainLayout title="mulek.cc - Home" description="Michael Scott Mulek, Systems Engineer. Projects and write-ups on homelab infrastructure, self-hosting, and development.">
   <TwSizeIndicator />
 
