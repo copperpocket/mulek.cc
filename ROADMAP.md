@@ -41,6 +41,8 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [x] Projects page redesign: whole-card links, a featured current project, `CATEGORY · YEAR` labels, tags as plain text, matching filter buttons with counts, and plainer category names (Web, Infrastructure, Games)
 - [x] The home page no longer scrolls slightly on phones (`100dvh` instead of `100vh`)
 - [x] No more TypeScript files: the two config files are plain JavaScript
+- [x] Consistent page titles: one shared `page-title` style, large and extra-bold in the plain text color
+- [x] New sun stripes ease in instead of starting as a crisp line
 - [x] Post dates show the right day (they were a day early in US time zones), and inline code no longer shows literal backticks
 
 ## Cleanup
@@ -78,4 +80,3 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 ## Design
 
 - [ ] Rework the phone layout so the sun still shows without pushing the panel to the bottom
-- [ ] Make the page headings consistent (About and Contact are larger and extra-bold, Projects and Blog smaller; Contact and 404 are lavender)

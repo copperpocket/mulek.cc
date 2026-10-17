@@ -127,7 +127,8 @@ const nebulas = roll(Astro.props.nebulas);
   const SUN_STRIPE_REGION = 0.50; // how far up from the horizon the gaps reach, as a fraction of the radius
   const SUN_STRIPE_SECONDS = 4; // time for a gap to drift down into the next one's place
   const SUN_STRIPE_MAX_GAP = 0.65; // gap height at the horizon, as a fraction of the stripe spacing
-  const SUN_STRIPE_FADE = 0.15; // how far down the stripe region a new gap takes to fully appear
+  const SUN_STRIPE_FADE = 0.15; // how far down the stripe region a new gap takes to fully appear...
+  const SUN_STRIPE_SOLID_PX = 4; // ...and it stays see-through until it's at least this tall, so it never starts as a crisp line
 
   // Constellations: a few joined stars anywhere in the open sky, drawn in line by line
   const CONSTELLATION_STARS = [4, 7]; // stars along the main line, plus sometimes one on a branch
@@ -567,9 +568,9 @@ const nebulas = roll(Astro.props.nebulas);
         sunCtx!.fillStyle = "#000";
         for (let i = 0; i < SUN_STRIPES; i++) {
           const depth = (i + progress) / SUN_STRIPES; // 0 at the top of the region, 1 at the horizon
-          const fadeIn = Math.min(1, depth / SUN_STRIPE_FADE);
-          sunCtx!.globalAlpha = fadeIn * fadeIn * (3 - 2 * fadeIn); // smoothstep
-          sunCtx!.fillRect(cx - r, cy - region + depth * region, r * 2, pitch * SUN_STRIPE_MAX_GAP * depth);
+          const gap = pitch * SUN_STRIPE_MAX_GAP * depth;
+          sunCtx!.globalAlpha = smoothstep(Math.min(depth / SUN_STRIPE_FADE, gap / SUN_STRIPE_SOLID_PX));
+          sunCtx!.fillRect(cx - r, cy - region + depth * region, r * 2, gap);
         }
         sunCtx!.globalAlpha = 1;
         sunCtx!.globalCompositeOperation = "source-over";
