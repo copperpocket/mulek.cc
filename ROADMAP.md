@@ -31,6 +31,8 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [x] The sun's pink across the site: hover color for links and buttons, category tags (teal before), the logo's star, and the header's scrolled line
 - [x] Sub-page panels edged orchid to lavender, matching the home page panels
 - [x] Even 32px spacing between page headings and the panels below them
+- [x] First blog post: Dev Log #1, plus a template so every dev log has the same sections and tags
+- [x] Post dates show the right day (they were a day early in US time zones), and inline code no longer shows literal backticks
 
 ## Cleanup
 
@@ -63,7 +65,6 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 
 - [ ] Flesh out the project write-ups (overview, setup, lessons learned), including a real homelab network diagram
 - [ ] "How this site deploys" write-up (Astro, Docker, Dokploy, auto-deploy from `master`)
-- [ ] First real blog post
 - [ ] Blog features: cover images, reading time, tag pages, next/previous links, consistent date format
 - [ ] Project card images
 - [ ] `/uses` page (hardware, homelab stack, tools) and `/now` page
