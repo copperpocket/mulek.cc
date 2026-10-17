@@ -32,6 +32,7 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [x] Sub-page panels edged orchid to lavender, matching the home page panels
 - [x] Even 32px spacing between page headings and the panels below them
 - [x] First blog post: Dev Log #1, plus a template so every dev log has the same sections and tags
+- [x] Nebulas as their own feature, separate from the constellation haze; each visit rolls 1-6 constellations and 2-8 nebulas, and the dev-only test switcher is gone
 - [x] Post dates show the right day (they were a day early in US time zones), and inline code no longer shows literal backticks
 
 ## Cleanup
@@ -74,5 +75,4 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 ## Design
 
 - [ ] Rework the phone layout so the sun still shows without pushing the panel to the bottom
-- [ ] Separate constellations from nebulas: constellations without haze, plus real nebula clouds as their own feature (then remove the dev-only constellation switcher)
 - [ ] Make the page headings consistent (About and Contact are larger and extra-bold, Projects and Blog smaller; Contact and 404 are lavender)
