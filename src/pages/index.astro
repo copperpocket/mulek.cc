@@ -16,7 +16,7 @@ const panel = "rounded-[1.125rem] bg-body dark:bg-body-dark border border-neutra
 const params = import.meta.env.DEV ? Astro.url.searchParams : new URLSearchParams();
 
 // TEMPORARY: sky options, picked with ?constellations=<n>&haze=<on|off>&nebulas=<n> on the dev server only
-const skyCounts = ["2", "3", "4", "5", "6"];
+const skyCounts = ["2", "4", "6", "8", "10", "12"];
 const pickSky = (name: string, options: string[], fallback: string) => {
   const value = params.get(name);
   return value && options.includes(value) ? value : fallback;

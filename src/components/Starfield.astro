@@ -12,12 +12,12 @@ interface Props {
       get --sun-edge-top/--sun-edge-bottom (where the sun's gradient starts and ends, in px from their
       top), for .panel-edge-sun */
   sun?: boolean;
-  /** How many constellations to draw, up to 6. They alternate sides of the sun, sharing each side's sky
-      top to bottom, or sit along the top on phones (where only one shows) */
+  /** How many constellations to draw, up to 12. Each gets a random spot anywhere in the open sky,
+      clear of the sun, each other and anything marked data-starfield-avoid. One that doesn't fit is skipped */
   constellations?: number;
   /** Add a faint haze behind each constellation. Constellations keep clear of anything marked data-starfield-avoid */
   haze?: boolean;
-  /** How many nebulas to draw, up to 6: soft clouds of gas in the sky's colors, clear of the sun, the
+  /** How many nebulas to draw, up to 12: soft clouds of gas in the sky's colors, clear of the sun, the
       constellations and anything marked data-starfield-avoid. One that doesn't fit is skipped */
   nebulas?: number;
   /** Horizon height as a fraction of the canvas (only used with grid) */
@@ -75,12 +75,8 @@ const { density = 1, grid = false, sun = false, constellations = 0, haze = false
     points: { x: number; y: number; color: ConstellationColor; twinklePhase: number }[]; // x and y are 0-1 within its own box
     aspect: number; // box width / height
     lines: [number, number][]; // indexes into points, in the order they're drawn in
-    side: number; // -1 for the left of the sky, 1 for the right
-    slot: number; // which share of its side's sky it gets, top to bottom...
-    slots: number; // ...out of this many
     size: number; // 0-1 share of its zone it fills
-    slackX: number; // 0-1 position within whatever room is left over
-    slackY: number;
+    spots: { x: number; y: number }[]; // places to try, 0-1 across the sky, in order until one fits
     delay: number; // seconds before it starts drawing in
   }
 
@@ -118,12 +114,13 @@ const { density = 1, grid = false, sun = false, constellations = 0, haze = false
   const SUN_STRIPE_MAX_GAP = 0.65; // gap height at the horizon, as a fraction of the stripe spacing
   const SUN_STRIPE_FADE = 0.15; // how far down the stripe region a new gap takes to fully appear
 
-  // Constellations: a few joined stars in the open sky beside the sun, drawn in line by line
+  // Constellations: a few joined stars anywhere in the open sky, drawn in line by line
   const CONSTELLATION_STARS = [4, 7]; // stars along the main line, plus sometimes one on a branch
   const CONSTELLATION_BRANCH_CHANCE = 0.4;
   const CONSTELLATION_TURN_DEGREES = 70; // most the path bends at each star
-  const CONSTELLATION_SIZE = [0.6, 0.95]; // share of its zone it fills
-  const CONSTELLATION_MAX_SIZE = 220; // px, so they stay small on big screens
+  const CONSTELLATION_SIZE = [0.6, 1]; // how much of the full size each one gets...
+  const CONSTELLATION_FULL_SIZE = 0.12; // ...where full is this fraction of the canvas width...
+  const CONSTELLATION_FULL_SIZE_PX = [130, 220]; // ...kept within this range
   const CONSTELLATION_DELAY_SECONDS = [0.2, 0.5]; // after page load, before the first one starts
   const CONSTELLATION_LINE_SECONDS = 0.9; // time to draw each line
   const CONSTELLATION_LINE_STAGGER = 0.7; // each line starts this far (as a share of a line's time) into the one before
@@ -132,14 +129,15 @@ const { density = 1, grid = false, sun = false, constellations = 0, haze = false
   const CONSTELLATION_LINE_GAP = 5; // px the lines stop short of each star, like a star chart
   const CONSTELLATION_BREATH_SECONDS = 12; // one slow pulse of the whole group
   const CONSTELLATION_COLORS: [ConstellationColor, number][] = [["star", 0.4], ["sunTop", 0.3], ["blue", 0.2], ["alt", 0.1]];
-  // Where they can sit, as fractions of the canvas width and the sky's height. Desktop has a zone on
-  // each side of the sun and panels; phones have one band along the top.
-  const CONSTELLATION_ZONE_SIDE = { x0: 0.03, x1: 0.25, y0: 0.08, y1: 0.8 };
-  const CONSTELLATION_ZONE_TOP = { x0: 0.08, x1: 0.92, y0: 0.05, y1: 0.32 };
-  const CONSTELLATION_PHONE_WIDTH = 640; // below this, only the first one shows, in the top zone
-  const CONSTELLATION_AVOID_MARGIN = 24; // px kept clear around anything marked data-starfield-avoid
-  const CONSTELLATION_MIN_HEIGHT = 60; // px; if a zone gets squeezed smaller than this, that constellation is skipped
-  const HAZE_RADIUS = 0.9; // haze around each star, as a multiple of the average line length
+  const CONSTELLATION_SKY = { x0: 0.02, x1: 0.98, y0: 0.04, y1: 0.92 }; // where they can sit, as fractions of the width and the sky
+  const CONSTELLATION_SPOTS = 150; // random places tried before giving up
+  const CONSTELLATION_AVOID_MARGIN = 24; // px kept clear around anything marked data-starfield-avoid, and the sun
+  const CONSTELLATION_GAP = 32; // px kept between constellations
+  const HAZE_RADIUS = 1.4; // haze around each star, as a multiple of the average line length...
+  const HAZE_MIN_RADIUS = 80; // ...but at least this many px, so tight constellations don't get small, hard-edged circles
+  // The haze's falloff, as [distance out, opacity] pairs: a smooth bell curve rather than a straight
+  // ramp, which leaves a visible edge
+  const HAZE_STOPS: [number, number][] = [[0, 1], [0.2, 0.75], [0.4, 0.42], [0.6, 0.18], [0.8, 0.05], [1, 0]];
 
   // Nebulas: big soft clouds of gas along a gently bending path, blending through colors of their
   // own (neon green, cyan, electric blue, amber) that nothing else in the sky uses
@@ -223,7 +221,7 @@ const { density = 1, grid = false, sun = false, constellations = 0, haze = false
   }
 
   // A gently bending path of stars (plus maybe one branch) with no crossing lines or crowded stars
-  function makeConstellation(side: number): Constellation {
+  function makeConstellation(): Constellation {
     for (let attempt = 0; ; attempt++) {
       const count = Math.round(randIn(CONSTELLATION_STARS));
       const pts: number[][] = [[0, 0]];
@@ -266,12 +264,8 @@ const { density = 1, grid = false, sun = false, constellations = 0, haze = false
         points,
         aspect: w / h,
         lines,
-        side,
-        slot: 0, // set once they all exist
-        slots: 1,
         size: randIn(CONSTELLATION_SIZE),
-        slackX: Math.random(),
-        slackY: Math.random(),
+        spots: Array.from({ length: CONSTELLATION_SPOTS }, () => ({ x: Math.random(), y: Math.random() })),
         delay: 0, // set once both exist, so they draw in one after the other
       };
     }
@@ -332,23 +326,19 @@ const { density = 1, grid = false, sun = false, constellations = 0, haze = false
     // Nebulas change only on resize or theme change, so they're painted once onto their own layer
     const nebulaLayer = document.createElement("canvas");
     const nebulaCtx = nebulaLayer.getContext("2d");
+    // Same for each constellation's haze once it has drawn in; until then it's drawn fresh each
+    // frame, since it grows in with the stars
+    const hazeLayer = document.createElement("canvas");
+    const hazeCtx = hazeLayer.getContext("2d");
+    let hazeCached = new Set<number>(); // constellations already painted onto the haze layer
 
     const density = Number(canvas.dataset.density) || 1;
     const hasGrid = canvas.dataset.grid !== undefined;
     const horizon = hasGrid ? Number(canvas.dataset.horizon) || 0.5 : 1;
     const hasSun = hasGrid && canvas.dataset.sun !== undefined && sunCtx !== null;
     const hasHaze = canvas.dataset.haze !== undefined;
-    const nebulas = nebulaCtx ? Array.from({ length: Math.min(6, Number(canvas.dataset.nebulas) || 0) }, makeNebula) : [];
-    const firstSide = Math.random() < 0.5 ? -1 : 1;
-    // They alternate sides of the sun, starting on a random one, and split each side's sky between them
-    const constellations = Array.from({ length: Math.min(6, Number(canvas.dataset.constellations) || 0) }, (_, i) =>
-      makeConstellation(i % 2 === 0 ? firstSide : -firstSide),
-    );
-    for (const side of [-1, 1]) {
-      const mine = constellations.filter((c) => c.side === side);
-      const order = mine.map((_, k) => k).sort(() => Math.random() - 0.5);
-      mine.forEach((c, k) => Object.assign(c, { slot: order[k], slots: mine.length }));
-    }
+    const nebulas = nebulaCtx ? Array.from({ length: Math.min(12, Number(canvas.dataset.nebulas) || 0) }, makeNebula) : [];
+    const constellations = Array.from({ length: Math.min(12, Number(canvas.dataset.constellations) || 0) }, makeConstellation);
     // The first starts soon after load, the next just before the first one finishes
     const drawSeconds = (c: Constellation) => ((c.lines.length - 1) * CONSTELLATION_LINE_STAGGER + 1) * CONSTELLATION_LINE_SECONDS;
     constellations.forEach((c, i) => {
@@ -390,8 +380,9 @@ const { density = 1, grid = false, sun = false, constellations = 0, haze = false
     const stars: Star[] = [];
     const colors = { star: "", alt: "", red: "", blue: "", grid: "", sunTop: "", sunBottom: "", sunGlow: "", sunGlowEnd: "" };
     const nebulaColors: Record<NebulaColor, string> = { green: "", cyan: "", blue: "", amber: "" };
-    // Fully transparent versions of the constellation colors, so the haze fades out without going gray
-    const clearColors: Record<string, string> = {};
+    // Each constellation color at falling opacities, ending fully transparent, so the haze fades out
+    // gently (no visible rim) and without going gray
+    const hazeShades: Record<string, string[]> = {};
     // Each nebula's blend between its two colors, with fully transparent versions to fade out to
     let nebulaShades: { solid: string; soft: string; clear: string }[][] = [];
     let constellationAlpha = 1; // --starfield-constellation-alpha, line opacity
@@ -429,7 +420,9 @@ const { density = 1, grid = false, sun = false, constellations = 0, haze = false
         canvas.style.color = css;
         return getComputedStyle(canvas).color;
       };
-      for (const [color] of CONSTELLATION_COLORS) clearColors[color] = resolve(`rgb(from ${colors[color]} r g b / 0)`);
+      for (const [color] of CONSTELLATION_COLORS) {
+        hazeShades[color] = HAZE_STOPS.map(([, alpha]) => resolve(`rgb(from ${colors[color]} r g b / ${alpha})`));
+      }
       for (const color of NEBULA_COLORS) nebulaColors[color] = readColor(canvas, `--starfield-nebula-${color}`);
       // Each shade blends between the two of its colors it falls between, with a half-faded and a
       // fully transparent version so the puffs fade out without going gray
@@ -458,6 +451,10 @@ const { density = 1, grid = false, sun = false, constellations = 0, haze = false
       nebulaLayer.width = canvas.width;
       nebulaLayer.height = canvas.height;
       nebulaCtx?.setTransform(dpr, 0, 0, dpr, 0, 0);
+      hazeLayer.width = canvas.width;
+      hazeLayer.height = canvas.height;
+      hazeCtx?.setTransform(dpr, 0, 0, dpr, 0, 0);
+      hazeCached = new Set();
 
       // Stars are stored in relative coordinates, so a resize (like a mobile
       // URL bar collapsing) keeps them in place and only tops up or trims the count
@@ -646,49 +643,49 @@ const { density = 1, grid = false, sun = false, constellations = 0, haze = false
       ctx!.restore();
     }
 
-    // The box a constellation fills, in px, keeping its shape whatever the screen size
-    function constellationBox(c: Constellation, index: number) {
-      const phone = width < CONSTELLATION_PHONE_WIDTH;
-      if (phone && index > 0) return null;
+    // Where each constellation sits, in px, found on resize: the first of its spots where it's clear
+    // of the panels and menu, the sun and the ones placed before it (null if none fits)
+    let constellationBoxes: ({ x: number; y: number; w: number; h: number } | null)[] = [];
+    function placeConstellations() {
       const sky = height * horizon;
-      const zone = phone ? CONSTELLATION_ZONE_TOP : CONSTELLATION_ZONE_SIDE;
-      const left = phone || c.side < 0 ? zone.x0 * width : (1 - zone.x1) * width;
-      // On desktop, constellations sharing a side each get an even slice of it, top to bottom
-      const slice = phone ? { top: zone.y0, bottom: zone.y1 } : {
-        top: zone.y0 + ((zone.y1 - zone.y0) * c.slot) / c.slots,
-        bottom: zone.y0 + ((zone.y1 - zone.y0) * (c.slot + 1)) / c.slots,
-      };
-      let z = { left, right: left + (zone.x1 - zone.x0) * width, top: slice.top * sky, bottom: slice.bottom * sky };
-      // Shrink the zone away from anything it overlaps (panels, the menu), trimming whichever
-      // side keeps the most room: stopping above it, below it, or beside it
+      const full = Math.min(CONSTELLATION_FULL_SIZE_PX[1], Math.max(CONSTELLATION_FULL_SIZE_PX[0], width * CONSTELLATION_FULL_SIZE));
+      const sun = hasSun ? sunShape() : null;
       const m = CONSTELLATION_AVOID_MARGIN;
-      for (const r of avoidRects) {
-        if (r.right + m <= z.left || r.left - m >= z.right || r.bottom + m <= z.top || r.top - m >= z.bottom) continue;
-        const options = [
-          { ...z, bottom: Math.min(z.bottom, r.top - m) },
-          { ...z, top: Math.max(z.top, r.bottom + m) },
-          { ...z, right: Math.min(z.right, r.left - m) },
-          { ...z, left: Math.max(z.left, r.right + m) },
-        ];
-        const area = (o: typeof z) => Math.max(0, o.right - o.left) * Math.max(0, o.bottom - o.top);
-        z = options.reduce((best, o) => (area(o) > area(best) ? o : best));
-      }
-      const x0 = z.left;
-      const zoneY = z.top;
-      const zoneW = z.right - z.left;
-      const zoneH = z.bottom - z.top;
-      if (zoneH < CONSTELLATION_MIN_HEIGHT || zoneW < CONSTELLATION_MIN_HEIGHT) return null;
-      // Fit inside the zone without stretching
-      const fit = Math.min(zoneW / c.aspect, zoneH, CONSTELLATION_MAX_SIZE) * c.size;
-      const w = fit * c.aspect;
-      const h = fit;
-      return { x: x0 + (zoneW - w) * c.slackX, y: zoneY + (zoneH - h) * c.slackY, w, h };
+      const placed: { x: number; y: number; w: number; h: number }[] = [];
+      const overlaps = (a: { x: number; y: number; w: number; h: number }, r: { left: number; right: number; top: number; bottom: number }, gap: number) =>
+        a.x < r.right + gap && a.x + a.w > r.left - gap && a.y < r.bottom + gap && a.y + a.h > r.top - gap;
+      constellationBoxes = constellations.map((c) => {
+        // Keep its shape: the longer side gets the full size
+        const fit = full * c.size * Math.min(1, 1 / c.aspect);
+        const w = fit * c.aspect;
+        const h = fit;
+        const areaW = (CONSTELLATION_SKY.x1 - CONSTELLATION_SKY.x0) * width - w;
+        const areaH = (CONSTELLATION_SKY.y1 - CONSTELLATION_SKY.y0) * sky - h;
+        if (areaW <= 0 || areaH <= 0) return null;
+        const box = c.spots
+          .map((s) => ({ x: CONSTELLATION_SKY.x0 * width + s.x * areaW, y: CONSTELLATION_SKY.y0 * sky + s.y * areaH, w, h }))
+          .find((b) => {
+            if (avoidRects.some((r) => overlaps(b, r, m))) return false;
+            if (placed.some((p) => overlaps(b, { left: p.x, right: p.x + p.w, top: p.y, bottom: p.y + p.h }, CONSTELLATION_GAP))) return false;
+            if (!sun) return true;
+            // Clear of the sun: the box's nearest point stays outside the disc
+            const nx = Math.max(b.x, Math.min(sun.cx, b.x + b.w));
+            const ny = Math.max(b.y, Math.min(sun.cy, b.y + b.h));
+            return Math.hypot(nx - sun.cx, ny - sun.cy) > sun.r + m;
+          });
+        if (box) placed.push(box);
+        return box ?? null;
+      });
     }
+    const constellationBox = (_c: Constellation, index: number) => constellationBoxes[index] ?? null;
 
-    // Called twice per frame: once for the haze (under the stars), once for the lines and stars
-    function drawConstellations(t: number, haze: boolean) {
+    // Called twice per frame: once for the haze (under the stars), once for the lines and stars.
+    // The haze can go to another canvas, steady (without the breathing, which is added when it's
+    // drawn), and for just some of the constellations
+    function drawConstellations(t: number, haze: boolean, target = ctx!, steady = false, only = (_index: number) => true) {
       const seconds = reducedMotion.matches ? Infinity : (t - startedAt) / 1000;
       constellations.forEach((c, index) => {
+        if (!only(index)) return;
         const box = constellationBox(c, index);
         if (!box) return;
         const at = (i: number) => ({ x: box.x + c.points[i].x * box.w, y: box.y + c.points[i].y * box.h });
@@ -702,18 +699,17 @@ const { density = 1, grid = false, sun = false, constellations = 0, haze = false
 
         if (haze) {
           const avg = c.lines.reduce((sum, [a, b]) => sum + Math.hypot(at(a).x - at(b).x, at(a).y - at(b).y), 0) / c.lines.length;
-          const radius = avg * HAZE_RADIUS;
+          const radius = Math.max(HAZE_MIN_RADIUS, avg * HAZE_RADIUS);
           c.points.forEach((p, i) => {
-            if (p.color === "alt" && !hazeNeutral) return;
+            if ((p.color === "alt" && !hazeNeutral) || lit[i] <= 0) return;
             const { x, y } = at(i);
-            const glow = ctx!.createRadialGradient(x, y, 0, x, y, radius);
-            glow.addColorStop(0, colors[p.color]);
-            glow.addColorStop(1, clearColors[p.color]);
-            ctx!.globalAlpha = hazeAlpha * lit[i] * breath;
-            ctx!.fillStyle = glow;
-            ctx!.fillRect(x - radius, y - radius, radius * 2, radius * 2);
+            const glow = target.createRadialGradient(x, y, 0, x, y, radius);
+            HAZE_STOPS.forEach(([stop], k) => glow.addColorStop(stop, hazeShades[p.color][k]));
+            target.globalAlpha = hazeAlpha * lit[i] * (steady ? 1 : breath);
+            target.fillStyle = glow;
+            target.fillRect(x - radius, y - radius, radius * 2, radius * 2);
           });
-          ctx!.globalAlpha = 1;
+          target.globalAlpha = 1;
           return;
         }
 
@@ -795,7 +791,7 @@ const { density = 1, grid = false, sun = false, constellations = 0, haze = false
             avoidRects.every((r) => gap(x, y, r) > reach * 0.35) &&
             (!sun || Math.hypot(x - sun.cx, y - sun.cy) > sun.r + reach * 0.35) &&
             boxes.every((b) => gap(x, y, { left: b.x, right: b.x + b.w, top: b.y, bottom: b.y + b.h }) > reach * 0.15) &&
-            placed.every((p) => Math.hypot(x - p.x, y - p.y) > (reach + p.reach) * 0.8),
+            placed.every((p) => Math.hypot(x - p.x, y - p.y) > (reach + p.reach) * 0.5),
           );
         if (!spot) return;
         placed.push({ ...spot, reach });
@@ -833,11 +829,34 @@ const { density = 1, grid = false, sun = false, constellations = 0, haze = false
       ctx!.globalAlpha = 1;
     }
 
+    // Each constellation's haze is drawn fresh while it draws in, then painted once onto the haze
+    // layer and reused from there
+    function drawHaze(t: number) {
+      const seconds = reducedMotion.matches ? Infinity : (t - startedAt) / 1000;
+      const settled = (index: number) => seconds >= constellations[index].delay + drawSeconds(constellations[index]);
+      if (!hazeCtx) {
+        drawConstellations(t, true);
+        return;
+      }
+      if (hazeCached.size === 0) hazeCtx.clearRect(0, 0, width, height);
+      const toCache = (index: number) => settled(index) && !hazeCached.has(index);
+      if (constellations.some((_, index) => toCache(index))) {
+        drawConstellations(t, true, hazeCtx, true, toCache);
+        constellations.forEach((_, index) => settled(index) && hazeCached.add(index));
+      }
+      if (hazeCached.size) {
+        ctx!.globalAlpha = reducedMotion.matches ? 1 : 0.85 + 0.15 * Math.sin((TAU * seconds) / CONSTELLATION_BREATH_SECONDS);
+        ctx!.drawImage(hazeLayer, 0, 0, width, height);
+        ctx!.globalAlpha = 1;
+      }
+      drawConstellations(t, true, ctx!, false, (index) => !settled(index));
+    }
+
     function draw(t: number) {
       ctx!.clearRect(0, 0, width, height);
       if (hasSun) drawSunGlow(t);
       if (nebulas.length) drawNebulas(t);
-      if (hasHaze) drawConstellations(t, true);
+      if (hasHaze) drawHaze(t);
       drawStars(t);
       drawConstellations(t, false);
       if (hasSun) drawSun(t);
@@ -861,12 +880,15 @@ const { density = 1, grid = false, sun = false, constellations = 0, haze = false
       resize();
       measureAvoid();
       placeSunEdges();
+      placeConstellations();
       paintNebulas();
+      hazeCached = new Set();
       redrawIfStill();
     });
     const onThemeChange = () => {
       readColors();
       paintNebulas();
+      hazeCached = new Set();
       redrawIfStill();
     };
 
