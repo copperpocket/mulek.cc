@@ -1,0 +1,43 @@
+{
+  "ducky": [
+    "/images/pets/ducky/ducky-1.jpg",
+    "/images/pets/ducky/ducky-2.jpg",
+    "/images/pets/ducky/ducky-3.jpg",
+    "/images/pets/ducky/ducky-4.jpg",
+    "/images/pets/ducky/ducky-5.jpg",
+    "/images/pets/ducky/ducky-6.jpg",
+    "/images/pets/ducky/ducky-7.jpg",
+    "/images/pets/ducky/ducky-8.jpg"
+  ],
+  "gertie": [
+    "/images/pets/gertie/gertie-1.jpg",
+    "/images/pets/gertie/gertie-10.jpg",
+    "/images/pets/gertie/gertie-11.jpg",
+    "/images/pets/gertie/gertie-12.jpg",
+    "/images/pets/gertie/gertie-13.jpg",
+    "/images/pets/gertie/gertie-14.jpg",
+    "/images/pets/gertie/gertie-15.jpg",
+    "/images/pets/gertie/gertie-2.jpg",
+    "/images/pets/gertie/gertie-3.jpg",
+    "/images/pets/gertie/gertie-4.jpg",
+    "/images/pets/gertie/gertie-5.jpg",
+    "/images/pets/gertie/gertie-6.jpg",
+    "/images/pets/gertie/gertie-7.jpg",
+    "/images/pets/gertie/gertie-8.jpg",
+    "/images/pets/gertie/gertie-9.jpg"
+  ],
+  "oliver": [
+    "/images/pets/oliver/oliver-1.jpg",
+    "/images/pets/oliver/oliver-2.jpg",
+    "/images/pets/oliver/oliver-3.jpg",
+    "/images/pets/oliver/oliver-4.jpg",
+    "/images/pets/oliver/oliver-5.jpg",
+    "/images/pets/oliver/oliver-6.jpg"
+  ],
+  "salem": [
+    "/images/pets/salem/salem-1.jpg",
+    "/images/pets/salem/salem-2.jpg",
+    "/images/pets/salem/salem-3.jpg",
+    "/images/pets/salem/salem-4.jpg"
+  ]
+}

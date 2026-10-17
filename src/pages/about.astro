@@ -7,6 +7,7 @@ import MainLayout from "@/layouts/MainLayout.astro";
 // Reusable UI components
 import Avatar from "@/components/Avatar.astro";
 import Starfield from "@/components/Starfield.astro";
+import { pageSky } from "@/config/sky";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
@@ -28,7 +29,7 @@ import "@/styles/global.css";
   <TwSizeIndicator />
 
   <!-- Decorative animated background layer -->
-  <Starfield />
+  <Starfield {...pageSky} />
 
   <!-- Global site header -->
   <Header />
@@ -45,12 +46,12 @@ import "@/styles/global.css";
     <!-- Centered intro with avatar + title -->
     <section id="about-hero" class="flex flex-col items-center text-center">
       <Avatar />
-      <h1 class="text-4xl md:text-5xl font-extrabold mt-4 mb-4">About Me</h1>
+      <h1 class="text-4xl md:text-5xl font-extrabold mt-4 mb-8">About Me</h1>
     </section>
     <!-- ABOUT SUMMARY -->
     <!-- Card wrapper for reusable summary component -->
     <section id="about-me" class="flex flex-col items-center">
-      <div id="card-about-me" class="w-full max-w-3xl p-6 rounded-xl bg-accent/20 dark:bg-neutral-900 shadow-xl">
+      <div id="card-about-me" class="w-full max-w-3xl p-6 rounded-xl card-edge bg-panel dark:bg-neutral-900 shadow-xl">
         <AboutSummary />
       </div>
     </section>
@@ -65,7 +66,7 @@ import "@/styles/global.css";
     <section id="about-timeline" class="mt-16 pt-16 border-t border-accent/30 flex flex-col items-center">
       <h2 class="text-3xl md:text-4xl font-extrabold mb-8">Experience</h2>
 
-      <div class="w-full max-w-4xl p-6 md:p-10 rounded-xl bg-accent/20 dark:bg-neutral-900 shadow-xl">
+      <div class="w-full max-w-4xl p-6 md:p-10 rounded-xl card-edge bg-panel dark:bg-neutral-900 shadow-xl">
         <div class="relative w-full max-w-3xl mx-auto">
 
           <div class="absolute left-1/2 transform -translate-x-1/2 w-0.5 h-full bg-accent/30 hidden sm:block"></div>
@@ -122,7 +123,7 @@ import "@/styles/global.css";
     <section id="about-philosophy" class="mt-16 pt-16 border-t border-accent/30 flex flex-col items-center">
       <h2 class="text-3xl md:text-4xl font-extrabold mb-8">Philosophy</h2>
       
-      <div id="tech-card" class="w-full max-w-4xl p-6 md:p-10 rounded-xl space-y-10 bg-accent/20 dark:bg-neutral-900 shadow-xl">
+      <div id="tech-card" class="w-full max-w-4xl p-6 md:p-10 rounded-xl space-y-10 card-edge bg-panel dark:bg-neutral-900 shadow-xl">
 
         <!-- Intro paragraph -->
         <p class="text-sm md:text-base leading-relaxed max-w-2xl mx-auto text-center">
@@ -175,7 +176,7 @@ import "@/styles/global.css";
       </p>
 
       <!-- Primary CTA button -->
-      <a href="/contact" class="px-8 py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition shadow-lg">
+      <a href="/contact" class="px-8 py-3 bg-accent text-on-accent font-semibold rounded-lg hover:bg-highlight transition shadow-lg">
         Get in Touch
       </a>
     </section>

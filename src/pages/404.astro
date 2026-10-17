@@ -1,19 +1,20 @@
 ---
 import MainLayout from "@/layouts/MainLayout.astro";
 import Starfield from "@/components/Starfield.astro";
+import { pageSky } from "@/config/sky";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import "@/styles/global.css";
 ---
 
 <MainLayout title="Page Not Found - mulek.cc" description="The page you were looking for doesn't exist." noindex>
-  <Starfield />
+  <Starfield {...pageSky} />
   <Header />
 
   <main class="page-main container mx-auto px-4 items-center text-center text-neutral-800 dark:text-neutral-200">
     <h1 class="text-6xl md:text-7xl font-extrabold text-accent mb-4">404</h1>
     <p class="text-lg mb-8">This page doesn't exist, or it has moved.</p>
-    <a href="/" class="px-8 py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition shadow-lg">
+    <a href="/" class="px-8 py-3 bg-accent text-on-accent font-semibold rounded-lg hover:bg-highlight transition shadow-lg">
       Back to Home
     </a>
   </main>

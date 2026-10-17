@@ -1,0 +1,254 @@
+---
+// The site menu: one button that opens the site links, a few outside links and the theme toggle.
+// On phones it covers the screen; on wider screens a small card drops down from the button. The home
+// page uses it at every width; sub-pages use it on phones, below the header's full nav bar.
+import ThemeIcon from "@/components/Theme.astro";
+
+const links = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
+  { href: "/projects", label: "Projects" },
+  { href: "/blog", label: "Blog" },
+  { href: "/contact", label: "Contact" },
+];
+const elsewhere = [
+  { href: "https://github.com/copperpocket", label: "GitHub" },
+  { href: "https://copperpocket.bsky.social", label: "Bluesky" },
+  { href: "/rss.xml", label: "RSS" },
+];
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+---
+
+<div class="home-menu" data-open="false">
+  <button
+    type="button"
+    class="home-menu-button relative z-10 flex items-center justify-center w-14 h-14 rounded-full text-neutral-800 dark:text-neutral-200 hover:text-highlight focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition-colors"
+    aria-expanded="false"
+    aria-controls="home-menu-panel"
+    aria-label="Menu"
+    data-starfield-avoid
+  >
+    <svg class="home-menu-icon w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true">
+      <line class="bar-top" x1="4" y1="6" x2="20" y2="6" />
+      <line class="bar-middle" x1="4" y1="12" x2="20" y2="12" />
+      <line class="bar-bottom" x1="4" y1="18" x2="20" y2="18" />
+    </svg>
+  </button>
+
+  <div class="home-menu-backdrop" aria-hidden="true"></div>
+
+  <nav id="home-menu-panel" class="home-menu-panel" aria-label="Main">
+    <div class="home-menu-card card-edge bg-panel dark:bg-neutral-900 rounded-xl shadow-2xl text-neutral-800 dark:text-neutral-200">
+      <ul class="home-menu-links">
+        {links.map(({ href, label }, i) => {
+          const current = href === path;
+          return (
+            <li style={`--i: ${i}`}>
+              <a
+                href={href}
+                aria-current={current ? "page" : undefined}
+                class:list={[
+                  "group flex items-baseline gap-3 py-1.5 font-semibold transition-colors hover:text-highlight",
+                  current && "text-accent",
+                ]}
+              >
+                <span class="font-mono text-xs opacity-60 group-hover:opacity-100 transition-opacity">{String(i + 1).padStart(2, "0")}</span>
+                {label}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+
+      <div class="home-menu-footer flex items-center justify-between gap-4 border-t border-neutral-300/60 dark:border-neutral-700/60 pt-4 mt-4" style={`--i: ${links.length}`}>
+        <ul class="flex flex-wrap gap-x-4 gap-y-1 text-sm">
+          {elsewhere.map(({ href, label }) => (
+            <li>
+              <a
+                href={href}
+                class="text-accent hover:text-highlight hover:underline transition-colors"
+                {...(href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              >{label}</a>
+            </li>
+          ))}
+        </ul>
+        <ThemeIcon />
+      </div>
+    </div>
+  </nav>
+</div>
+
+<style>
+  /* --- The button: three lines that fold into an X. Opening, the outer lines slide together first
+         and then turn; closing, they turn back first and then slide apart --- */
+  .home-menu-icon line {
+    transition:
+      translate 0.16s ease 0.16s,
+      rotate 0.16s ease,
+      opacity 0.12s ease 0.16s,
+      scale 0.16s ease 0.16s;
+  }
+  .bar-top { transform-origin: 12px 6px; }
+  .bar-middle { transform-origin: 12px 12px; }
+  .bar-bottom { transform-origin: 12px 18px; }
+  .home-menu[data-open="true"] .home-menu-icon line {
+    transition:
+      translate 0.16s ease,
+      rotate 0.16s ease 0.16s,
+      opacity 0.12s ease,
+      scale 0.16s ease;
+  }
+  .home-menu[data-open="true"] .bar-top { translate: 0 6px; rotate: 45deg; }
+  .home-menu[data-open="true"] .bar-middle { opacity: 0; scale: 0.2 1; }
+  .home-menu[data-open="true"] .bar-bottom { translate: 0 -6px; rotate: -45deg; }
+
+  /* --- The panel: hidden until open, then it fades and slides into place and the links follow --- */
+  .home-menu-panel,
+  .home-menu-backdrop {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+  }
+  .home-menu[data-open="true"] .home-menu-panel,
+  .home-menu[data-open="true"] .home-menu-backdrop {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transition-delay: 0s;
+  }
+  .home-menu-links li,
+  .home-menu-footer {
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .home-menu[data-open="true"] .home-menu-links li,
+  .home-menu[data-open="true"] .home-menu-footer {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(60ms + var(--i) * 35ms);
+  }
+
+  /* Phones: a blurred cover over the whole page, with the card centered on it */
+  .home-menu-backdrop {
+    position: fixed;
+    inset: 0;
+    background: color-mix(in oklab, var(--color-body) 70%, transparent);
+    backdrop-filter: blur(8px);
+  }
+  :global(html.dark) .home-menu-backdrop {
+    background: color-mix(in oklab, var(--color-body-dark) 70%, transparent);
+  }
+  .home-menu-panel {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .home-menu .home-menu-panel { pointer-events: none; } /* taps on the cover reach the backdrop and close it */
+  .home-menu-card {
+    width: min(100%, 22rem);
+    padding: 2rem;
+    pointer-events: auto;
+    transform: scale(0.97);
+    transition: transform 0.2s ease;
+  }
+  .home-menu[data-open="true"] .home-menu-card { transform: none; }
+  .home-menu-links { font-size: 1.75rem; }
+
+  /* Wider screens: a small card drops down under the button, leaving the sky visible */
+  @media (min-width: 40rem) {
+    .home-menu-backdrop { display: none; }
+    .home-menu-panel {
+      inset: 5rem 3rem auto auto;
+      display: block;
+      width: 18rem;
+      padding: 0;
+      transform: translateY(-8px);
+    }
+    .home-menu[data-open="true"] .home-menu-panel { transform: none; }
+    .home-menu-card {
+      width: auto;
+      padding: 1.25rem 1.5rem;
+      transform: none;
+    }
+    .home-menu-links { font-size: 1.25rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .home-menu *,
+    .home-menu-panel,
+    .home-menu-backdrop {
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+  // Open and close: the button, Escape, a tap outside the menu, or picking a link. While it's open,
+  // the page behind doesn't scroll and Tab stays inside the menu.
+  let controller: AbortController | null = null;
+
+  function init() {
+    controller?.abort();
+    const root = document.querySelector<HTMLElement>(".home-menu");
+    if (!root) return;
+    controller = new AbortController();
+    const { signal } = controller;
+    const button = root.querySelector<HTMLButtonElement>(".home-menu-button")!;
+    const card = root.querySelector<HTMLElement>(".home-menu-card")!;
+
+    const isOpen = () => root.dataset.open === "true";
+    // From the keyboard, focus moves into the menu (and back to the button when it closes)
+    function setOpen(open: boolean, viaKeyboard = false) {
+      root!.dataset.open = String(open);
+      button.setAttribute("aria-expanded", String(open));
+      button.setAttribute("aria-label", open ? "Close menu" : "Menu");
+      document.documentElement.style.overflow = open ? "hidden" : "";
+      if (!viaKeyboard) return;
+      if (open) card.querySelector<HTMLElement>("a")?.focus({ preventScroll: true });
+      else button.focus();
+    }
+    setOpen(false);
+
+    // A click from Enter or Space has no click count
+    button.addEventListener("click", (event) => setOpen(!isOpen(), event.detail === 0), { signal });
+    card.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => setOpen(false), { signal }));
+    document.addEventListener(
+      "click",
+      (event) => {
+        if (isOpen() && !card.contains(event.target as Node) && !button.contains(event.target as Node)) setOpen(false);
+      },
+      { signal },
+    );
+    document.addEventListener(
+      "keydown",
+      (event) => {
+        if (!isOpen()) return;
+        if (event.key === "Escape") {
+          setOpen(false, true);
+          return;
+        }
+        if (event.key !== "Tab") return;
+        // Keep focus inside: the button plus everything focusable in the card
+        const focusable = [button, ...card.querySelectorAll<HTMLElement>("a, button, input")].filter(
+          (el) => el.offsetWidth > 0 || el.offsetHeight > 0, // skip hidden ones
+        );
+        const index = focusable.indexOf(document.activeElement as HTMLElement);
+        const next = event.shiftKey ? (index <= 0 ? focusable.length - 1 : index - 1) : (index + 1) % focusable.length;
+        event.preventDefault();
+        focusable[next].focus();
+      },
+      { signal },
+    );
+  }
+
+  document.addEventListener("astro:page-load", init);
+  // Leaving the page with the menu open shouldn't leave scrolling locked
+  document.addEventListener("astro:before-swap", () => {
+    document.documentElement.style.overflow = "";
+  });
+</script>

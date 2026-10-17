@@ -1,6 +1,6 @@
 ---
 import ThemeIcon from "./Theme.astro";
-import HamburgerMenu from "./HamburgerMenu.astro";
+import SiteMenu from "./SiteMenu.astro";
 import Wordmark from "./Wordmark.astro";
 
 interface Props {
@@ -31,9 +31,9 @@ const isActive = (path: string) =>
   - scrolled: compact, solid background, accent line underneath
   The spacer below keeps page content from sliding under the expanded header.
 -->
-<header id="site-header" class="site-header fixed inset-x-0 top-0 z-40" data-scrolled="false">
-  <div class="header-inner relative flex items-center justify-between w-full px-10 lg:px-16">
-    <span class="header-line absolute bottom-0 left-0 h-[2px] w-full bg-accent"></span>
+<header id="site-header" class="site-header fixed inset-x-0 top-0 z-40" data-scrolled="false" data-starfield-avoid="static">
+  <div class="header-inner relative flex items-center justify-between w-full px-6 sm:px-14">
+    <span class="header-line absolute bottom-0 left-0 h-[2px] w-full"></span>
 
     {hideLogo !== true && (
       <a href="/" class="header-logo flex items-center" aria-label="mulek.cc home">
@@ -49,28 +49,16 @@ const isActive = (path: string) =>
       <a href="/contact" class:list={["nav-link", { "active": isActive('/contact') }]}>Contact</a>
     </nav>
 
-    <div class="header-actions flex items-center space-x-6">
-      <div class="inline-flex items-center">
+    <div class="header-actions flex items-center -mr-2">
+      <!-- On phones the theme toggle lives inside the menu -->
+      <div class="hidden md:inline-flex items-center p-2 rounded-full">
         <ThemeIcon />
       </div>
-      <div class="inline-flex z-50 items-center md:hidden">
-        <HamburgerMenu />
+      <div class="md:hidden">
+        <SiteMenu />
       </div>
     </div>
 
-    <div
-      id="hidden-menu"
-      class="hidden-menu fixed inset-0 bg-neutral-100/60 dark:bg-neutral-900/60 backdrop-blur-sm
-             flex items-center justify-center overflow-auto z-40 md:hidden"
-    >
-      <ul class="flex flex-col p-4 space-y-4 text-neutral-800 dark:text-neutral-200 text-2xl">
-        <li><a href="/" class="hover:text-blue-500">Home</a></li>
-        <li><a href="/about" class="hover:text-blue-500">About</a></li>
-        <li><a href="/blog" class="hover:text-blue-500">Blog</a></li>
-        <li><a href="/contact" class="hover:text-blue-500">Contact</a></li>
-        <li><a href="/projects" class="hover:text-blue-500">Projects</a></li>
-      </ul>
-    </div>
   </div>
 </header>
 
@@ -105,8 +93,11 @@ const isActive = (path: string) =>
   .header-spacer { height: 5.5rem; }
   .header-logo { height: 2.25rem; }
   .header-nav { gap: 2rem; font-size: 1.125rem; }
-  .header-actions { transform: scale(1.15); transform-origin: right center; }
-  .header-line { opacity: 0; }
+  /* Lavender with the sun's pink in the middle */
+  .header-line {
+    opacity: 0;
+    background-image: linear-gradient(to right, var(--color-accent), var(--color-highlight), var(--color-accent));
+  }
 
   /* Scrolled */
   .site-header[data-scrolled="true"] { background-color: var(--color-body); }
@@ -114,10 +105,5 @@ const isActive = (path: string) =>
   .site-header[data-scrolled="true"] .header-inner { height: 3.75rem; }
   .site-header[data-scrolled="true"] .header-logo { height: 1.75rem; }
   .site-header[data-scrolled="true"] .header-nav { gap: 1.5rem; font-size: 1rem; }
-  .site-header[data-scrolled="true"] .header-actions { transform: none; }
   .site-header[data-scrolled="true"] .header-line { opacity: 0.9; }
 </style>
-
-<script type="module">
-  import "/scripts/menu-toggle.js";
-</script>
