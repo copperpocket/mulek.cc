@@ -44,7 +44,7 @@ const pets = [
 ];
 ---
 
-<div class="space-y-4 text-sm md:text-base">
+<div class:list={["space-y-4 text-sm md:text-base", short && "lg:text-lg"]}>
   {short ? (
     /* Top intro remains the same - you liked the pet links */
     <p>
@@ -66,22 +66,22 @@ const pets = [
   <div class="grid grid-cols-2 gap-4">
     <!-- Pinned Time (Central Time), with the zone abbreviation and a status filled in by the script below -->
     <div class="p-3 border border-neutral-200 dark:border-neutral-800 rounded-lg bg-neutral-50 dark:bg-neutral-900/30">
-      <span class="text-[10px] uppercase tracking-widest opacity-70 font-bold block mb-1">
+      <span class="text-[10px] xl:text-xs uppercase tracking-widest opacity-70 font-bold block mb-1">
         Local Time (<span id="local-time-zone">CT</span>)
       </span>
-      <p class="font-mono text-lg text-accent" id="local-time-display">--:--:--</p>
-      <p class="text-xs opacity-60 italic min-h-4" id="local-time-status"></p>
+      <p class="font-mono text-lg lg:text-xl text-accent" id="local-time-display">--:--:--</p>
+      <p class="text-xs lg:text-sm opacity-60 italic min-h-4" id="local-time-status"></p>
     </div>
 
     <!-- Professional Uptime -->
     <div class="p-3 border border-neutral-200 dark:border-neutral-800 rounded-lg bg-neutral-50 dark:bg-neutral-900/30">
-      <span class="text-[10px] uppercase tracking-widest opacity-70 font-bold block mb-1">Professional Uptime</span>
+      <span class="text-[10px] xl:text-xs uppercase tracking-widest opacity-70 font-bold block mb-1">Professional Uptime</span>
       <p class="font-medium">{uptime} Years</p>
     </div>
 
     <!-- Current Playthrough -->
     <div class="p-3 border border-neutral-200 dark:border-neutral-800 rounded-lg bg-neutral-50 dark:bg-neutral-900/30">
-      <span class="text-[10px] uppercase tracking-widest opacity-70 font-bold block mb-1">Current Playthrough</span>
+      <span class="text-[10px] xl:text-xs uppercase tracking-widest opacity-70 font-bold block mb-1">Current Playthrough</span>
       <p class="font-medium truncate">WoW Forever</p>
     </div>
 
@@ -91,7 +91,7 @@ const pets = [
         href={`/projects/${currentProject.slug}`}
         class="group p-3 border border-neutral-200 dark:border-neutral-800 rounded-lg bg-neutral-50 dark:bg-neutral-900/30 hover:border-accent/50 transition-colors"
       >
-        <span class="text-[10px] uppercase tracking-widest opacity-70 font-bold flex justify-between items-center mb-1">
+        <span class="text-[10px] xl:text-xs uppercase tracking-widest opacity-70 font-bold flex justify-between items-center mb-1">
           Current Project
           <span class="opacity-0 group-hover:opacity-100 transition-opacity">&rarr;</span>
         </span>
@@ -100,17 +100,16 @@ const pets = [
     )}
   </div>
 
-  <!-- Link to this site's source, styled as `git remote -v` output -->
+  <!-- Link to this site's source, styled as the command that downloads it (it really works) -->
   <a
     href="https://github.com/copperpocket/mulek.cc"
     target="_blank"
     rel="noopener noreferrer"
-    class="group block w-fit font-mono text-xs leading-snug"
+    class="group block w-fit font-mono text-xs lg:text-sm leading-snug"
   >
-    <span class="block opacity-70">$ git remote -v</span>
-    <span class="flex items-center gap-2">
-      <span class="opacity-70">origin</span>
-      <span class="text-accent opacity-80 group-hover:opacity-100 group-hover:underline hover:text-highlight group-hover:text-highlight transition">github.com/copperpocket/mulek.cc</span>
+    <span class="flex flex-wrap items-center gap-x-2">
+      <span class="opacity-70">$ git clone</span>
+      <span class="text-accent opacity-80 group-hover:opacity-100 group-hover:underline group-hover:text-highlight transition">https://github.com/copperpocket/mulek.cc</span>
       <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-accent opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition">
         <line x1="7" y1="17" x2="17" y2="7"></line>
         <polyline points="7 7 17 7 17 17"></polyline>
