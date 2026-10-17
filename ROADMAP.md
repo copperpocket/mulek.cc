@@ -43,14 +43,11 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [x] No more TypeScript files: the two config files are plain JavaScript
 - [x] Consistent page titles: one shared `page-title` style, large and extra-bold in the plain text color
 - [x] New sun stripes ease in instead of starting as a crisp line
+- [x] Cleanup: deleted unused components, the starter layout, old config and logo files, and stale duplicate scripts; nav and outside links defined once (`src/config/links.js`); the theme set in one place; the theme toggle's CSS bundled locally, so no third-party requests
 - [x] Post dates show the right day (they were a day early in US time zones), and inline code no longer shows literal backticks
 
 ## Cleanup
 
-- [ ] Delete dead code: `ImageMod`, `Logo`, `ThemeSwitcher`, `layouts/Layout.astro`, `src/config/*.json`, `astro.svg`, and the stale duplicates in `src/scripts/` and `src/assets/`
-- [ ] Define the navigation links once (they're currently in `Header.astro` and `SiteMenu.astro`)
-- [ ] Run the theme setup in one place instead of three (`MainLayout`, `index.astro`, `Theme.astro`)
-- [ ] Bundle the theme toggle CSS locally instead of loading it from jsDelivr
 - [ ] Move the shared page shell (header, footer, background, global CSS) into `MainLayout`
 
 ## Performance
@@ -60,7 +57,6 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 ## SEO and sharing
 
 - [ ] Per-project preview images (set `image` in the frontmatter; the default card is used otherwise)
-- [ ] Delete the old logo files (`public/images/favicon.png`, `logo.png`, `logo-darkmode.png`, `mm.png`, and the copies in `src/assets/`) along with the other dead code
 - [ ] Use the logo on the home page (it has no header) and in the mobile menu
 
 ## Contact form

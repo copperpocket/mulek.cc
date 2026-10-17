@@ -14,7 +14,6 @@ This site serves as both a home for documentation and a hub for ongoing experime
 
 - [Astro](https://astro.build) — Web framework, server-rendered via the [`@astrojs/node`](https://docs.astro.build/en/guides/integrations-guide/node/) adapter (standalone mode)  
 - [Tailwind CSS](https://tailwindcss.com) — Utility-first styling  
-- [TypeScript](https://www.typescriptlang.org) — Type-safe development  
 - Markdown-based content collections for blog posts and projects  
 - [Nodemailer](https://nodemailer.com) + [hCaptcha](https://www.hcaptcha.com) — Contact form API  
 
@@ -23,14 +22,14 @@ This site serves as both a home for documentation and a hub for ongoing experime
 ```text
 /
 ├── public/           # Static assets (images, client scripts)
+├── scripts/          # Maintenance scripts (yarn pet-photos)
 ├── src/
-│   ├── assets/       # Assets processed by Astro
 │   ├── components/   # UI components
-│   ├── config/       # Site configuration (site info, menu, social, theme)
+│   ├── config/       # Site settings (links, sky)
 │   ├── content/      # Markdown blog posts & projects + collection schema
+│   ├── data/         # Generated data (the pet photo list)
 │   ├── layouts/      # Page layouts
 │   ├── pages/        # Routes, including the /api/contact endpoint
-│   ├── scripts/      # Script files
 │   └── styles/       # Global styles
 ├── .gitignore
 ├── astro.config.mjs
@@ -82,4 +81,4 @@ yarn start      # runs the standalone Node server from dist/server/entry.mjs
 
 The **code** in this repository is released under the [MIT License](LICENSE). Feel free to borrow anything useful; just keep the copyright notice.
 
-The **content** is not covered by that license and remains © Michael Scott Mulek, all rights reserved. That means the writing in `src/content/` and the personal images in `public/images/` and `src/assets/` (photos, avatar artwork and logos). Please don't reuse it without asking.
+The **content** is not covered by that license and remains © Michael Scott Mulek, all rights reserved. That means the writing in `src/content/` and the personal images in `public/images/` (photos, avatar artwork and logos). Please don't reuse it without asking.
