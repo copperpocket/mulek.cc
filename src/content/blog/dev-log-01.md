@@ -1,7 +1,7 @@
 ---
 title: "[AI] Dev Log #1: Cleanup, a New Logo, and a Synthwave Sky"
 description: "Three days of work on mulek.cc: fixes, SEO, a new logo and header, and a home page sky with a sun, constellations and nebulas."
-pubDate: 2026-10-17
+pubDate: 2026-10-16
 tags: ["dev-log", "design", "starfield", "seo", "security"]
 ---
 

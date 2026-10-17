@@ -2,7 +2,7 @@
 title: "Duckcraft - World of Warcraft"
 description: "A private Wrath of the Lich King server powered by AzerothCore and enhanced with playerbots."
 pubDate: 2025-10-19
-category: "GameDev"
+category: "Games"
 tags: ["AzerothCore", "C++"]
 ---
 

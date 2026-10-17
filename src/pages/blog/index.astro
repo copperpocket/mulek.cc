@@ -33,7 +33,7 @@ const pageTitle = "Blog Archive";
           <ul role="list" class="space-y-6">
             {allPosts.map(({ slug, data }) => (
               <li
-                class="post-preview card-edge bg-white dark:bg-neutral-900 rounded-lg shadow-xl p-6 transition-all duration-300 hover:shadow-2xl hover:scale-[1.01]"
+                class="post-preview card-edge card-lift hover:scale-[1.01] bg-white dark:bg-neutral-900 rounded-xl shadow-xl p-6"
               >
                 <a href={`/blog/${slug}`} class="block">
                   <h2 class="text-xl font-semibold mb-2 text-accent">{data.title}</h2>

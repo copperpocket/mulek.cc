@@ -14,7 +14,9 @@ const blogCollection = defineCollection({
 });
 
 // Filter buttons on /projects appear in this order
-export const projectCategories = ["WebDev", "DevOps", "GameDev"] as const;
+/** @type {["Web", "Infrastructure", "Games"]} */
+export const projectCategories = ["Web", "Infrastructure", "Games"];
+
 
 // Define the "projects" collection: card info in frontmatter, write-up in the body
 const projectsCollection = defineCollection({
@@ -28,7 +30,7 @@ const projectsCollection = defineCollection({
     url: z.string().url().optional(), // live site, if there is one
     github: z.string().url().optional(),
     image: z.string().optional(), // card image, path under public/
-    current: z.boolean().optional(), // shown as "Current Project" on the home page
+    current: z.boolean().optional(), // shown as "Current Project" on the home page, and featured on /projects
   }),
 });
 

@@ -1,9 +1,9 @@
 ---
 title: "Mailcow"
 description: "A self-hosted Mailcow instance for domain-based email and automated system notifications."
-pubDate: 2025-10-19
-category: "DevOps"
-tags: ["Mail server", "Self hosted"]
+pubDate: 2024-10-19
+category: "Infrastructure"
+tags: ["Docker", "Postfix", "SMTP2GO"]
 ---
 
 My **mail server** is powered by **Mailcow**, a complete mail system built on Docker that handles all mail-related services under my own domain — **mulek.cc**.  

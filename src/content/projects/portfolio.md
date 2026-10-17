@@ -2,7 +2,7 @@
 title: "Portfolio Site v2"
 description: "Behind the design and development of mulek.cc, my personal website."
 pubDate: 2025-10-06
-category: "WebDev"
+category: "Web"
 tags: ["Astro.js", "TailwindCSS"]
 url: "https://mulek.cc"
 github: "https://github.com/copperpocket/mulek.cc"
