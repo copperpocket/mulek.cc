@@ -24,7 +24,7 @@ const pageTitle = "Blog Archive";
   <div class="page-main">
     <div class="container mx-auto px-4">
       <section class="max-w-3xl mx-auto">
-        <h1 class="text-3xl font-bold text-center mb-10 text-neutral-800 dark:text-neutral-200">
+        <h1 class="text-3xl font-bold text-center mb-8 text-neutral-800 dark:text-neutral-200">
           {pageTitle}
         </h1>
 
@@ -32,7 +32,7 @@ const pageTitle = "Blog Archive";
           <ul role="list" class="space-y-6">
             {allPosts.map(({ slug, data }) => (
               <li
-                class="post-preview bg-white dark:bg-neutral-900 rounded-lg shadow-xl p-6 transition-all duration-300 hover:shadow-2xl hover:scale-[1.01]"
+                class="post-preview card-edge bg-white dark:bg-neutral-900 rounded-lg shadow-xl p-6 transition-all duration-300 hover:shadow-2xl hover:scale-[1.01]"
               >
                 <a href={`/blog/${slug}`} class="block">
                   <h2 class="text-xl font-semibold mb-2 text-accent">{data.title}</h2>
@@ -49,8 +49,8 @@ const pageTitle = "Blog Archive";
             <p>No posts yet. The first one is in the works.</p>
             <p>
               In the meantime, see what I've been building on the
-              <a href="/projects" class="text-accent font-semibold hover:underline">Projects</a>
-              page, or follow the <a href="/rss.xml" class="text-accent font-semibold hover:underline">RSS feed</a>
+              <a href="/projects" class="text-accent font-semibold hover:underline hover:text-highlight">Projects</a>
+              page, or follow the <a href="/rss.xml" class="text-accent font-semibold hover:underline hover:text-highlight">RSS feed</a>
               to catch new posts.
             </p>
           </div>

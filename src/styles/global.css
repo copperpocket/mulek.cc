@@ -13,10 +13,16 @@
 @theme {
   --color-primary: #EC4646;
   --color-primary-dark: #F5EE27;
-  --color-secondary: #51C2D5;
+  /* Hover color and small highlights (tags, the logo's star): the sun's pink. Light mode is a deeper
+     pink of the same hue, readable at 5:1 on the light background and under white text at 5.4:1;
+     html.dark below switches to the sun's own top color */
+  --color-highlight: oklch(55% 0.2 355);
   --color-body: #f6f6f6;
   --color-body-dark: #0c0c0c;
-  --color-accent: #9792e3;
+  --color-accent: #5b53c9; /* light mode; html.dark below switches to #9792e3 */
+  --color-on-accent: #ffffff; /* text on accent buttons; dark text in dark mode, where the accent is light */
+  /* Solid panel behind cards and forms in light mode, so the starfield doesn't show through */
+  --color-panel: color-mix(in oklab, var(--color-accent) 12%, var(--color-body));
   --color-border: #E0E0E0;
   --color-muted: #F5F5F5;
 }
@@ -31,24 +37,63 @@ html, body {
 
 /* Starfield background colors (read by the canvas in Starfield.astro) */
 :root {
-  --starfield-star: oklch(58.951% 0.15471 317.725);
-  --starfield-star-alt: oklch(5% 0 0 / 0.95);
-  --starfield-star-red: oklch(55% 0.2 25); /* rare */
-  --starfield-star-blue: oklch(78% 0.16 220); /* rare, also a comet glow */
+  /* Light mode stars are deeper colors and drawn more opaque, since faint dots vanish on a light sky */
+  --starfield-star: oklch(45% 0.2 317.7);
+  --starfield-star-alt: oklch(25% 0.02 285);
+  --starfield-star-red: oklch(52% 0.22 25); /* rare */
+  --starfield-star-blue: oklch(50% 0.17 245); /* rare, also a comet glow */
+  --starfield-sun-top: oklch(72% 0.17 350);
+  --starfield-sun-bottom: oklch(52% 0.2 295);
+  --starfield-sun-glow: oklch(58% 0.21 325 / 0.4); /* deeper and stronger than dark mode, or it vanishes on the light sky */
+  --starfield-sun-glow-end: rgb(from var(--starfield-sun-glow) r g b / 0);
+  /* The sun's color halfway down, for light that seems to come off it (like the panel edges) */
+  --sunlight: color-mix(in oklab, var(--starfield-sun-top), var(--starfield-sun-bottom));
+  --starfield-alpha: 1.8; /* multiplies each star's twinkle opacity */
+  --starfield-constellation-alpha: 0.5; /* constellation line opacity */
+  --starfield-haze-alpha: 0.16; /* constellation haze opacity */
+  --starfield-haze-neutral: 0; /* no haze around the near-black neutral stars, which would look like gray smudges */
+  --starfield-nebula-alpha: 0.3; /* opacity of each puff of a nebula cloud (they overlap and build up) */
+  --starfield-nebula-ink: 1; /* light mode: clouds darken the sky like ink instead of being painted on */
+  /* Nebula colors, used nowhere else in the sky. In light mode they're inks, so overlapping puffs
+     deepen toward the core */
+  --starfield-nebula-green: oklch(72% 0.17 150);
+  --starfield-nebula-cyan: oklch(72% 0.12 210);
+  --starfield-nebula-blue: oklch(62% 0.17 262);
+  --starfield-nebula-amber: oklch(78% 0.14 65);
   --starfield-grid: theme(colors.neutral.800 / 0.15);
 
-  /* Logo colors (Wordmark.astro, LogoMark.astro). Light mode uses a deeper lavender for contrast. */
-  --logo-ink: #5b53c9;
-  --logo-star: oklch(55% 0.19 317.7);
+  /* Logo colors (Wordmark.astro, LogoMark.astro) */
+  --logo-ink: var(--color-accent);
+  --logo-star: var(--color-highlight);
 }
 
+/*
+  Dark mode colors. The light accent and highlight are darker so text in them stays readable
+  (at least 4.5:1) on the light background; the dark background can take the lighter originals.
+*/
 html.dark {
+  --color-accent: #9792e3;
+  --color-highlight: var(--starfield-sun-top);
+  --color-on-accent: #0c0c0c;
+  --starfield-star: oklch(58.951% 0.15471 317.725);
   --starfield-star-alt: oklch(95% 0 0 / 0.95);
-  --starfield-grid: theme(colors.accent / 0.15);
-  --logo-ink: theme(colors.accent);
-  --logo-star: oklch(65% 0.17 317.7);
+  --starfield-star-red: oklch(55% 0.2 25);
+  --starfield-star-blue: oklch(78% 0.16 220);
+  --starfield-sun-top: oklch(80% 0.14 350);
+  --starfield-sun-bottom: oklch(58% 0.2 295);
+  --starfield-sun-glow: oklch(60% 0.2 317.7 / 0.35);
+  --starfield-alpha: 1;
+  --starfield-constellation-alpha: 0.35;
+  --starfield-haze-alpha: 0.12;
+  --starfield-haze-neutral: 1;
+  --starfield-nebula-alpha: 0.22;
+  --starfield-nebula-ink: 0;
+  --starfield-nebula-green: oklch(84% 0.22 150);
+  --starfield-nebula-cyan: oklch(82% 0.14 205);
+  --starfield-nebula-blue: oklch(64% 0.21 262);
+  --starfield-nebula-amber: oklch(82% 0.16 75);
+  --starfield-grid: color-mix(in oklab, var(--color-accent) 15%, transparent);
 }
-
 
 .hidden-menu {
   opacity: 0;
@@ -76,7 +121,7 @@ body.menu-open #hidden-menu {
 }
 
 .nav-link {
-  @apply text-neutral-800 dark:text-neutral-200 hover:text-accent transition-colors;
+  @apply text-neutral-800 dark:text-neutral-200 hover:text-highlight transition-colors;
 }
 .nav-link.active {
   @apply text-accent;
@@ -98,10 +143,82 @@ body.menu-open #hidden-menu {
 
 /* Reusable card container */
 .card {
-  @apply bg-accent/20 dark:bg-neutral-900 shadow-xl rounded-xl;
+  @apply bg-panel dark:bg-neutral-900 shadow-xl rounded-xl;
 }
 
 /* Optional size variants */
 .card-padding {
   @apply p-6 md:p-10;
+}
+
+/*
+  Sunlit edge for panels: the border is colored along the top, wraps over the rounded corners,
+  holds its color down the sides, then fades into the plain border near the bottom. It's a real border with a gradient
+  painted under it (background-clip), so the browser draws clean corners at any width.
+  Set --edge-width to change the thickness and --edge-color to change the color (sunlight by default).
+  The fade runs from --edge-fade-start to --edge-fade-end, as a share of the panel's height.
+*/
+.panel-edge {
+  --edge-panel: var(--color-body);
+  --edge-plain: var(--color-neutral-300);
+  border: var(--edge-width, 1px) solid transparent;
+  background:
+    linear-gradient(var(--edge-panel), var(--edge-panel)) padding-box,
+    linear-gradient(
+      to bottom,
+      var(--edge-color, var(--sunlight)) var(--edge-fade-start, 50%),
+      var(--edge-plain) var(--edge-fade-end, 95%)
+    ) border-box;
+}
+html.dark .panel-edge {
+  --edge-panel: var(--color-body-dark);
+  --edge-plain: var(--color-neutral-800);
+}
+
+/*
+  Sun-matched edge: instead of one color, the edge carries the sun's own gradient, lined up with the
+  sun on screen, so where it crosses the sun it's the same color and it darkens down the sides at the
+  same rate. Starfield sets the --sun-edge-* positions on elements marked data-sun-edge. Both use
+  sRGB blending, like the canvas, so the colors match exactly. The plain border is painted over the
+  bottom part, so it still fades out near the bottom; --edge-fade-to swaps that for another color.
+*/
+.panel-edge.panel-edge-sun {
+  background:
+    linear-gradient(var(--edge-panel), var(--edge-panel)) padding-box,
+    linear-gradient(
+      to bottom,
+      transparent var(--edge-fade-start, 50%),
+      var(--edge-fade-to, var(--edge-plain)) var(--edge-fade-end, 95%)
+    ) border-box,
+    linear-gradient(
+      to bottom in srgb,
+      var(--starfield-sun-top) var(--sun-edge-top, 0px),
+      var(--starfield-sun-bottom) var(--sun-edge-bottom, 100%)
+    ) border-box;
+}
+
+/*
+  Card edge for sub-page panels (About cards, Contact form, project cards, blog previews): the home
+  page's edge without a sun behind it. It runs from an orchid, the sun's pink (hue 350) turned
+  partway toward the lavender accent (about 285), into the lavender, and fades out down the sides
+  the same way as the home panels. Light mode uses a deeper orchid. --card-edge-fill must match the
+  card's own background (the lavender panel tint by default, white on cards with bg-white).
+*/
+.card-edge {
+  --card-edge-top: oklch(62% 0.2 315);
+  --card-edge-fill: var(--color-panel);
+  border: 4px solid transparent;
+  background:
+    linear-gradient(var(--card-edge-fill), var(--card-edge-fill)) padding-box,
+    linear-gradient(
+      to bottom in oklab,
+      var(--card-edge-top) 0,
+      var(--color-accent) 50%,
+      var(--card-edge-fill) 95%
+    ) border-box;
+}
+.card-edge.bg-white { --card-edge-fill: white; }
+html.dark .card-edge {
+  --card-edge-top: oklch(75% 0.15 315);
+  --card-edge-fill: var(--color-neutral-900);
 }

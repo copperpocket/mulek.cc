@@ -14,7 +14,7 @@ const { title, description, tags, category, slug, github, url, image } = Astro.p
 ---
 
 <div 
-  class="project-card h-full bg-white dark:bg-neutral-900 rounded-lg shadow-xl overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-[1.02] flex flex-col"
+  class="project-card h-full card-edge bg-white dark:bg-neutral-900 rounded-lg shadow-xl overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-[1.02] flex flex-col"
   data-category={category} 
 >
   {image && (
@@ -39,7 +39,7 @@ const { title, description, tags, category, slug, github, url, image } = Astro.p
         ))}
       </div>
 
-      <span class="text-xs font-medium px-1 py-0 rounded-full bg-secondary/20 dark:bg-secondary/30 text-secondary border border-secondary/50">
+      <span class="text-xs font-medium px-1 py-0 rounded-full bg-highlight/20 dark:bg-highlight/30 text-highlight border border-highlight/50">
         {category}
       </span>
     </div>
@@ -47,14 +47,14 @@ const { title, description, tags, category, slug, github, url, image } = Astro.p
     <div class="flex flex-col mt-auto">
       <a 
         href={slug} 
-        class="w-full text-center px-4 py-2 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition text-sm"
+        class="w-full text-center px-4 py-2 bg-accent text-on-accent font-semibold rounded-lg hover:bg-highlight transition text-sm"
       >
         View Details &rarr;
       </a>
 
       <div class="flex justify-between text-sm mx-6 my-2">
         {url && (
-          <a href={url} target="_blank" class="text-accent hover:text-accent/80 font-medium transition">
+          <a href={url} target="_blank" class="text-accent hover:text-highlight font-medium transition">
             View Live
           </a>
         )}

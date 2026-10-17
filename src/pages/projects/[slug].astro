@@ -26,7 +26,7 @@ const { title, description, category, tags, url, github, image } = project.data;
   <div class="page-article">
     <article class="container mx-auto px-4 max-w-4xl">
       <div class="text-center pb-8 border-b border-neutral-200 dark:border-neutral-700">
-        <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-secondary/20 dark:bg-secondary/30 text-secondary border border-secondary/50">
+        <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-highlight/20 dark:bg-highlight/30 text-highlight border border-highlight/50">
           {category}
         </span>
 
@@ -48,12 +48,12 @@ const { title, description, category, tags, url, github, image } = project.data;
         {(url || github) && (
           <div class="flex flex-wrap justify-center gap-4 mt-8">
             {url && (
-              <a href={url} target="_blank" rel="noopener noreferrer" class="px-6 py-2 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition">
+              <a href={url} target="_blank" rel="noopener noreferrer" class="px-6 py-2 bg-accent text-on-accent font-semibold rounded-lg hover:bg-highlight transition">
                 View Live
               </a>
             )}
             {github && (
-              <a href={github} target="_blank" rel="noopener noreferrer" class="px-6 py-2 border border-accent text-accent font-semibold rounded-lg hover:bg-accent/10 transition">
+              <a href={github} target="_blank" rel="noopener noreferrer" class="px-6 py-2 border border-accent text-accent font-semibold rounded-lg hover:bg-highlight/10 hover:text-highlight hover:border-highlight transition">
                 GitHub
               </a>
             )}
@@ -66,7 +66,7 @@ const { title, description, category, tags, url, github, image } = project.data;
       </div>
 
       <div class="text-center mt-16">
-        <a href="/projects" class="text-accent hover:underline font-semibold">&larr; Back to Projects</a>
+        <a href="/projects" class="text-accent hover:underline hover:text-highlight font-semibold">&larr; Back to Projects</a>
       </div>
     </article>
   </div>

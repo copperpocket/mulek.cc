@@ -9,6 +9,23 @@ import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
 import AboutSummary from "@/components/AboutSummary.astro";
 import "@/styles/global.css";
 
+// Hero panels: a 12px edge that follows the sun's gradient (.panel-edge-sun) and fades out into the
+// panel itself near the bottom, like light falling off. The corners are 6px rounder than the edge is
+// thick, so the inside of the edge stays rounded.
+const panel = "rounded-[1.125rem] bg-body dark:bg-body-dark border border-neutral-300 dark:border-neutral-800 panel-edge panel-edge-sun [--edge-width:12px] [--edge-fade-to:var(--edge-panel)]";
+const params = import.meta.env.DEV ? Astro.url.searchParams : new URLSearchParams();
+
+// TEMPORARY: sky options, picked with ?constellations=<n>&haze=<on|off>&nebulas=<n> on the dev server only
+const skyCounts = ["2", "3", "4", "5", "6"];
+const pickSky = (name: string, options: string[], fallback: string) => {
+  const value = params.get(name);
+  return value && options.includes(value) ? value : fallback;
+};
+const constellationCount = pickSky("constellations", skyCounts, "2");
+const hazeSetting = pickSky("haze", ["on", "off"], "on");
+const nebulaCount = pickSky("nebulas", skyCounts, "2");
+const sky = { constellations: constellationCount, haze: hazeSetting, nebulas: nebulaCount };
+
 ---
 
 <script type="module">
@@ -34,16 +51,34 @@ import "@/styles/global.css";
 <MainLayout title="mulek.cc - Home" description="Michael Scott Mulek, Systems Engineer. Projects and write-ups on homelab infrastructure, self-hosting, and development.">
   <TwSizeIndicator />
 
+  {import.meta.env.DEV && (
+    <div class="fixed bottom-20 left-4 z-70 flex flex-col items-start gap-2 text-xs text-white">
+      {[
+        { label: "Constellations", param: "constellations", options: skyCounts, current: constellationCount },
+        { label: "Haze", param: "haze", options: ["on", "off"], current: hazeSetting },
+        { label: "Nebulas", param: "nebulas", options: skyCounts, current: nebulaCount },
+      ].map(({ label, param, options, current }) => (
+        <nav class="flex items-center gap-1 p-1 rounded-full bg-neutral-800/90 shadow-lg" aria-label={`${label} (dev only)`}>
+          <span class="px-2 text-white/60">{label}</span>
+          {options.map((name) => {
+            const next = new URLSearchParams({ ...sky, [param]: name });
+            return <a href={`/?${next}`} class:list={["px-3 py-1 rounded-full", name === current ? "bg-white text-neutral-900" : "hover:bg-white/20"]}>{name}</a>;
+          })}
+        </nav>
+      ))}
+    </div>
+  )}
+
   <div class="relative w-full overflow-hidden min-h-screen md:h-[calc(100vh-3rem)]">
 
-    <div class="fixed top-8 left-0 w-full z-60 px-12 pointer-events-none">
+    <div class="fixed top-4 left-0 w-full z-60 px-4 sm:px-12 pointer-events-none">
       <div class="flex justify-end items-center w-full pointer-events-auto">
         
-        <div class="p-2 rounded-full">
+        <div data-starfield-avoid class="p-2 rounded-full">
           <ThemeIcon />
         </div>
 
-        <div id="menu-wrapper" class="inline-flex items-center p-2 rounded-full">
+        <div id="menu-wrapper" data-starfield-avoid class="inline-flex items-center p-2 rounded-full">
           <HamburgerMenu /> 
         </div>
         
@@ -52,39 +87,46 @@ import "@/styles/global.css";
 
     <section
       id="hero-section"
-      class="absolute inset-0 flex items-center justify-center bg-body dark:bg-body-dark"
+      class="absolute inset-0 flex flex-col justify-center bg-body dark:bg-body-dark"
     >
-      <Starfield grid fixed={false} density={1.6} />
+      <Starfield grid sun constellations={Number(constellationCount)} haze={hazeSetting === "on"} nebulas={Number(nebulaCount)} fixed={false} density={1.6} />
 
-      <div class="relative z-20 w-full max-w-7xl mx-auto px-6 sm:px-16 grid grid-cols-1 lg:grid-cols-2 gap-8">
-        
-        <!-- Left Column: Hero Info -->
-        <div class="flex flex-col sm:flex-row lg:flex-col z-30 items-center sm:items-start sm:justify-between lg:justify-start text-neutral-800 dark:text-neutral-200 sm:gap-12 lg:gap-0">
-  
-          <div class="flex flex-col space-y-3 w-fit sm:w-full text-left">
-            <div class="flex items-center justify-between w-full">
-              <h1 class="text-4xl font-bold">Michael Mulek</h1>
-            </div>
+      <!-- Phones only: the sky above the horizon is left open so the whole sun shows, and the panel
+           sits on the floor below it, where thumbs reach. If the screen is too short for that,
+           this spacer shrinks (down to the menu's height) before the panel would be cut off. -->
+      <div class="sm:hidden basis-[50vh] min-h-20" aria-hidden="true"></div>
 
-            <p class="text-lg font-medium">Systems Engineer</p>
-            <p class="text-base">Learn a bit about who I am and the work I’ve done.</p>
+      <div class="relative z-20 w-full px-6 sm:px-16 flex justify-center max-sm:flex-1 max-sm:items-center">
+        <!-- Each column sits in its own panel, sized to its content, so stars never pass behind the text
+             and the background stays the main feature. They stack below lg. Above that they sit in two
+             equal halves at the same width, hugging the middle, so the gap between them lines up with the
+             sun and the sun shows equally past both. -->
+        <div class="flex flex-col lg:grid lg:grid-cols-2 lg:w-full items-stretch gap-6 lg:gap-12">
 
-            <div class="flex flex-row space-x-3 sm:space-x-4 mt-4">
-              <a href="/about" class="px-4 py-2 sm:px-6 sm:py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition">
-                About Me
-              </a>
-              <a href="/projects" class="px-4 py-2 sm:px-6 sm:py-3 border border-accent bg-body dark:bg-body-dark text-accent font-semibold rounded-lg hover:bg-accent/10 transition">
-                My Projects
-              </a>
+          <!-- Left Column: Hero Info -->
+          <div data-starfield-avoid data-sun-edge class={`${panel} lg:justify-self-end lg:w-full lg:max-w-lg flex flex-col justify-center p-5 sm:p-8 text-neutral-800 dark:text-neutral-200`}>
+            <div class="flex flex-col space-y-3 w-fit text-left">
+              <h1 class="text-4xl lg:text-5xl font-bold">Michael Mulek</h1>
+              <p class="text-lg lg:text-xl font-medium">Systems Engineer</p>
+              <p class="text-base lg:text-lg text-pretty">Learn a bit about who I am and the work I’ve done.</p>
+
+              <div class="flex flex-row space-x-3 sm:space-x-4 mt-4">
+                <a href="/about" class="px-4 py-2 sm:px-6 sm:py-3 bg-accent text-on-accent font-semibold rounded-lg hover:bg-highlight transition">
+                  About Me
+                </a>
+                <a href="/projects" class="px-4 py-2 sm:px-6 sm:py-3 border border-accent bg-body dark:bg-body-dark text-accent font-semibold rounded-lg hover:bg-highlight/10 hover:text-highlight hover:border-highlight transition">
+                  My Projects
+                </a>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Right Column: About Summary -->
-        <div class="hidden sm:flex flex-col items-center sm:items-start text-center sm:text-left text-neutral-800 dark:text-neutral-200">
-          <AboutSummary short={true} />
-        </div>
+          <!-- Right Column: About Summary -->
+          <div data-starfield-avoid data-sun-edge class={`${panel} lg:justify-self-start lg:w-full hidden sm:flex flex-col max-w-lg p-6 sm:p-8 text-left text-neutral-800 dark:text-neutral-200`}>
+            <AboutSummary short={true} />
+          </div>
 
+        </div>
       </div>
     </section>
   </div>
@@ -95,11 +137,11 @@ import "@/styles/global.css";
           flex flex-col items-center justify-center overflow-auto z-50"
   >
     <ul class="flex flex-col p-4 space-y-6 text-neutral-800 dark:text-neutral-200 text-3xl font-bold text-center">
-      <li><a href="/" class="hover:text-accent transition">Home</a></li>
-      <li><a href="/about" class="hover:text-accent transition">About</a></li>
-      <li><a href="/projects" class="hover:text-accent transition">Projects</a></li>
-      <li><a href="/blog" class="hover:text-accent transition">Blog</a></li>
-      <li><a href="/contact" class="hover:text-accent transition">Contact</a></li>
+      <li><a href="/" class="hover:text-highlight transition">Home</a></li>
+      <li><a href="/about" class="hover:text-highlight transition">About</a></li>
+      <li><a href="/projects" class="hover:text-highlight transition">Projects</a></li>
+      <li><a href="/blog" class="hover:text-highlight transition">Blog</a></li>
+      <li><a href="/contact" class="hover:text-highlight transition">Contact</a></li>
     </ul>
 
   </div>

@@ -86,12 +86,12 @@ const projects = (await getCollection("projects")).sort(
         
         // Category Buttons (WebDev, DevOps, GameDev)
         const categoryInactiveClasses = ['bg-neutral-200', 'dark:bg-neutral-700', 'text-neutral-800', 'dark:text-neutral-200', 'hover:bg-neutral-300', 'dark:hover:bg-neutral-600'];
-        const categoryActiveClass = ['bg-accent', 'text-white'];
+        const categoryActiveClass = ['bg-accent', 'text-on-accent'];
 
         // "All Projects" Button (Unique Style)
         // Note: The base unique style is in the HTML, we only need to define what changes
         const allButtonDefaultClasses = ['bg-white', 'dark:bg-neutral-800', 'text-accent'];
-        const allButtonActiveClass = ['bg-accent', 'text-white', 'border-accent']; // Solid accent when active
+        const allButtonActiveClass = ['bg-accent', 'text-on-accent', 'border-accent']; // Solid accent when active
         
         // --- Helper Function to manage filtering (no change needed here) ---
 

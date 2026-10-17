@@ -23,7 +23,7 @@ const HCAPTCHA_SITE_KEY = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY;
     <section id="contact-form-section" class="flex flex-col items-center">
       <div
         id="card-contact"
-        class="rounded-2xl p-6 w-full max-w-xl flex flex-col space-y-4 bg-[color:theme(colors.accent/20%)] dark:bg-neutral-900 shadow-xl"
+        class="rounded-2xl p-6 w-full max-w-xl flex flex-col space-y-4 card-edge bg-panel dark:bg-neutral-900 shadow-xl"
       >
         <form class="flex flex-col space-y-3" id="contact-form">
           <input
@@ -59,7 +59,7 @@ const HCAPTCHA_SITE_KEY = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY;
           <button
             type="submit"
             id="submit-button"
-            class="text-sm md:text-base bg-accent text-white font-semibold rounded-lg px-4 py-2 hover:bg-accent/90 transition"
+            class="text-sm md:text-base bg-accent text-on-accent font-semibold rounded-lg px-4 py-2 hover:bg-highlight transition"
           >
             Send Message
           </button>
@@ -68,9 +68,9 @@ const HCAPTCHA_SITE_KEY = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY;
         <div id="form-status" class="text-center text-sm font-semibold"></div>
 
         <div class="flex justify-center items-center space-x-6 mt-4 text-sm">
-          <a href="https://copperpocket.bsky.social" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">Bluesky</a>
-          <a href="https://github.com/copperpocket" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">GitHub</a>
-          <a href="/rss.xml" class="text-accent hover:underline">RSS</a>        </div>
+          <a href="https://copperpocket.bsky.social" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline hover:text-highlight">Bluesky</a>
+          <a href="https://github.com/copperpocket" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline hover:text-highlight">GitHub</a>
+          <a href="/rss.xml" class="text-accent hover:underline hover:text-highlight">RSS</a>        </div>
       </div>
     </section>
 
