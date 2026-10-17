@@ -3,6 +3,7 @@ import MainLayout from "@/layouts/MainLayout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import Starfield from "@/components/Starfield.astro";
+import { pageSky } from "@/config/sky";
 import "@/styles/global.css";
 
 import { getCollection } from "astro:content";
@@ -18,7 +19,7 @@ const pageTitle = "Blog Archive";
 ---
 
 <MainLayout title={`Blog - mulek.cc`} description="Articles on homelab infrastructure, self-hosting, and development by Michael Scott Mulek.">
-  <Starfield constellations={[1, 6]} haze nebulas={[2, 8]} nebulaFade={false} />
+  <Starfield {...pageSky} />
   <Header />
 
   <div class="page-main">

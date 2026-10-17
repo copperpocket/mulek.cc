@@ -7,6 +7,7 @@ import MainLayout from "@/layouts/MainLayout.astro";
 // Reusable UI components
 import Avatar from "@/components/Avatar.astro";
 import Starfield from "@/components/Starfield.astro";
+import { pageSky } from "@/config/sky";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
@@ -28,7 +29,7 @@ import "@/styles/global.css";
   <TwSizeIndicator />
 
   <!-- Decorative animated background layer -->
-  <Starfield constellations={[1, 6]} haze nebulas={[2, 8]} nebulaFade={false} />
+  <Starfield {...pageSky} />
 
   <!-- Global site header -->
   <Header />

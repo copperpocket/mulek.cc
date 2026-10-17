@@ -2,6 +2,7 @@
 // src/pages/projects/index.astro
 import MainLayout from "@/layouts/MainLayout.astro";
 import Starfield from "@/components/Starfield.astro";
+import { pageSky } from "@/config/sky";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 
@@ -20,7 +21,7 @@ const projects = (await getCollection("projects")).sort(
 ---
 
 <MainLayout title="Projects - mulek.cc" description="Projects by Michael Scott Mulek - web development, homelab infrastructure, and game servers.">
-    <Starfield constellations={[1, 6]} haze nebulas={[2, 8]} nebulaFade={false} />
+    <Starfield {...pageSky} />
     <Header />
 
     <div id="projects-container" class="page-main">

@@ -1,6 +1,7 @@
 ---
 import MainLayout from "@/layouts/MainLayout.astro";
 import Starfield from "@/components/Starfield.astro";
+import { pageSky } from "@/config/sky";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import { getCollection, render } from "astro:content";
@@ -20,7 +21,7 @@ const { title, description, category, tags, url, github, image } = project.data;
 ---
 
 <MainLayout title={`${title} - mulek.cc`} description={description} image={image} type="article">
-  <Starfield constellations={[1, 6]} haze nebulas={[2, 8]} nebulaFade={false} />
+  <Starfield {...pageSky} />
   <Header />
 
   <div class="page-article">

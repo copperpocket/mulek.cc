@@ -3,6 +3,7 @@ import MainLayout from "./MainLayout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import Starfield from "@/components/Starfield.astro";
+import { pageSky } from "@/config/sky";
 import "@/styles/global.css";
 
 const { data } = Astro.props;
@@ -22,7 +23,7 @@ const isoDate = new Date(data.pubDate).toISOString().slice(0, 10);
 ---
 
 <MainLayout title={data.title} description={data.description} image={data.image} type="article">
-  <Starfield constellations={[1, 6]} haze nebulas={[2, 8]} nebulaFade={false} />
+  <Starfield {...pageSky} />
   <Header />
 
   <div id="post-container" class="page-article">

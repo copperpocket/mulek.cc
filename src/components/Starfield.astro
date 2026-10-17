@@ -25,13 +25,15 @@ interface Props {
   nebulas?: number | [number, number];
   /** Fade the nebulas in slowly after page load, instead of showing them right away */
   nebulaFade?: boolean;
+  /** Seconds between comets, as a [min, max] range */
+  cometSeconds?: [number, number];
   /** Horizon height as a fraction of the canvas (only used with grid) */
   horizon?: number;
   /** Pin to the viewport, or fill the nearest positioned parent */
   fixed?: boolean;
 }
 
-const { density = 1, grid = false, sun = false, stripes = true, haze = false, nebulaFade = true, horizon = 0.5, fixed = true } = Astro.props;
+const { density = 1, grid = false, sun = false, stripes = true, haze = false, nebulaFade = true, cometSeconds = [8, 20], horizon = 0.5, fixed = true } = Astro.props;
 // Pages render per request, so a range gives a different count on every visit
 const roll = (count: number | [number, number] = 0) =>
   Array.isArray(count) ? count[0] + Math.floor(Math.random() * (count[1] - count[0] + 1)) : count;
@@ -50,6 +52,7 @@ const nebulas = roll(Astro.props.nebulas);
   data-haze={constellations && haze ? "" : undefined}
   data-nebulas={nebulas || undefined}
   data-nebula-fade={nebulas && nebulaFade ? "" : undefined}
+  data-comet-seconds={cometSeconds.join(",")}
   aria-hidden="true"
 ></canvas>
 
@@ -172,7 +175,6 @@ const nebulas = roll(Astro.props.nebulas);
 
   // Comets: a faint streak every so often, never more than one at a time
   const COMET_FIRST_SECONDS = [3, 5]; // delay before the first one
-  const COMET_GAP_SECONDS = [8, 20]; // delay between comets
   // Now and then they come in company: a pair flying side by side, or (rarer) a small meteor shower
   const COMET_PAIR_CHANCE = 0.16;
   const COMET_SHOWER_CHANCE = 0.08;
@@ -357,6 +359,7 @@ const nebulas = roll(Astro.props.nebulas);
     const hasStripes = hasSun && canvas.dataset.sunStripes !== undefined;
     const hasHaze = canvas.dataset.haze !== undefined;
     const nebulaFade = canvas.dataset.nebulaFade !== undefined;
+    const cometSeconds = (canvas.dataset.cometSeconds ?? "8,20").split(",").map(Number); // wait between comets
     const nebulas = nebulaCtx ? Array.from({ length: Math.min(12, Number(canvas.dataset.nebulas) || 0) }, makeNebula) : [];
     const constellations = Array.from({ length: Math.min(12, Number(canvas.dataset.constellations) || 0) }, makeConstellation);
     // The first starts soon after load, the next just before the first one finishes
@@ -611,7 +614,8 @@ const nebulas = roll(Astro.props.nebulas);
       const angle = (randIn(COMET_ANGLE_DEGREES) * Math.PI) / 180;
       const direction = Math.random() < 0.5 ? 1 : -1;
       const x = rand(0.1, 0.9) * width;
-      const y = rand(0, 0.5) * sky;
+      // Below a horizon they start in the upper half of the sky; without one, anywhere but the bottom
+      const y = rand(0, hasGrid ? 0.5 : 0.85) * sky;
       let born = now;
       let side = 0;
       comets = Array.from({ length: count }, (_, i) => {
@@ -905,7 +909,7 @@ const nebulas = roll(Astro.props.nebulas);
     function loop(now: number) {
       if (!comets.length && now >= nextCometAt) {
         spawnComets(now);
-        nextCometAt = now + randIn(COMET_GAP_SECONDS) * 1000;
+        nextCometAt = now + randIn(cometSeconds) * 1000;
       }
       draw(now);
       frame = requestAnimationFrame(loop);

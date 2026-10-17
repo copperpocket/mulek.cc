@@ -1,6 +1,7 @@
 ---
 import MainLayout from "@/layouts/MainLayout.astro";
 import Starfield from "@/components/Starfield.astro";
+import { pageSky } from "@/config/sky";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import "@/styles/global.css";
@@ -8,7 +9,7 @@ import "@/styles/global.css";
 const HCAPTCHA_SITE_KEY = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY;
 ---
 <MainLayout title="Contact - mulek.cc" description="Get in touch with Michael Scott Mulek. Have a question, project idea, or just want to say hello?">
-  <Starfield constellations={[1, 6]} haze nebulas={[2, 8]} nebulaFade={false} />
+  <Starfield {...pageSky} />
   <Header />
 
   <main class="page-main container mx-auto px-4 text-neutral-800 dark:text-neutral-200">

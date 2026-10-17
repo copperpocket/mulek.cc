@@ -3,6 +3,7 @@
 
 import MainLayout from "@/layouts/MainLayout.astro";
 import Starfield from "@/components/Starfield.astro";
+import { homeSky } from "@/config/sky";
 import ThemeIcon from "@/components/Theme.astro";
 import HamburgerMenu from "@/components/HamburgerMenu.astro";
 import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
@@ -60,7 +61,7 @@ const panel = "rounded-xl bg-body dark:bg-body-dark border border-neutral-300 da
       id="hero-section"
       class="absolute inset-0 flex flex-col justify-center bg-body dark:bg-body-dark"
     >
-      <Starfield grid sun constellations={[1, 6]} haze nebulas={[2, 8]} nebulaFade={false} fixed={false} density={1.6} />
+      <Starfield grid sun {...homeSky} fixed={false} density={1.6} />
 
       <!-- Phones only: the sky above the horizon is left open so the whole sun shows, and the panel
            sits on the floor below it, where thumbs reach. If the screen is too short for that,
