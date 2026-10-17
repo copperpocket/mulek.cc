@@ -36,12 +36,14 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [x] Sub-pages share the home page's sky (constellations and nebulas, no sun); nebulas show right away instead of fading in
 - [x] Home panel edge thinned to 4px
 - [x] Comets come twice as often, sometimes in pairs, and rarely as a small meteor shower
+- [x] New site menu: one button that opens a card (full screen on phones) with the links, outside links and theme toggle; keyboard accessible, and used on the home page and on phones everywhere
+- [x] Pet photos: a pool per pet, picked at random, added through `yarn pet-photos`, which strips all metadata (location, camera, dates)
 - [x] Post dates show the right day (they were a day early in US time zones), and inline code no longer shows literal backticks
 
 ## Cleanup
 
 - [ ] Delete dead code: `ImageMod`, `Logo`, `ThemeSwitcher`, `layouts/Layout.astro`, `src/config/*.json`, `astro.svg`, and the stale duplicates in `src/scripts/` and `src/assets/`
-- [ ] Define the navigation links once (they're currently in `Header.astro` and `index.astro`, and the mobile menu has drifted)
+- [ ] Define the navigation links once (they're currently in `Header.astro` and `SiteMenu.astro`)
 - [ ] Run the theme setup in one place instead of three (`MainLayout`, `index.astro`, `Theme.astro`)
 - [ ] Bundle the theme toggle CSS locally instead of loading it from jsDelivr
 - [ ] Move the shared page shell (header, footer, background, global CSS) into `MainLayout`
@@ -55,10 +57,6 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [ ] Per-project preview images (set `image` in the frontmatter; the default card is used otherwise)
 - [ ] Delete the old logo files (`public/images/favicon.png`, `logo.png`, `logo-darkmode.png`, `mm.png`, and the copies in `src/assets/`) along with the other dead code
 - [ ] Use the logo on the home page (it has no header) and in the mobile menu
-
-## Accessibility
-
-- [ ] Make the hamburger menu keyboard-accessible, with proper ARIA labels
 
 ## Contact form
 
