@@ -20,7 +20,7 @@ const { title, description, category, tags, url, github, image } = project.data;
 ---
 
 <MainLayout title={`${title} - mulek.cc`} description={description} image={image} type="article">
-  <Starfield />
+  <Starfield constellations={[1, 6]} haze nebulas={[2, 8]} nebulaFade={false} />
   <Header />
 
   <div class="page-article">

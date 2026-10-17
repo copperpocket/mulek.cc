@@ -20,7 +20,7 @@ const projects = (await getCollection("projects")).sort(
 ---
 
 <MainLayout title="Projects - mulek.cc" description="Projects by Michael Scott Mulek - web development, homelab infrastructure, and game servers.">
-    <Starfield />
+    <Starfield constellations={[1, 6]} haze nebulas={[2, 8]} nebulaFade={false} />
     <Header />
 
     <div id="projects-container" class="page-main">
@@ -184,4 +184,4 @@ const projects = (await getCollection("projects")).sort(
         }
         lockResultsHeight();
     });
-</script>
+</script>

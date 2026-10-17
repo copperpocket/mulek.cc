@@ -12,21 +12,31 @@ interface Props {
       get --sun-edge-top/--sun-edge-bottom (where the sun's gradient starts and ends, in px from their
       top), for .panel-edge-sun */
   sun?: boolean;
-  /** How many constellations to draw, up to 12. Each gets a random spot anywhere in the open sky,
-      clear of the sun, each other and anything marked data-starfield-avoid. One that doesn't fit is skipped */
-  constellations?: number;
+  /** Cut the classic synthwave gaps across the sun's lower half (only used with sun) */
+  stripes?: boolean;
+  /** How many constellations to draw, up to 12, or a [min, max] range rolled on every page load. Each
+      gets a random spot anywhere in the open sky, clear of the sun, each other and anything marked
+      data-starfield-avoid. One that doesn't fit is skipped */
+  constellations?: number | [number, number];
   /** Add a faint haze behind each constellation. Constellations keep clear of anything marked data-starfield-avoid */
   haze?: boolean;
   /** How many nebulas to draw, up to 12: soft clouds of gas in the sky's colors, clear of the sun, the
       constellations and anything marked data-starfield-avoid. One that doesn't fit is skipped */
-  nebulas?: number;
+  nebulas?: number | [number, number];
+  /** Fade the nebulas in slowly after page load, instead of showing them right away */
+  nebulaFade?: boolean;
   /** Horizon height as a fraction of the canvas (only used with grid) */
   horizon?: number;
   /** Pin to the viewport, or fill the nearest positioned parent */
   fixed?: boolean;
 }
 
-const { density = 1, grid = false, sun = false, constellations = 0, haze = false, nebulas = 0, horizon = 0.5, fixed = true } = Astro.props;
+const { density = 1, grid = false, sun = false, stripes = true, haze = false, nebulaFade = true, horizon = 0.5, fixed = true } = Astro.props;
+// Pages render per request, so a range gives a different count on every visit
+const roll = (count: number | [number, number] = 0) =>
+  Array.isArray(count) ? count[0] + Math.floor(Math.random() * (count[1] - count[0] + 1)) : count;
+const constellations = roll(Astro.props.constellations);
+const nebulas = roll(Astro.props.nebulas);
 ---
 
 <canvas
@@ -34,10 +44,12 @@ const { density = 1, grid = false, sun = false, constellations = 0, haze = false
   data-density={density}
   data-grid={grid ? "" : undefined}
   data-sun={grid && sun ? "" : undefined}
+  data-sun-stripes={grid && sun && stripes ? "" : undefined}
   data-horizon={horizon}
   data-constellations={constellations || undefined}
   data-haze={constellations && haze ? "" : undefined}
   data-nebulas={nebulas || undefined}
+  data-nebula-fade={nebulas && nebulaFade ? "" : undefined}
   aria-hidden="true"
 ></canvas>
 
@@ -160,7 +172,13 @@ const { density = 1, grid = false, sun = false, constellations = 0, haze = false
 
   // Comets: a faint streak every so often, never more than one at a time
   const COMET_FIRST_SECONDS = [3, 5]; // delay before the first one
-  const COMET_GAP_SECONDS = [15, 35]; // delay between comets
+  const COMET_GAP_SECONDS = [8, 20]; // delay between comets
+  // Now and then they come in company: a pair flying side by side, or (rarer) a small meteor shower
+  const COMET_PAIR_CHANCE = 0.16;
+  const COMET_SHOWER_CHANCE = 0.08;
+  const COMET_SHOWER_SIZE = [4, 8];
+  const COMET_GROUP_STAGGER_SECONDS = [0.1, 0.45]; // each one in a group follows a moment after the last
+  const COMET_GROUP_SPREAD = [18, 70]; // px apart, side to side
   const COMET_LIFE_SECONDS = [1.2, 2];
   const COMET_SPEED = [180, 330]; // px per second
   const COMET_ANGLE_DEGREES = [10, 45]; // below horizontal
@@ -336,7 +354,9 @@ const { density = 1, grid = false, sun = false, constellations = 0, haze = false
     const hasGrid = canvas.dataset.grid !== undefined;
     const horizon = hasGrid ? Number(canvas.dataset.horizon) || 0.5 : 1;
     const hasSun = hasGrid && canvas.dataset.sun !== undefined && sunCtx !== null;
+    const hasStripes = hasSun && canvas.dataset.sunStripes !== undefined;
     const hasHaze = canvas.dataset.haze !== undefined;
+    const nebulaFade = canvas.dataset.nebulaFade !== undefined;
     const nebulas = nebulaCtx ? Array.from({ length: Math.min(12, Number(canvas.dataset.nebulas) || 0) }, makeNebula) : [];
     const constellations = Array.from({ length: Math.min(12, Number(canvas.dataset.constellations) || 0) }, makeConstellation);
     // The first starts soon after load, the next just before the first one finishes
@@ -395,7 +415,7 @@ const { density = 1, grid = false, sun = false, constellations = 0, haze = false
     // puffs overlap, instead of being painted over it (which looks washed out on a light sky)
     let nebulaInk = false;
     let starAlpha = 1; // --starfield-alpha, so light mode can draw stars more solidly
-    let comet: Comet | null = null;
+    let comets: Comet[] = []; // one at a time, or a pair or shower that set off together
     let nextCometAt = performance.now() + randIn(COMET_FIRST_SECONDS) * 1000;
 
     function readColors() {
@@ -534,21 +554,23 @@ const { density = 1, grid = false, sun = false, constellations = 0, haze = false
       sunCtx!.closePath();
       sunCtx!.fill();
 
-      // Gaps drift slowly down. Each one starts as an invisible hairline, fades in,
-      // then widens as it nears the horizon, so none of them pop into view.
-      const region = r * SUN_STRIPE_REGION;
-      const pitch = region / SUN_STRIPES;
-      const progress = (t / 1000 / SUN_STRIPE_SECONDS) % 1;
-      sunCtx!.globalCompositeOperation = "destination-out";
-      sunCtx!.fillStyle = "#000";
-      for (let i = 0; i < SUN_STRIPES; i++) {
-        const depth = (i + progress) / SUN_STRIPES; // 0 at the top of the region, 1 at the horizon
-        const fadeIn = Math.min(1, depth / SUN_STRIPE_FADE);
-        sunCtx!.globalAlpha = fadeIn * fadeIn * (3 - 2 * fadeIn); // smoothstep
-        sunCtx!.fillRect(cx - r, cy - region + depth * region, r * 2, pitch * SUN_STRIPE_MAX_GAP * depth);
+      if (hasStripes) {
+        // Gaps drift slowly down. Each one starts as an invisible hairline, fades in,
+        // then widens as it nears the horizon, so none of them pop into view.
+        const region = r * SUN_STRIPE_REGION;
+        const pitch = region / SUN_STRIPES;
+        const progress = (t / 1000 / SUN_STRIPE_SECONDS) % 1;
+        sunCtx!.globalCompositeOperation = "destination-out";
+        sunCtx!.fillStyle = "#000";
+        for (let i = 0; i < SUN_STRIPES; i++) {
+          const depth = (i + progress) / SUN_STRIPES; // 0 at the top of the region, 1 at the horizon
+          const fadeIn = Math.min(1, depth / SUN_STRIPE_FADE);
+          sunCtx!.globalAlpha = fadeIn * fadeIn * (3 - 2 * fadeIn); // smoothstep
+          sunCtx!.fillRect(cx - r, cy - region + depth * region, r * 2, pitch * SUN_STRIPE_MAX_GAP * depth);
+        }
+        sunCtx!.globalAlpha = 1;
+        sunCtx!.globalCompositeOperation = "source-over";
       }
-      sunCtx!.globalAlpha = 1;
-      sunCtx!.globalCompositeOperation = "source-over";
 
       ctx!.drawImage(sunLayer, 0, 0, width, height);
     }
@@ -579,30 +601,45 @@ const { density = 1, grid = false, sun = false, constellations = 0, haze = false
       return Math.random() < 0.5 ? "star" : "blue";
     }
 
-    function spawnComet(now: number) {
+    function spawnComets(now: number) {
       const sky = height * horizon;
+      const roll = Math.random();
+      const count =
+        roll < COMET_SHOWER_CHANCE ? Math.round(randIn(COMET_SHOWER_SIZE)) : roll < COMET_SHOWER_CHANCE + COMET_PAIR_CHANCE ? 2 : 1;
+      // A group shares a heading and speed, set off side by side and a moment apart
       const speed = randIn(COMET_SPEED);
       const angle = (randIn(COMET_ANGLE_DEGREES) * Math.PI) / 180;
       const direction = Math.random() < 0.5 ? 1 : -1;
-      comet = {
-        x: rand(0.1, 0.9) * width,
-        y: rand(0, 0.5) * sky,
-        vx: Math.cos(angle) * speed * direction,
-        vy: Math.sin(angle) * speed,
-        born: now,
-        life: randIn(COMET_LIFE_SECONDS),
-        size: Math.random() ** 1.5, // skewed small, so big ones are rarer
-        glow: pickCometGlow(),
-      };
+      const x = rand(0.1, 0.9) * width;
+      const y = rand(0, 0.5) * sky;
+      let born = now;
+      let side = 0;
+      comets = Array.from({ length: count }, (_, i) => {
+        if (i > 0) {
+          born += randIn(COMET_GROUP_STAGGER_SECONDS) * 1000;
+          side += randIn(COMET_GROUP_SPREAD) * (Math.random() < 0.5 ? 1 : -1);
+        }
+        const a = angle + (i > 0 ? rand(-0.04, 0.04) : 0);
+        return {
+          // Offset sideways from the first one's path
+          x: x - Math.sin(a) * side * direction,
+          y: y + Math.cos(a) * side,
+          vx: Math.cos(a) * speed * direction,
+          vy: Math.sin(a) * speed,
+          born,
+          life: randIn(COMET_LIFE_SECONDS),
+          size: Math.random() ** 1.5, // skewed small, so big ones are rarer
+          glow: pickCometGlow(),
+        };
+      });
     }
 
+    // Draws one comet; false once it has finished
     function drawComet(c: Comet, now: number) {
       const age = (now - c.born) / 1000;
+      if (age < 0) return true; // not set off yet
       const progress = age / c.life;
-      if (progress >= 1) {
-        comet = null;
-        return;
-      }
+      if (progress >= 1) return false;
 
       // Quick fade in, long fade out
       const fade = Math.min(1, progress / 0.15) * Math.min(1, (1 - progress) / 0.5) * lerp(COMET_MAX_ALPHA, c.size);
@@ -641,6 +678,7 @@ const { density = 1, grid = false, sun = false, constellations = 0, haze = false
       ctx!.arc(headX, headY, lerp(COMET_HEAD_RADIUS, c.size), 0, TAU);
       ctx!.fill();
       ctx!.restore();
+      return true;
     }
 
     // Where each constellation sits, in px, found on resize: the first of its spots where it's clear
@@ -819,7 +857,7 @@ const { density = 1, grid = false, sun = false, constellations = 0, haze = false
     function drawNebulas(t: number) {
       const seconds = reducedMotion.matches ? Infinity : (t - startedAt) / 1000;
       const [fadeFrom, fadeTo] = NEBULA_FADE_SECONDS;
-      const fade = smoothstep((seconds - fadeFrom) / (fadeTo - fadeFrom));
+      const fade = nebulaFade ? smoothstep((seconds - fadeFrom) / (fadeTo - fadeFrom)) : 1;
       const breath = reducedMotion.matches ? 1 : 0.88 + 0.12 * Math.sin((TAU * seconds) / NEBULA_BREATH_SECONDS);
       if (fade <= 0) return;
       ctx!.globalAlpha = fade * breath;
@@ -861,12 +899,12 @@ const { density = 1, grid = false, sun = false, constellations = 0, haze = false
       drawConstellations(t, false);
       if (hasSun) drawSun(t);
       if (hasGrid) drawGrid(t);
-      if (comet) drawComet(comet, t);
+      comets = comets.filter((c) => drawComet(c, t));
     }
 
     function loop(now: number) {
-      if (!comet && now >= nextCometAt) {
-        spawnComet(now);
+      if (!comets.length && now >= nextCometAt) {
+        spawnComets(now);
         nextCometAt = now + randIn(COMET_GAP_SECONDS) * 1000;
       }
       draw(now);
@@ -895,7 +933,9 @@ const { density = 1, grid = false, sun = false, constellations = 0, haze = false
     readColors();
     resize();
     observer.observe(canvas);
-    avoidElements.forEach((el) => observer.observe(el));
+    // Elements marked data-starfield-avoid="static" (like the header, which shrinks on scroll) aren't
+    // watched, so the sky doesn't rearrange itself as they change
+    avoidElements.filter((el) => el.dataset.starfieldAvoid !== "static").forEach((el) => observer.observe(el));
     sunEdgeElements.forEach((el) => observer.observe(el));
     document.addEventListener("themechange", onThemeChange);
     if (reducedMotion.matches) draw(0);

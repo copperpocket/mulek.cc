@@ -33,6 +33,9 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [x] Even 32px spacing between page headings and the panels below them
 - [x] First blog post: Dev Log #1, plus a template so every dev log has the same sections and tags
 - [x] Nebulas as their own feature, separate from the constellation haze; each visit rolls 1-6 constellations and 2-8 nebulas, and the dev-only test switcher is gone
+- [x] Sub-pages share the home page's sky (constellations and nebulas, no sun); nebulas show right away instead of fading in
+- [x] Home panel edge thinned to 4px
+- [x] Comets come twice as often, sometimes in pairs, and rarely as a small meteor shower
 - [x] Post dates show the right day (they were a day early in US time zones), and inline code no longer shows literal backticks
 
 ## Cleanup

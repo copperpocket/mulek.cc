@@ -22,7 +22,7 @@ const isoDate = new Date(data.pubDate).toISOString().slice(0, 10);
 ---
 
 <MainLayout title={data.title} description={data.description} image={data.image} type="article">
-  <Starfield />
+  <Starfield constellations={[1, 6]} haze nebulas={[2, 8]} nebulaFade={false} />
   <Header />
 
   <div id="post-container" class="page-article">
