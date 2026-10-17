@@ -8,9 +8,9 @@ tags: ["dev-log", "design", "starfield", "seo", "security"]
 ## Summary
 
 - **Dates:** October 15–17, 2026
-- **Commits:** 27, across PR #7, PR #8 and the `dev` branch
+- **Commits:** 27, across PR #7, PR #8, PR #9 and the `dev` branch
 - **Files changed:** 59 (+2,516 / −1,380 lines)
-- **Status:** PR #7 and PR #8 merged to `master` and deployed; the rest ships with the PR that publishes this post
+- **Status:** PR #7, PR #8 and PR #9 merged to `master` and deployed; the rest ships with the PR that publishes this post
 
 The site got a cleanup pass first, then SEO and contact form hardening, a new logo, and a redesigned home page sky.
 
@@ -114,7 +114,7 @@ The site got a cleanup pass first, then SEO and contact form hardening, a new lo
 | `2b95e8c` | chore(license): add MIT license for code, reserve rights to content |
 | `068b458` | style(home): even out spacing around the about panel cards |
 
-### On `dev` (ships with this post)
+### PR #9 (merged)
 
 | Commit | Message |
 | --- | --- |
@@ -123,6 +123,11 @@ The site got a cleanup pass first, then SEO and contact form hardening, a new lo
 | `0b6ff5c` | feat(brand): add the m favicon, prompt mark, and mulek✦cc wordmark |
 | `33f231a` | feat(header): expand at the top of the page and compact on scroll |
 | `7a1ff23` | style(layout): center short pages vertically and unify page spacing |
+
+### On `dev` (ships with this post)
+
+| Commit | Message |
+| --- | --- |
 | `fe71afa` | chore(github): add a pull request template |
 | `f64f1bb` | feat(home): add a synthwave sun, constellations and nebulas, and carry its colors site-wide |
 | `30438a1` | feat(starfield): place constellations anywhere in the open sky and allow up to 12 of each |
