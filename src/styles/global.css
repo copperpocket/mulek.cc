@@ -95,6 +95,18 @@ html.dark {
   --starfield-grid: color-mix(in oklab, var(--color-accent) 15%, transparent);
 }
 
+/*
+  Hover for cards that link somewhere (project cards, blog previews): the card eases up, grows a
+  little and its shadow deepens. Tailwind moves things with the translate and scale properties, not
+  transform, so those are what transition. In the components layer, so a card can override the
+  scale with a utility (wide cards use hover:scale-[1.01]).
+*/
+@layer components {
+  .card-lift {
+    @apply transition-[translate,scale,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-2xl;
+  }
+}
+
 /* Tailwind v4 leaves buttons with the default arrow cursor; give them the pointing hand, like links */
 button:not(:disabled),
 [role="button"]:not([aria-disabled="true"]) {

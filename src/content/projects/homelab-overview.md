@@ -2,7 +2,7 @@
 title: "Homelab Overview"
 description: "A self-hosted ecosystem that powers my personal services, experiments, and development projects."
 pubDate: 2025-10-19
-category: "DevOps"
+category: "Infrastructure"
 tags: ["Proxmox", "TrueNAS", "OPNsense"]
 ---
 

@@ -2,7 +2,7 @@
 title: "Echo Protocol"
 description: "A cross-genre project combining an isometric exploration game with a competitive card game, driven by a collectible status system."
 pubDate: 2025-11-14
-category: "GameDev"
+category: "Games"
 tags: ["Godot", "Dialogic"]
 github: "https://github.com/copperpocket/echo_protocol"
 ---
@@ -67,4 +67,4 @@ The ultimate reward is **Status and Pride** derived from assembling a **cohesive
 
 ---
 
-This design outlines a rich meta-game where the competitive card game is both a core feature and one of the many ways a player can demonstrate their power and earn the next big pull.
+This design outlines a rich meta-game where the competitive card game is both a core feature and one of the many ways a player can demonstrate their power and earn the next big pull.

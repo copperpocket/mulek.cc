@@ -38,6 +38,9 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [x] Comets come twice as often, sometimes in pairs, and rarely as a small meteor shower
 - [x] New site menu: one button that opens a card (full screen on phones) with the links, outside links and theme toggle; keyboard accessible, and used on the home page and on phones everywhere
 - [x] Pet photos: a pool per pet, picked at random, added through `yarn pet-photos`, which strips all metadata (location, camera, dates)
+- [x] Projects page redesign: whole-card links, a featured current project, `CATEGORY · YEAR` labels, tags as plain text, matching filter buttons with counts, and plainer category names (Web, Infrastructure, Games)
+- [x] The home page no longer scrolls slightly on phones (`100dvh` instead of `100vh`)
+- [x] No more TypeScript files: the two config files are plain JavaScript
 - [x] Post dates show the right day (they were a day early in US time zones), and inline code no longer shows literal backticks
 
 ## Cleanup
@@ -68,7 +71,6 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [ ] Flesh out the project write-ups (overview, setup, lessons learned), including a real homelab network diagram
 - [ ] "How this site deploys" write-up (Astro, Docker, Dokploy, auto-deploy from `master`)
 - [ ] Blog features: cover images, reading time, tag pages, next/previous links, consistent date format
-- [ ] Project card images
 - [ ] `/uses` page (hardware, homelab stack, tools) and `/now` page
 - [ ] Downloadable résumé, plus certifications and skills on About
 - [ ] Live homelab status widget (uptime, Grafana stats)

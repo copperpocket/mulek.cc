@@ -2,7 +2,7 @@
 title: "Quackshire - Minecraft"
 description: "A private Minecraft server that hosts builds from my friends and family."
 pubDate: 2025-10-15
-category: "GameDev"
+category: "Games"
 tags: ["Java", "Spigot"]
 github: "https://github.com/copperpocket/quackshire"
 ---

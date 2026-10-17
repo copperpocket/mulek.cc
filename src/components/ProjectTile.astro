@@ -1,0 +1,77 @@
+---
+// A project on /projects. The whole card opens the write-up (the title's link stretches over it),
+// with the live site and GitHub as small links of their own. `featured` makes it a wide card
+// across the top of the grid.
+interface Props {
+  title: string;
+  description: string;
+  tags: string[];
+  category: string;
+  pubDate: Date;
+  slug: string;
+  url?: string;
+  github?: string;
+  featured?: boolean;
+}
+
+const { title, description, tags, category, pubDate, slug, url, github, featured = false } = Astro.props;
+const year = pubDate.getUTCFullYear();
+const external = { target: "_blank", rel: "noopener noreferrer" };
+---
+
+<article
+  class:list={[
+    "project-card group relative flex flex-col card-edge bg-white dark:bg-neutral-900 rounded-xl shadow-xl",
+    // Lifts on hover (card-lift); the wide featured card grows less, since it would grow a lot more
+    "card-lift",
+    featured ? "sm:col-span-2 lg:col-span-3 p-6 sm:p-8 hover:scale-[1.01]" : "p-6",
+  ]}
+  data-category={category}
+>
+  <p class="flex flex-wrap items-center gap-x-2 font-mono text-[11px] uppercase tracking-widest text-neutral-500 dark:text-neutral-400">
+    {featured && <span class="text-highlight">Current project</span>}
+    {featured && <span aria-hidden="true">·</span>}
+    <span>{category}</span>
+    <span aria-hidden="true">·</span>
+    <span>{year}</span>
+  </p>
+
+  <h2 class:list={["font-semibold mt-3 text-neutral-800 dark:text-neutral-200", featured ? "text-2xl sm:text-3xl" : "text-xl"]}>
+    <!-- Stretched over the whole card, so clicking anywhere opens the write-up -->
+    <a href={slug} class="after:absolute after:inset-0 after:rounded-xl focus-visible:outline-none group-focus-within:underline">
+      {title}
+    </a>
+  </h2>
+  <p class:list={["mt-2 text-neutral-600 dark:text-neutral-400 flex-1", featured ? "text-base sm:text-lg max-w-3xl" : "text-sm"]}>
+    {description}
+  </p>
+
+  <p class="mt-4 font-mono text-xs text-neutral-500 dark:text-neutral-400">{tags.join(" · ")}</p>
+
+  <div class="mt-4 pt-4 flex items-center justify-between gap-4 border-t border-neutral-200 dark:border-neutral-800 text-sm">
+    <span class="font-semibold text-accent group-hover:text-highlight transition-colors">
+      Read more <span class="inline-block transition-[translate] duration-300 ease-out group-hover:translate-x-1">&rarr;</span>
+    </span>
+    <!-- Above the stretched link, so these stay clickable on their own -->
+    <span class="relative z-10 flex gap-4">
+      {url && (
+        <a href={url} {...external} class="group/link inline-flex items-center text-accent hover:text-highlight hover:underline transition-colors">
+          Live
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="ml-0.5 opacity-70 group-hover/link:opacity-100 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition" aria-hidden="true">
+            <line x1="7" y1="17" x2="17" y2="7"></line>
+            <polyline points="7 7 17 7 17 17"></polyline>
+          </svg>
+        </a>
+      )}
+      {github && (
+        <a href={github} {...external} class="group/link inline-flex items-center text-accent hover:text-highlight hover:underline transition-colors">
+          GitHub
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="ml-0.5 opacity-70 group-hover/link:opacity-100 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition" aria-hidden="true">
+            <line x1="7" y1="17" x2="17" y2="7"></line>
+            <polyline points="7 7 17 7 17 17"></polyline>
+          </svg>
+        </a>
+      )}
+    </span>
+  </div>
+</article>
