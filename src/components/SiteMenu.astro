@@ -3,20 +3,9 @@
 // On phones it covers the screen; on wider screens a small card drops down from the button. The home
 // page uses it at every width; sub-pages use it on phones, below the header's full nav bar.
 import ThemeIcon from "@/components/Theme.astro";
+import { navLinks, outsideLinks, isCurrent, newTab } from "@/config/links";
 
-const links = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/projects", label: "Projects" },
-  { href: "/blog", label: "Blog" },
-  { href: "/contact", label: "Contact" },
-];
-const elsewhere = [
-  { href: "https://github.com/copperpocket", label: "GitHub" },
-  { href: "https://copperpocket.bsky.social", label: "Bluesky" },
-  { href: "/rss.xml", label: "RSS" },
-];
-const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+const path = Astro.url.pathname;
 ---
 
 <div class="home-menu" data-open="false">
@@ -40,8 +29,8 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/";
   <nav id="home-menu-panel" class="home-menu-panel" aria-label="Main">
     <div class="home-menu-card card-edge bg-panel dark:bg-neutral-900 rounded-xl shadow-2xl text-neutral-800 dark:text-neutral-200">
       <ul class="home-menu-links">
-        {links.map(({ href, label }, i) => {
-          const current = href === path;
+        {navLinks.map(({ href, label }, i) => {
+          const current = isCurrent(href, path);
           return (
             <li style={`--i: ${i}`}>
               <a
@@ -60,14 +49,14 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/";
         })}
       </ul>
 
-      <div class="home-menu-footer flex items-center justify-between gap-4 border-t border-neutral-300/60 dark:border-neutral-700/60 pt-4 mt-4" style={`--i: ${links.length}`}>
+      <div class="home-menu-footer flex items-center justify-between gap-4 border-t border-neutral-300/60 dark:border-neutral-700/60 pt-4 mt-4" style={`--i: ${navLinks.length}`}>
         <ul class="flex flex-wrap gap-x-4 gap-y-1 text-sm">
-          {elsewhere.map(({ href, label }) => (
+          {outsideLinks.map(({ href, label }) => (
             <li>
               <a
                 href={href}
                 class="text-accent hover:text-highlight hover:underline transition-colors"
-                {...(href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                {...newTab(href)}
               >{label}</a>
             </li>
           ))}

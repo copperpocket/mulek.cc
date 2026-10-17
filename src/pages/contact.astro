@@ -2,6 +2,7 @@
 import MainLayout from "@/layouts/MainLayout.astro";
 import Starfield from "@/components/Starfield.astro";
 import { pageSky } from "@/config/sky";
+import { outsideLinks, newTab } from "@/config/links";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import "@/styles/global.css";
@@ -69,9 +70,10 @@ const HCAPTCHA_SITE_KEY = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY;
         <div id="form-status" class="text-center text-sm font-semibold"></div>
 
         <div class="flex justify-center items-center space-x-6 mt-4 text-sm">
-          <a href="https://copperpocket.bsky.social" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline hover:text-highlight">Bluesky</a>
-          <a href="https://github.com/copperpocket" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline hover:text-highlight">GitHub</a>
-          <a href="/rss.xml" class="text-accent hover:underline hover:text-highlight">RSS</a>        </div>
+          {outsideLinks.map(({ href, label }) => (
+            <a href={href} {...newTab(href)} class="text-accent hover:underline hover:text-highlight transition-colors">{label}</a>
+          ))}
+        </div>
       </div>
     </section>
 
