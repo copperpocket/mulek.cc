@@ -228,3 +228,27 @@ html.dark .card-edge {
   --card-edge-top: oklch(75% 0.15 315);
   --card-edge-fill: var(--color-neutral-900);
 }
+
+/*
+  The same orchid-to-lavender edge as a ring around the About page avatar, with a thin gap of page
+  background between the ring and the picture, fading out toward the bottom like the card edges.
+*/
+.avatar-edge {
+  --avatar-edge-top: oklch(62% 0.2 315);
+  --avatar-edge-gap: var(--color-body);
+  border: 4px solid transparent;
+  padding: 3px;
+  border-radius: 9999px;
+  background:
+    linear-gradient(var(--avatar-edge-gap), var(--avatar-edge-gap)) padding-box,
+    linear-gradient(
+      to bottom in oklab,
+      var(--avatar-edge-top) 0,
+      var(--color-accent) 50%,
+      transparent 95%
+    ) border-box;
+}
+html.dark .avatar-edge {
+  --avatar-edge-top: oklch(75% 0.15 315);
+  --avatar-edge-gap: var(--color-body-dark);
+}
