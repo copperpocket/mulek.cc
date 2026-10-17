@@ -15,7 +15,7 @@
   --color-primary-dark: #F5EE27;
   /* Hover color and small highlights (tags, the logo's star): the sun's pink. Light mode is a deeper
      pink of the same hue, readable at 5:1 on the light background and under white text at 5.4:1;
-     html.dark below switches to the sun's own top color */
+     html.dark below switches to a lighter pink nudged toward the lavender (7:1 on the dark background) */
   --color-highlight: oklch(55% 0.2 355);
   --color-body: #f6f6f6;
   --color-body-dark: #0c0c0c;
@@ -73,7 +73,7 @@ html, body {
 */
 html.dark {
   --color-accent: #9792e3;
-  --color-highlight: var(--starfield-sun-top);
+  --color-highlight: oklch(72% 0.15 335); /* the sun's pink nudged toward the lavender, at about its brightness */
   --color-on-accent: #0c0c0c;
   --starfield-star: oklch(58.951% 0.15471 317.725);
   --starfield-star-alt: oklch(95% 0 0 / 0.95);
