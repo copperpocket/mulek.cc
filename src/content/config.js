@@ -14,7 +14,8 @@ const blogCollection = defineCollection({
 });
 
 // Filter buttons on /projects appear in this order
-export const projectCategories = ["WebDev", "DevOps", "GameDev"] as const;
+/** @type {["WebDev", "DevOps", "GameDev"]} */
+export const projectCategories = ["WebDev", "DevOps", "GameDev"];
 
 // Define the "projects" collection: card info in frontmatter, write-up in the body
 const projectsCollection = defineCollection({
