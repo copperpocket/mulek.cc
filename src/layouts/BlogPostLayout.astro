@@ -11,11 +11,14 @@ if (!data) {
   throw new Error("BlogPostLayout requires a 'data' prop");
 }
 
+// Frontmatter dates are midnight UTC, so format them in UTC or they show as the day before in the Americas
 const formattedDate = new Date(data.pubDate).toLocaleDateString("en-US", {
   year: "numeric",
   month: "long",
   day: "numeric",
+  timeZone: "UTC",
 });
+const isoDate = new Date(data.pubDate).toISOString().slice(0, 10);
 ---
 
 <MainLayout title={data.title} description={data.description} image={data.image} type="article">
@@ -28,7 +31,7 @@ const formattedDate = new Date(data.pubDate).toLocaleDateString("en-US", {
         <div class="text-xs text-neutral-500 dark:text-neutral-400 mb-2">
           <span class="font-medium">{data.author}</span>
           <span class="mx-2 text-neutral-300 dark:text-neutral-600">/</span>
-          <time datetime={data.pubDate}>{formattedDate}</time>
+          <time datetime={isoDate}>{formattedDate}</time>
         </div>
 
         <h1 class="text-3xl font-extrabold text-neutral-800 dark:text-neutral-200 sm:text-5xl">

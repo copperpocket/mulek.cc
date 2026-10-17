@@ -120,6 +120,12 @@ body.menu-open #hidden-menu {
   pointer-events: auto;
 }
 
+/* No literal backticks around inline code in posts and write-ups (the typography plugin adds them) */
+.prose :where(code):not(:where(pre code))::before,
+.prose :where(code):not(:where(pre code))::after {
+  content: none;
+}
+
 .nav-link {
   @apply text-neutral-800 dark:text-neutral-200 hover:text-highlight transition-colors;
 }
