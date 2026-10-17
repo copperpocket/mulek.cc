@@ -15,16 +15,24 @@ import "@/styles/global.css";
 const panel = "rounded-[1.125rem] bg-body dark:bg-body-dark border border-neutral-300 dark:border-neutral-800 panel-edge panel-edge-sun [--edge-width:12px] [--edge-fade-to:var(--edge-panel)]";
 const params = import.meta.env.DEV ? Astro.url.searchParams : new URLSearchParams();
 
-// TEMPORARY: sky options, picked with ?constellations=<n>&haze=<on|off>&nebulas=<n> on the dev server only
-const skyCounts = ["2", "4", "6", "8", "10", "12"];
+// The sky changes on every visit: a random number of constellations (with haze) and nebulas.
+// Pages render per request, so each refresh rolls new counts.
+const CONSTELLATION_COUNT = [1, 6];
+const NEBULA_COUNT = [2, 8];
+const roll = ([min, max]: number[]) => min + Math.floor(Math.random() * (max - min + 1));
+
+// TEMPORARY: dev-only overrides, picked with ?constellations=<n>&haze=<on|off>&nebulas=<n>
+const skyCounts = ["random", "2", "4", "6", "8", "10", "12"];
 const pickSky = (name: string, options: string[], fallback: string) => {
   const value = params.get(name);
   return value && options.includes(value) ? value : fallback;
 };
-const constellationCount = pickSky("constellations", skyCounts, "2");
+const constellationCount = pickSky("constellations", skyCounts, "random");
 const hazeSetting = pickSky("haze", ["on", "off"], "on");
-const nebulaCount = pickSky("nebulas", skyCounts, "2");
+const nebulaCount = pickSky("nebulas", skyCounts, "random");
 const sky = { constellations: constellationCount, haze: hazeSetting, nebulas: nebulaCount };
+const constellations = constellationCount === "random" ? roll(CONSTELLATION_COUNT) : Number(constellationCount);
+const nebulas = nebulaCount === "random" ? roll(NEBULA_COUNT) : Number(nebulaCount);
 
 ---
 
@@ -89,7 +97,7 @@ const sky = { constellations: constellationCount, haze: hazeSetting, nebulas: ne
       id="hero-section"
       class="absolute inset-0 flex flex-col justify-center bg-body dark:bg-body-dark"
     >
-      <Starfield grid sun constellations={Number(constellationCount)} haze={hazeSetting === "on"} nebulas={Number(nebulaCount)} fixed={false} density={1.6} />
+      <Starfield grid sun constellations={constellations} haze={hazeSetting === "on"} nebulas={nebulas} fixed={false} density={1.6} />
 
       <!-- Phones only: the sky above the horizon is left open so the whole sun shows, and the panel
            sits on the floor below it, where thumbs reach. If the screen is too short for that,
