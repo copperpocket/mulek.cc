@@ -26,3 +26,6 @@ pnpm-debug.log*
 # misc
 deploy.sh
 .git-commit-template.txt
+
+# raw pet photos waiting for scripts/pet-photos.mjs (they may hold location data)
+photos-inbox/

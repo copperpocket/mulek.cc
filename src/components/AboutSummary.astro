@@ -1,6 +1,8 @@
 ---
 // src/components/AboutSummary.astro
 import { getCollection } from "astro:content";
+// Each pet's photos, from public/images/pets/<pet>/ (added with `yarn pet-photos`, which strips metadata)
+import petPhotos from "@/data/pet-photos.json";
 
 interface Props {
   short?: boolean;
@@ -36,12 +38,17 @@ const currentProject =
   projects.find((p) => p.data.current) ??
   [...projects].sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())[0];
 
+// A pet with photos gets a link that opens a random one of them; one without is plain text
+const photosOf = (name: string): string[] => (petPhotos as Record<string, string[]>)[name.toLowerCase()] ?? [];
 const pets = [
-  { name: 'Gertie', bday: '09-11', age: getAge("2022-09-11"), img: '/images/gertie1.jpeg' },
-  { name: 'Ducky', bday: '04-06', age: getAge("2023-04-06"), img: '/images/ducky1.jpeg' },
+  { name: 'Gertie', bday: '09-11', age: getAge("2022-09-11") },
+  { name: 'Ducky', bday: '04-06', age: getAge("2023-04-06") },
   { name: 'Salem', bday: '07-17', age: getAge("2018-07-17") },
   { name: 'Oliver', bday: '02-08', age: getAge("2019-02-08") },
-];
+].map((pet) => ({ ...pet, photos: photosOf(pet.name) }));
+// "A, B, C, and D." between the names
+const petJoin = (i: number) => (i === pets.length - 1 ? "." : i === pets.length - 2 ? ", and " : ", ");
+const petLink = "pet-link text-accent font-semibold hover:underline hover:text-highlight transition-colors";
 ---
 
 <div class:list={["space-y-4 text-sm md:text-base", short && "lg:text-lg"]}>
@@ -56,9 +63,9 @@ const pets = [
           <polyline points="7 7 17 7 17 17"></polyline>
         </svg>
       </a>, where I live with my fiancé Chelsea<span class="inline-block text-yellow-500 dark:text-yellow-400 animate-pulse ml-1">❤️</span> and our companions: 
-      <button class="pet-link text-accent font-semibold hover:underline hover:text-highlight" data-img={pets[0].img}>{pets[0].name}</button>, 
-      <button class="pet-link text-accent font-semibold hover:underline hover:text-highlight" data-img={pets[1].img}>{pets[1].name}</button>,
-      Salem, and Oliver.
+      {pets.map((pet, i) => (
+        <Fragment>{pet.photos.length ? <button type="button" class={petLink} data-imgs={JSON.stringify(pet.photos)}>{pet.name}</button> : pet.name}{petJoin(i)}</Fragment>
+      ))}
     </p>
 
     <div class="hidden sm:flex flex-col gap-4">
@@ -128,12 +135,9 @@ const pets = [
             <polyline points="7 7 17 7 17 17"></polyline>
           </svg>
         </a>, where I live with my fiancé Chelsea<span class="inline-block text-yellow-500 dark:text-yellow-400 animate-pulse ml-1">❤️</span>. We share our home with our companions: 
-        <button class="pet-link text-accent font-semibold hover:underline hover:text-highlight" data-img={pets[0].img}>{pets[0].name}</button>
-        ({pets[0].age}<span data-bday={pets[0].bday}></span>), 
-        <button class="pet-link text-accent font-semibold hover:underline hover:text-highlight" data-img={pets[1].img}>{pets[1].name}</button>
-        ({pets[1].age}<span data-bday={pets[1].bday}></span>),
-        Salem ({pets[2].age}<span data-bday={pets[2].bday}></span>), and
-        Oliver ({pets[3].age}<span data-bday={pets[3].bday}></span>).
+        {pets.map((pet, i) => (
+          <Fragment>{pet.photos.length ? <button type="button" class={petLink} data-imgs={JSON.stringify(pet.photos)}>{pet.name}</button> : pet.name} ({pet.age}<span data-bday={pet.bday}></span>){petJoin(i)}</Fragment>
+        ))}
       </p>
       <p>
         I spend much of my time focused on self-hosting and home lab 
@@ -228,10 +232,18 @@ const pets = [
       }, 200);
     };
 
+    // Each click shows a random photo of that pet, never the same one twice in a row
+    const lastShown: Record<string, string> = {};
     petLinks.forEach(link => {
       link.addEventListener('click', (e) => {
         const target = e.currentTarget as HTMLButtonElement;
-        openModal(target.dataset.img || '', target.textContent || '');
+        const name = target.textContent || '';
+        const photos: string[] = JSON.parse(target.dataset.imgs || '[]');
+        const choices = photos.length > 1 ? photos.filter((p) => p !== lastShown[name]) : photos;
+        const photo = choices[Math.floor(Math.random() * choices.length)];
+        if (!photo) return;
+        lastShown[name] = photo;
+        openModal(photo, name);
       });
     });
 
