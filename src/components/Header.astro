@@ -1,6 +1,6 @@
 ---
 import ThemeIcon from "./Theme.astro";
-import HamburgerMenu from "./HamburgerMenu.astro";
+import SiteMenu from "./SiteMenu.astro";
 import Wordmark from "./Wordmark.astro";
 
 interface Props {
@@ -50,27 +50,15 @@ const isActive = (path: string) =>
     </nav>
 
     <div class="header-actions flex items-center -mr-2">
-      <div class="inline-flex items-center p-2 rounded-full">
+      <!-- On phones the theme toggle lives inside the menu -->
+      <div class="hidden md:inline-flex items-center p-2 rounded-full">
         <ThemeIcon />
       </div>
-      <div class="inline-flex z-50 items-center p-2 rounded-full md:hidden">
-        <HamburgerMenu />
+      <div class="md:hidden">
+        <SiteMenu />
       </div>
     </div>
 
-    <div
-      id="hidden-menu"
-      class="hidden-menu fixed inset-0 bg-neutral-100/60 dark:bg-neutral-900/60 backdrop-blur-sm
-             flex items-center justify-center overflow-auto z-40 md:hidden"
-    >
-      <ul class="flex flex-col p-4 space-y-4 text-neutral-800 dark:text-neutral-200 text-2xl">
-        <li><a href="/" class="hover:text-highlight">Home</a></li>
-        <li><a href="/about" class="hover:text-highlight">About</a></li>
-        <li><a href="/blog" class="hover:text-highlight">Blog</a></li>
-        <li><a href="/contact" class="hover:text-highlight">Contact</a></li>
-        <li><a href="/projects" class="hover:text-highlight">Projects</a></li>
-      </ul>
-    </div>
   </div>
 </header>
 
@@ -119,7 +107,3 @@ const isActive = (path: string) =>
   .site-header[data-scrolled="true"] .header-nav { gap: 1.5rem; font-size: 1rem; }
   .site-header[data-scrolled="true"] .header-line { opacity: 0.9; }
 </style>
-
-<script type="module">
-  import "/scripts/menu-toggle.js";
-</script>

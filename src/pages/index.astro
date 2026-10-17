@@ -4,8 +4,7 @@
 import MainLayout from "@/layouts/MainLayout.astro";
 import Starfield from "@/components/Starfield.astro";
 import { homeSky } from "@/config/sky";
-import ThemeIcon from "@/components/Theme.astro";
-import HamburgerMenu from "@/components/HamburgerMenu.astro";
+import SiteMenu from "@/components/SiteMenu.astro";
 import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
 import AboutSummary from "@/components/AboutSummary.astro";
 import "@/styles/global.css";
@@ -15,10 +14,6 @@ import "@/styles/global.css";
 const panel = "rounded-xl bg-body dark:bg-body-dark border border-neutral-300 dark:border-neutral-800 panel-edge panel-edge-sun [--edge-width:4px] [--edge-fade-to:var(--edge-panel)]";
 
 ---
-
-<script type="module">
-  import "/scripts/menu-toggle.js";
-</script>
 
 <script is:inline>
   const getTheme = () => {
@@ -41,18 +36,13 @@ const panel = "rounded-xl bg-body dark:bg-body-dark border border-neutral-300 da
 
 
 
+
   <div class="relative w-full overflow-hidden min-h-screen md:h-[calc(100vh-3rem)]">
 
     <div class="fixed top-4 left-0 w-full z-60 px-4 sm:px-12 pointer-events-none">
       <div class="flex justify-end items-center w-full pointer-events-auto">
         
-        <div data-starfield-avoid class="p-2 rounded-full">
-          <ThemeIcon />
-        </div>
-
-        <div id="menu-wrapper" data-starfield-avoid class="inline-flex items-center p-2 rounded-full">
-          <HamburgerMenu /> 
-        </div>
+        <SiteMenu />
         
       </div>
     </div>
@@ -103,20 +93,6 @@ const panel = "rounded-xl bg-body dark:bg-body-dark border border-neutral-300 da
     </section>
   </div>
 
-  <div
-    id="hidden-menu"
-    class="hidden-menu fixed inset-0 bg-neutral-100/60 dark:bg-neutral-900/60 backdrop-blur-sm
-          flex flex-col items-center justify-center overflow-auto z-50"
-  >
-    <ul class="flex flex-col p-4 space-y-6 text-neutral-800 dark:text-neutral-200 text-3xl font-bold text-center">
-      <li><a href="/" class="hover:text-highlight transition">Home</a></li>
-      <li><a href="/about" class="hover:text-highlight transition">About</a></li>
-      <li><a href="/projects" class="hover:text-highlight transition">Projects</a></li>
-      <li><a href="/blog" class="hover:text-highlight transition">Blog</a></li>
-      <li><a href="/contact" class="hover:text-highlight transition">Contact</a></li>
-    </ul>
-
-  </div>
 </div>
 
 </MainLayout>

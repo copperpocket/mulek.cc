@@ -95,29 +95,10 @@ html.dark {
   --starfield-grid: color-mix(in oklab, var(--color-accent) 15%, transparent);
 }
 
-.hidden-menu {
-  opacity: 0;
-  pointer-events:none;
-  visibility: hidden;
-  /* transform: translateY(-6px); */
-}
-
-body.menu-open .hidden-menu {
-  opacity: 1;
-  pointer-events:auto;
-  visibility: visible;
-  transform: none;
-}
-
-body.menu-open #hidden-menu {
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  opacity: 1;
-  visibility: visible;
-  transform: none;
-  pointer-events: auto;
+/* Tailwind v4 leaves buttons with the default arrow cursor; give them the pointing hand, like links */
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]) {
+  cursor: pointer;
 }
 
 /* No literal backticks around inline code in posts and write-ups (the typography plugin adds them) */
