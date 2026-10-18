@@ -38,6 +38,9 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [x] Comets come twice as often, sometimes in pairs, and rarely as a small meteor shower
 - [x] New site menu: one button that opens a card (full screen on phones) with the links, outside links and theme toggle; keyboard accessible, and used on the home page and on phones everywhere
 - [x] Pet photos: a pool per pet, picked at random, added through `yarn pet-photos`, which strips all metadata (location, camera, dates)
+- [x] The home page uses the About page's intro word for word, with each pet's age and the birthday cake; the birthday check moved into `AboutSummary`, so it also works when the About page is opened directly
+- [x] The sub-page background no longer rearranges itself (new stars, constellations and nebulas jumping to new spots) when the mobile address bar hides or shows on scroll: the canvas is sized to `100lvh`, which stays the same either way
+- [x] Pet photo popup fits on short phone screens: the photo is capped by the visible height (`dvh`) with room left for the caption, so the close button is never pushed off the top
 - [x] Projects page redesign: whole-card links, a featured current project, `CATEGORY · YEAR` labels, tags as plain text, matching filter buttons with counts, and plainer category names (Web, Infrastructure, Games)
 - [x] The home page no longer scrolls slightly on phones (`100dvh` instead of `100vh`)
 - [x] No more TypeScript files: the two config files are plain JavaScript
