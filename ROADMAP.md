@@ -48,6 +48,8 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [x] Logos in their places: the `mulek✦cc` wordmark top left on the home page too (smaller on phones, everywhere), and the `>m_` mark in the footer and on the 404 page, with a blinking cursor there
 - [x] The menu button and theme toggle are lavender, like the wordmark and everything else you can click
 - [x] The site uses "Michael Mulek", without the middle name
+- [x] Fonts chosen and bundled locally: Outfit for headings, Lexend for reading, JetBrains Mono for code
+- [x] Header nav links are semibold, like the menu's
 - [x] Post dates show the right day (they were a day early in US time zones), and inline code no longer shows literal backticks
 
 ## Cleanup
