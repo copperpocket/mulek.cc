@@ -90,26 +90,3 @@ const panel = "rounded-xl bg-body dark:bg-body-dark border border-neutral-300 da
 
 </MainLayout>
 
-<script>
-  function checkBirthdays() {
-    const today = new Date();
-    const currentMonthDay = `${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    
-    const birthdaySpans = document.querySelectorAll('[data-bday]');
-    
-    birthdaySpans.forEach(span => {
-      // Clear previous content to avoid double emojis if the event fires twice
-      span.textContent = ''; 
-      
-      if (span.getAttribute('data-bday') === currentMonthDay) {
-        span.textContent = ' 🎂';
-        span.classList.add('animate-bounce', 'inline-block');
-      }
-    });
-  }
-
-  // Listen for Astro's page load event to handle View Transitions
-  document.addEventListener('astro:page-load', () => {
-    checkBirthdays();
-  });
-</script>

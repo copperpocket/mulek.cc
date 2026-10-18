@@ -55,22 +55,22 @@ const petLink = "pet-link text-accent font-semibold hover:underline hover:text-h
 ---
 
 <div class:list={["space-y-4 text-sm md:text-base", short && "lg:text-lg"]}>
-  {short ? (
-    /* Top intro remains the same - you liked the pet links */
-    <p>
-      I'm based in 
-      <a href="https://www.exploreminnesota.com/" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center text-accent font-semibold hover:underline hover:text-highlight transition-colors">
-        Minnesota
-        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="ml-0.5 opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition">
-          <line x1="7" y1="17" x2="17" y2="7"></line>
-          <polyline points="7 7 17 7 17 17"></polyline>
-        </svg>
-      </a>, where I live with my fiancé Chelsea<span class="inline-block text-yellow-500 dark:text-yellow-400 animate-pulse ml-1">❤️</span> and our companions: 
-      {pets.map((pet, i) => (
-        <Fragment><span class="whitespace-nowrap">{pet.photos.length ? <button type="button" class={petLink} data-imgs={JSON.stringify(pet.photos)}>{pet.name}</button> : pet.name}{petPunct(i)}</span>{petRest(i)}</Fragment>
-      ))}
-    </p>
+  <!-- The intro, the same on the home page and the About page -->
+  <p>
+    Hi, I'm Michael. I'm based in 
+    <a href="https://www.exploreminnesota.com/" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center text-accent font-semibold hover:underline hover:text-highlight transition-colors">
+      Minnesota
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="ml-0.5 opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition">
+        <line x1="7" y1="17" x2="17" y2="7"></line>
+        <polyline points="7 7 17 7 17 17"></polyline>
+      </svg>
+    </a>, where I live with my fiancé Chelsea<span class="inline-block text-yellow-500 dark:text-yellow-400 animate-pulse ml-1">❤️</span>. We share our home with our companions: 
+    {pets.map((pet, i) => (
+      <Fragment><span class="whitespace-nowrap">{pet.photos.length ? <button type="button" class={petLink} data-imgs={JSON.stringify(pet.photos)}>{pet.name}</button> : pet.name} ({pet.age}<span data-bday={pet.bday}></span>){petPunct(i)}</span>{petRest(i)}</Fragment>
+    ))}
+  </p>
 
+  {short ? (
     <div class="hidden sm:flex flex-col gap-4">
   <!-- "The Console" Grid -->
   <div class="grid grid-cols-2 gap-4">
@@ -132,19 +132,6 @@ const petLink = "pet-link text-accent font-semibold hover:underline hover:text-h
   ) : (
     <>
       <p>
-        Hi, I'm Michael. I'm based in 
-        <a href="https://www.exploreminnesota.com/" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center text-accent font-semibold hover:underline hover:text-highlight transition-colors">
-          Minnesota
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="ml-0.5 opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition">
-            <line x1="7" y1="17" x2="17" y2="7"></line>
-            <polyline points="7 7 17 7 17 17"></polyline>
-          </svg>
-        </a>, where I live with my fiancé Chelsea<span class="inline-block text-yellow-500 dark:text-yellow-400 animate-pulse ml-1">❤️</span>. We share our home with our companions: 
-        {pets.map((pet, i) => (
-          <Fragment><span class="whitespace-nowrap">{pet.photos.length ? <button type="button" class={petLink} data-imgs={JSON.stringify(pet.photos)}>{pet.name}</button> : pet.name} ({pet.age}<span data-bday={pet.bday}></span>){petPunct(i)}</span>{petRest(i)}</Fragment>
-        ))}
-      </p>
-      <p>
         I spend much of my time focused on self-hosting and home lab 
         <a href="/projects" class="text-accent font-semibold hover:underline hover:text-highlight">projects.</a>
         I experiment with new tools and manage my own infrastructure to keep my 
@@ -187,7 +174,9 @@ const petLink = "pet-link text-accent font-semibold hover:underline hover:text-h
       </svg>
     </button>
     
-    <img id="modal-img" src="" alt="Pet Photo" class="w-full h-auto object-cover max-h-[75vh]" />
+    <!-- At most 75% of the visible screen (dvh, so the mobile address bar counts), and always leaving
+         room for the caption and padding, so the whole card and its close button stay on screen -->
+    <img id="modal-img" src="" alt="Pet Photo" class="w-full h-auto object-cover max-h-[min(75dvh,calc(100dvh-9rem))]" />
     
     <div class="p-5 text-center bg-white dark:bg-neutral-800">
       <p id="modal-caption" class="font-bold text-xl text-neutral-800 dark:text-neutral-100"></p>
@@ -260,6 +249,24 @@ const petLink = "pet-link text-accent font-semibold hover:underline hover:text-h
 
   // Support for Astro View Transitions
   document.addEventListener('astro:page-load', initPetModal);
+
+  // A bouncing cake after a pet's age on their birthday (by the visitor's date)
+  function checkBirthdays() {
+    const today = new Date();
+    const currentMonthDay = `${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+    document.querySelectorAll('[data-bday]').forEach(span => {
+      // Clear previous content to avoid double emojis if the event fires twice
+      span.textContent = '';
+
+      if (span.getAttribute('data-bday') === currentMonthDay) {
+        span.textContent = ' 🎂';
+        span.classList.add('animate-bounce', 'inline-block');
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', checkBirthdays);
 
   // Local time for the "fun" desktop section, always in Central Time
   const TIME_ZONE = 'America/Chicago';

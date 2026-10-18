@@ -41,8 +41,10 @@ const constellations = roll(Astro.props.constellations);
 const nebulas = roll(Astro.props.nebulas);
 ---
 
+<!-- Pinned to the viewport, it's as tall as the screen with the mobile address bar hidden (lvh), so
+     it keeps one size as the bar slides in and out on scroll; a resize would rearrange the sky -->
 <canvas
-  class:list={["starfield inset-0 w-full h-full pointer-events-none z-10", fixed ? "fixed" : "absolute"]}
+  class:list={["starfield left-0 top-0 w-full pointer-events-none z-10", fixed ? "fixed h-lvh" : "absolute h-full"]}
   data-density={density}
   data-grid={grid ? "" : undefined}
   data-sun={grid && sun ? "" : undefined}
