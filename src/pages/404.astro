@@ -1,16 +1,9 @@
 ---
 import MainLayout from "@/layouts/MainLayout.astro";
-import Starfield from "@/components/Starfield.astro";
-import { pageSky } from "@/config/sky";
-import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
 import LogoMark from "@/components/LogoMark.astro";
-import "@/styles/global.css";
 ---
 
 <MainLayout title="Page Not Found - mulek.cc" description="The page you were looking for doesn't exist." noindex>
-  <Starfield {...pageSky} />
-  <Header />
 
   <main class="page-main container mx-auto px-4 items-center text-center text-neutral-800 dark:text-neutral-200">
     <!-- The >m_ prompt, waiting at a page that doesn't exist -->
@@ -22,5 +15,4 @@ import "@/styles/global.css";
     </a>
   </main>
 
-  <Footer />
 </MainLayout>

@@ -1,16 +1,11 @@
 ---
 // src/pages/projects/index.astro
 import MainLayout from "@/layouts/MainLayout.astro";
-import Starfield from "@/components/Starfield.astro";
-import { pageSky } from "@/config/sky";
-import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
 
 import ProjectTile from "@/components/ProjectTile.astro";
 import { getCollection } from "astro:content";
 import { projectCategories as categories } from "@/content/config";
 
-import "@/styles/global.css";
 
 // Projects live in src/content/projects; group by category, newest first within each. The current
 // project (current: true) comes first, as a wide featured card.
@@ -27,8 +22,6 @@ const filters = [
 ---
 
 <MainLayout title="Projects - mulek.cc" description="Projects by Michael Mulek - web development, homelab infrastructure, and game servers.">
-    <Starfield {...pageSky} />
-    <Header />
 
     <div id="projects-container" class="page-main">
         <div class="container mx-auto px-4 max-w-6xl">
@@ -68,7 +61,6 @@ const filters = [
         </div>
     </div>
 
-    <Footer />
 </MainLayout>
 
 <script>

@@ -1,10 +1,5 @@
 ---
 import MainLayout from "./MainLayout.astro";
-import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
-import Starfield from "@/components/Starfield.astro";
-import { pageSky } from "@/config/sky";
-import "@/styles/global.css";
 
 const { data } = Astro.props;
 
@@ -23,8 +18,6 @@ const isoDate = new Date(data.pubDate).toISOString().slice(0, 10);
 ---
 
 <MainLayout title={data.title} description={data.description} image={data.image} type="article">
-  <Starfield {...pageSky} />
-  <Header />
 
   <div id="post-container" class="page-article">
     <article class="container mx-auto px-4 max-w-4xl">
@@ -59,5 +52,4 @@ const isoDate = new Date(data.pubDate).toISOString().slice(0, 10);
     </article>
   </div>
 
-  <Footer />
 </MainLayout>

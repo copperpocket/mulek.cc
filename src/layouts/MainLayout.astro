@@ -1,5 +1,10 @@
 ---
 import { ClientRouter } from "astro:transitions";
+import Starfield from "@/components/Starfield.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import { pageSky } from "@/config/sky";
+import "@/styles/global.css";
 
 export interface Props {
   title?: string;
@@ -11,6 +16,9 @@ export interface Props {
   type?: "website" | "article";
   /** Keep the page out of search results (the 404 page) */
   noindex?: boolean;
+  /** The shared shell: the sky, the header and the footer around the page. The home page turns it off
+   *  and brings its own (a bigger sky with the sun, and a menu instead of a header). */
+  shell?: boolean;
 }
 
 const {
@@ -19,6 +27,7 @@ const {
   image = "/og.png",
   type = "website",
   noindex = false,
+  shell = true,
 } = Astro.props;
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
@@ -71,6 +80,9 @@ const isDefaultImage = image === "/og.png";
         <ClientRouter />
     </head>
   <body class="relative flex flex-col min-h-dvh bg-body dark:bg-body-dark text-neutral-800 dark:text-neutral-200">
+      {shell && <Starfield {...pageSky} />}
+      {shell && <Header />}
       <slot />
+      {shell && <Footer />}
   </body>
 </html>

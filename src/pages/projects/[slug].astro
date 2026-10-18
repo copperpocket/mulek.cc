@@ -1,11 +1,6 @@
 ---
 import MainLayout from "@/layouts/MainLayout.astro";
-import Starfield from "@/components/Starfield.astro";
-import { pageSky } from "@/config/sky";
-import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
 import { getCollection, render } from "astro:content";
-import "@/styles/global.css";
 
 const { slug } = Astro.params;
 
@@ -21,8 +16,6 @@ const { title, description, category, tags, url, github, image } = project.data;
 ---
 
 <MainLayout title={`${title} - mulek.cc`} description={description} image={image} type="article">
-  <Starfield {...pageSky} />
-  <Header />
 
   <div class="page-article">
     <article class="container mx-auto px-4 max-w-4xl">
@@ -72,5 +65,4 @@ const { title, description, category, tags, url, github, image } = project.data;
     </article>
   </div>
 
-  <Footer />
 </MainLayout>

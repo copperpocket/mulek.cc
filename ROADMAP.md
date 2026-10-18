@@ -54,10 +54,7 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [x] Fonts chosen and bundled locally: Outfit for headings, Lexend for reading, JetBrains Mono for code
 - [x] Header nav links are semibold, like the menu's
 - [x] Post dates show the right day (they were a day early in US time zones), and inline code no longer shows literal backticks
-
-## Cleanup
-
-- [ ] Move the shared page shell (header, footer, background, global CSS) into `MainLayout`
+- [x] The shared page shell (sky, header, footer, global CSS) lives in `MainLayout`; the home page opts out with `shell={false}`
 
 ## Performance
 

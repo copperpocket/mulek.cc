@@ -1,10 +1,5 @@
 ---
 import MainLayout from "@/layouts/MainLayout.astro";
-import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
-import Starfield from "@/components/Starfield.astro";
-import { pageSky } from "@/config/sky";
-import "@/styles/global.css";
 
 import { getCollection } from "astro:content";
 
@@ -19,8 +14,6 @@ const pageTitle = "Blog Archive";
 ---
 
 <MainLayout title={`Blog - mulek.cc`} description="Articles on homelab infrastructure, self-hosting, and development by Michael Mulek.">
-  <Starfield {...pageSky} />
-  <Header />
 
   <div class="page-main">
     <div class="container mx-auto px-4">
@@ -60,5 +53,4 @@ const pageTitle = "Blog Archive";
     </div>
   </div>
 
-  <Footer />
 </MainLayout>

@@ -6,33 +6,20 @@ import MainLayout from "@/layouts/MainLayout.astro";
 
 // Reusable UI components
 import Avatar from "@/components/Avatar.astro";
-import Starfield from "@/components/Starfield.astro";
-import { pageSky } from "@/config/sky";
-import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
 import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
 import AboutSummary from "@/components/AboutSummary.astro";
 import AboutTimelineItem from "@/components/AboutTimelineItem.astro";
-
-// Global styles (Tailwind + overrides)
-import "@/styles/global.css";
 ---
 
 <!--
   MainLayout:
   - Sets page title + meta description (SEO)
-  - Wraps all content in consistent layout (header/footer handled externally)
+  - Wraps all content in the shared shell (sky, header and footer come from the layout)
 -->
 <MainLayout title="About - mulek.cc" description="Learn more about Michael Mulek - Systems Engineer, homelab enthusiast, and developer.">
   
   <!-- Dev utility: shows current Tailwind breakpoint -->
   <TwSizeIndicator />
-
-  <!-- Decorative animated background layer -->
-  <Starfield {...pageSky} />
-
-  <!-- Global site header -->
-  <Header />
 
   <!--
     Main content container
@@ -181,7 +168,4 @@ import "@/styles/global.css";
       </a>
     </section>
   </main>
-
-  <!-- Global footer -->
-  <Footer />
 </MainLayout>
