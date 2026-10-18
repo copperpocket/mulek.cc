@@ -159,7 +159,7 @@ button:not(:disabled),
 }
 
 .nav-link {
-  @apply text-neutral-800 dark:text-neutral-200 hover:text-highlight transition-colors;
+  @apply font-semibold text-neutral-800 dark:text-neutral-200 hover:text-highlight transition-colors;
 }
 .nav-link.active {
   @apply text-accent;
