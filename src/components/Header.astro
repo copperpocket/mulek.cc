@@ -2,6 +2,7 @@
 import ThemeIcon from "./Theme.astro";
 import SiteMenu from "./SiteMenu.astro";
 import Wordmark from "./Wordmark.astro";
+import { navLinks, isCurrent } from "@/config/links";
 
 interface Props {
   hideLogo?: boolean;
@@ -21,8 +22,6 @@ const breakpointClasses = {
 const displayClass = breakpointClasses[navBreakpoint];
 
 const pathname = Astro.url.pathname;
-const isActive = (path: string) => 
-  pathname === path || (path !== '/' && pathname.startsWith(path));
 ---
 
 <!--
@@ -42,11 +41,9 @@ const isActive = (path: string) =>
     )}
 
     <nav class={`header-nav hidden ${displayClass} items-center absolute left-1/2 -translate-x-1/2`}>
-      <a href="/" class:list={["nav-link", { "active": isActive('/') }]}>Home</a>
-      <a href="/about" class:list={["nav-link", { "active": isActive('/about') }]}>About</a>
-      <a href="/projects" class:list={["nav-link", { "active": isActive('/projects') }]}>Projects</a>
-      <a href="/blog" class:list={["nav-link", { "active": isActive('/blog') }]}>Blog</a>
-      <a href="/contact" class:list={["nav-link", { "active": isActive('/contact') }]}>Contact</a>
+      {navLinks.map(({ href, label }) => (
+        <a href={href} class:list={["nav-link", { active: isCurrent(href, pathname) }]} aria-current={isCurrent(href, pathname) ? "page" : undefined}>{label}</a>
+      ))}
     </nav>
 
     <div class="header-actions flex items-center -mr-2">

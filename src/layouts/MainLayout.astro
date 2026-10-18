@@ -50,18 +50,21 @@ const isDefaultImage = image === "/og.png";
         {isDefaultImage && <meta property="og:image:height" content="630" />}
         {isDefaultImage && <meta property="og:image:alt" content="Michael Mulek, Systems Engineer, mulek.cc" />}
         <meta name="twitter:card" content="summary_large_image" />
+        <!-- The theme, set in this one place: localStorage.theme ("light" or "dark"), or else the system
+             setting. It runs before the page paints, so it never flashes the wrong theme, and again after
+             each page transition, since the new page's <html> arrives with the default class. -->
         <script is:inline>
-          (function() {
-            const saved = localStorage.getItem("theme");
-            const html = document.documentElement;
-            if (saved === "light") {
-              html.classList.remove("dark");
-            } else if (saved === "dark") {
-              html.classList.add("dark");
-            } else {
-              if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-                html.classList.add("dark");
-              }
+          (function () {
+            function applyTheme() {
+              let saved = null;
+              try { saved = localStorage.getItem("theme"); } catch {}
+              const dark = saved ? saved === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+              document.documentElement.classList.toggle("dark", dark);
+            }
+            applyTheme();
+            if (!window.__themeSetup) {
+              window.__themeSetup = true;
+              document.addEventListener("astro:after-swap", applyTheme);
             }
           })();
         </script>

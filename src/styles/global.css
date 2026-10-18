@@ -102,6 +102,12 @@ html.dark {
   scale with a utility (wide cards use hover:scale-[1.01]).
 */
 @layer components {
+  /* Page titles (About, Contact, Projects, Blog, 404): large, extra-bold, plain text color. Lavender
+     stays for things you can click. Each page sets its own spacing around it. */
+  .page-title {
+    @apply text-4xl md:text-5xl font-extrabold text-center text-neutral-800 dark:text-neutral-200;
+  }
+
   .card-lift {
     @apply transition-[translate,scale,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-2xl;
   }
