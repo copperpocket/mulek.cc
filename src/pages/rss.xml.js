@@ -22,7 +22,7 @@ export async function GET(context) {
 
   return rss({
     title: "mulek.cc",
-    description: "Blog posts and project write-ups on homelab infrastructure, self-hosting, and development by Michael Scott Mulek.",
+    description: "Blog posts and project write-ups on homelab infrastructure, self-hosting, and development by Michael Mulek.",
     site: context.site,
     trailingSlash: false,
     items: [...posts, ...projects].sort((a, b) => b.pubDate.valueOf() - a.pubDate.valueOf()),
