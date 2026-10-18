@@ -1,4 +1,9 @@
 @import "tailwindcss";
+/* The site's fonts, bundled with it (Fontsource), so there are no Google Fonts or other outside
+   requests. Each is one variable file covering every weight, and only the Latin part is downloaded. */
+@import "@fontsource-variable/outfit";
+@import "@fontsource-variable/lexend";
+@import "@fontsource-variable/jetbrains-mono";
 @plugin "@tailwindcss/typography";
 
 /* Enable browser theming  */
@@ -11,6 +16,11 @@
 @custom-variant xtall { @media (min-height: 801px) { @slot; } }
 
 @theme {
+  /* Fonts: Lexend for everything you read, Outfit for headings (matching the wordmark's round
+     letters), JetBrains Mono for the code-style bits */
+  --font-sans: "Lexend Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Outfit Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
   /* How long hover changes take (Tailwind's transition utilities default to this) */
   --default-transition-duration: 400ms;
   --color-primary: #EC4646;
@@ -144,6 +154,11 @@ html.dark {
 }
 .prose a:hover {
   color: var(--color-highlight);
+}
+
+/* Headings, the header nav and the menu's links use Outfit, the font that matches the wordmark */
+:is(h1, h2, h3, h4, h5, h6, .nav-link, .home-menu-links) {
+  font-family: var(--font-heading);
 }
 
 /* Tailwind v4 leaves buttons with the default arrow cursor; give them the pointing hand, like links */
