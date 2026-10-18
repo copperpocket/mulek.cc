@@ -5,6 +5,7 @@ import MainLayout from "@/layouts/MainLayout.astro";
 import Starfield from "@/components/Starfield.astro";
 import { homeSky } from "@/config/sky";
 import SiteMenu from "@/components/SiteMenu.astro";
+import Wordmark from "@/components/Wordmark.astro";
 import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
 import AboutSummary from "@/components/AboutSummary.astro";
 import "@/styles/global.css";
@@ -14,10 +15,12 @@ import "@/styles/global.css";
 const panel = "rounded-xl bg-body dark:bg-body-dark border border-neutral-300 dark:border-neutral-800 panel-edge panel-edge-sun [--edge-width:4px] [--edge-fade-to:var(--edge-panel)]";
 
 
+
 ---
 
-<MainLayout title="mulek.cc - Home" description="Michael Scott Mulek, Systems Engineer. Projects and write-ups on homelab infrastructure, self-hosting, and development.">
+<MainLayout title="mulek.cc - Home" description="Michael Mulek, Systems Engineer. Projects and write-ups on homelab infrastructure, self-hosting, and development.">
   <TwSizeIndicator />
+
 
 
 
@@ -26,9 +29,12 @@ const panel = "rounded-xl bg-body dark:bg-body-dark border border-neutral-300 da
   <div class="relative w-full overflow-hidden h-dvh md:h-[calc(100dvh-3rem)]">
 
     <div class="fixed top-4 left-0 w-full z-60 px-4 sm:px-12 pointer-events-none">
-      <div class="flex justify-end items-center w-full pointer-events-auto">
-        
-        <SiteMenu />
+      <div class="flex justify-between items-center w-full">
+        <!-- The wordmark, where the sub-page header has it, a little smaller on phones -->
+        <a href="/" aria-label="mulek.cc home" data-starfield-avoid class="logo-link pointer-events-auto ml-2 h-7 sm:h-9 flex items-center">
+          <Wordmark class="h-full w-auto" />
+        </a>
+        <span class="pointer-events-auto"><SiteMenu /></span>
         
       </div>
     </div>

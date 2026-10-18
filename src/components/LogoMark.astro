@@ -3,14 +3,18 @@
 // Colors come from --logo-ink and --logo-star in global.css, so it follows the site theme.
 interface Props {
   class?: string;
+  /** Blink the underscore like a terminal cursor */
+  blink?: boolean;
+  /** Crop to the mark itself, without the square tile's padding (for sitting close to text) */
+  tight?: boolean;
 }
 
-const { class: className } = Astro.props;
+const { class: className, blink = false, tight = false } = Astro.props;
 ---
 
 <svg
   class={className}
-  viewBox="-8.5 -10 84 84"
+  viewBox={tight ? "-3 19 75 26" : "-8.5 -10 84 84"}
   role="img"
   aria-label="mulek.cc"
   xmlns="http://www.w3.org/2000/svg"
@@ -23,5 +27,18 @@ const { class: className } = Astro.props;
     stroke-linecap="round"
     stroke-linejoin="round"
   />
-  <rect x="55.5" y="39.5" width="14" height="5" rx="1.2" fill="var(--logo-star)" />
+  <rect x="55.5" y="39.5" width="14" height="5" rx="1.2" fill="var(--logo-star)" class:list={[blink && "logo-cursor"]} />
 </svg>
+
+<style>
+  /* On for half a second, off for half a second, like a terminal cursor */
+  .logo-cursor {
+    animation: logo-cursor-blink 1.1s steps(1, end) infinite;
+  }
+  @keyframes logo-cursor-blink {
+    50% { opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .logo-cursor { animation: none; }
+  }
+</style>
