@@ -13,10 +13,12 @@ import "@/styles/global.css";
 // panel itself near the bottom, like light falling off.
 const panel = "rounded-xl bg-body dark:bg-body-dark border border-neutral-300 dark:border-neutral-800 panel-edge panel-edge-sun [--edge-width:4px] [--edge-fade-to:var(--edge-panel)]";
 
+
 ---
 
 <MainLayout title="mulek.cc - Home" description="Michael Scott Mulek, Systems Engineer. Projects and write-ups on homelab infrastructure, self-hosting, and development.">
   <TwSizeIndicator />
+
 
 
 
@@ -38,11 +40,12 @@ const panel = "rounded-xl bg-body dark:bg-body-dark border border-neutral-300 da
       <Starfield grid sun {...homeSky} fixed={false} density={1.6} />
 
       <!-- Phones only: the sky above the horizon is left open so the whole sun shows, and the panel
-           sits on the floor below it, where thumbs reach. If the screen is too short for that,
-           this spacer shrinks (down to the menu's height) before the panel would be cut off. -->
-      <div class="sm:hidden basis-[50vh] min-h-20" aria-hidden="true"></div>
+           starts 8px below the horizon (which is halfway down), whatever the screen's height. If the
+           screen is too short for that, this spacer shrinks (down to the menu's height) before the
+           panel would be cut off. -->
+      <div class="sm:hidden min-h-20 basis-[calc(50%+8px)]" aria-hidden="true"></div>
 
-      <div class="relative z-20 w-full px-6 sm:px-16 flex justify-center max-sm:flex-1 max-sm:items-center">
+      <div class="relative z-20 w-full px-6 sm:px-16 flex justify-center max-sm:flex-1 max-sm:items-start">
         <!-- Each column sits in its own panel, sized to its content, so stars never pass behind the text
              and the background stays the main feature. They stack below lg. Above that they sit in two
              equal halves at the same width, hugging the middle, so the gap between them lines up with the

@@ -44,6 +44,7 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [x] Consistent page titles: one shared `page-title` style, large and extra-bold in the plain text color
 - [x] New sun stripes ease in instead of starting as a crisp line
 - [x] Cleanup: deleted unused components, the starter layout, old config and logo files, and stale duplicate scripts; nav and outside links defined once (`src/config/links.js`); the theme set in one place; the theme toggle's CSS bundled locally, so no third-party requests
+- [x] Phone layout: the panel starts just below the horizon (8px under the sun) at any screen height
 - [x] Post dates show the right day (they were a day early in US time zones), and inline code no longer shows literal backticks
 
 ## Cleanup
@@ -72,7 +73,3 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [ ] `/uses` page (hardware, homelab stack, tools) and `/now` page
 - [ ] Downloadable résumé, plus certifications and skills on About
 - [ ] Live homelab status widget (uptime, Grafana stats)
-
-## Design
-
-- [ ] Rework the phone layout so the sun still shows without pushing the panel to the bottom
