@@ -45,6 +45,9 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [x] New sun stripes ease in instead of starting as a crisp line
 - [x] Cleanup: deleted unused components, the starter layout, old config and logo files, and stale duplicate scripts; nav and outside links defined once (`src/config/links.js`); the theme set in one place; the theme toggle's CSS bundled locally, so no third-party requests
 - [x] Phone layout: the panel starts just below the horizon (8px under the sun) at any screen height
+- [x] Logos in their places: the `mulek✦cc` wordmark top left on the home page too (smaller on phones, everywhere), and the `>m_` mark in the footer and on the 404 page, with a blinking cursor there
+- [x] The menu button and theme toggle are lavender, like the wordmark and everything else you can click
+- [x] The site uses "Michael Mulek", without the middle name
 - [x] Post dates show the right day (they were a day early in US time zones), and inline code no longer shows literal backticks
 
 ## Cleanup
@@ -58,7 +61,6 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 ## SEO and sharing
 
 - [ ] Per-project preview images (set `image` in the frontmatter; the default card is used otherwise)
-- [ ] Use the logo on the home page (it has no header) and in the mobile menu
 
 ## Contact form
 
