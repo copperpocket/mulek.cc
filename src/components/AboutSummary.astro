@@ -48,6 +48,9 @@ const pets = [
 ].map((pet) => ({ ...pet, photos: photosOf(pet.name) }));
 // "A, B, C, and D." between the names
 const petJoin = (i: number) => (i === pets.length - 1 ? "." : i === pets.length - 2 ? ", and " : ", ");
+// The punctuation stays on the same line as the name before it; the rest of the joiner can wrap
+const petPunct = (i: number) => petJoin(i)[0];
+const petRest = (i: number) => petJoin(i).slice(1);
 const petLink = "pet-link text-accent font-semibold hover:underline hover:text-highlight transition-colors";
 ---
 
@@ -64,7 +67,7 @@ const petLink = "pet-link text-accent font-semibold hover:underline hover:text-h
         </svg>
       </a>, where I live with my fiancé Chelsea<span class="inline-block text-yellow-500 dark:text-yellow-400 animate-pulse ml-1">❤️</span> and our companions: 
       {pets.map((pet, i) => (
-        <Fragment>{pet.photos.length ? <button type="button" class={petLink} data-imgs={JSON.stringify(pet.photos)}>{pet.name}</button> : pet.name}{petJoin(i)}</Fragment>
+        <Fragment><span class="whitespace-nowrap">{pet.photos.length ? <button type="button" class={petLink} data-imgs={JSON.stringify(pet.photos)}>{pet.name}</button> : pet.name}{petPunct(i)}</span>{petRest(i)}</Fragment>
       ))}
     </p>
 
@@ -116,11 +119,13 @@ const petLink = "pet-link text-accent font-semibold hover:underline hover:text-h
   >
     <span class="flex flex-wrap items-center gap-x-2">
       <span class="opacity-70">$ git clone</span>
+      <span class="inline-flex items-center gap-2 whitespace-nowrap">
       <span class="text-accent opacity-80 group-hover:opacity-100 group-hover:underline group-hover:text-highlight transition">https://github.com/copperpocket/mulek.cc</span>
       <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-accent opacity-70 group-hover:opacity-100 group-hover:text-highlight group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition">
         <line x1="7" y1="17" x2="17" y2="7"></line>
         <polyline points="7 7 17 7 17 17"></polyline>
       </svg>
+      </span>
     </span>
   </a>
 </div>
@@ -136,7 +141,7 @@ const petLink = "pet-link text-accent font-semibold hover:underline hover:text-h
           </svg>
         </a>, where I live with my fiancé Chelsea<span class="inline-block text-yellow-500 dark:text-yellow-400 animate-pulse ml-1">❤️</span>. We share our home with our companions: 
         {pets.map((pet, i) => (
-          <Fragment>{pet.photos.length ? <button type="button" class={petLink} data-imgs={JSON.stringify(pet.photos)}>{pet.name}</button> : pet.name} ({pet.age}<span data-bday={pet.bday}></span>){petJoin(i)}</Fragment>
+          <Fragment><span class="whitespace-nowrap">{pet.photos.length ? <button type="button" class={petLink} data-imgs={JSON.stringify(pet.photos)}>{pet.name}</button> : pet.name} ({pet.age}<span data-bday={pet.bday}></span>){petPunct(i)}</span>{petRest(i)}</Fragment>
         ))}
       </p>
       <p>
