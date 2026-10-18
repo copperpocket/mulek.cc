@@ -30,7 +30,8 @@ const {
   shell = true,
 } = Astro.props;
 
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+// Built pages have a trailing slash in their path (/about/); the canonical URL and the sitemap don't
+const canonicalUrl = new URL(Astro.url.pathname.replace(/(.)\/$/, "$1"), Astro.site);
 const imageUrl = new URL(image, Astro.site);
 // The default card is 1200x630; other images don't get size or alt hints
 const isDefaultImage = image === "/og.png";

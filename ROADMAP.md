@@ -55,10 +55,7 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [x] Header nav links are semibold, like the menu's
 - [x] Post dates show the right day (they were a day early in US time zones), and inline code no longer shows literal backticks
 - [x] The shared page shell (sky, header, footer, global CSS) lives in `MainLayout`; the home page opts out with `shell={false}`
-
-## Performance
-
-- [ ] Pre-render pages at build time and keep only `/api/contact` server-rendered
+- [x] Pages are pre-rendered at build time and only `/api/contact` runs on the server; the sky's random counts, the footer year, the pet ages and the years in the industry are set in the browser, so they stay right without a redeploy
 
 ## SEO and sharing
 

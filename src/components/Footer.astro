@@ -7,6 +7,15 @@ import LogoMark from "@/components/LogoMark.astro";
     class="mt-auto w-full bg-body dark:bg-body-dark text-neutral-600 dark:text-neutral-400 text-center text-xs pb-2"
   >
     <LogoMark tight class="h-2.5 w-auto mx-auto mb-1.5" />
-    <p>&copy; {new Date().getFullYear()} Michael Mulek</p>
+    <p>&copy; <span data-year>{new Date().getFullYear()}</span> Michael Mulek</p>
     <p>Built with AstroJS & Tailwind CSS</p>
   </section>
+
+<script>
+  // The page is built ahead of time, so the year is corrected here by the visitor's date
+  document.addEventListener("astro:page-load", () => {
+    document.querySelectorAll<HTMLElement>("[data-year]").forEach((el) => {
+      el.textContent = String(new Date().getFullYear());
+    });
+  });
+</script>

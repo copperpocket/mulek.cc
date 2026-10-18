@@ -2,24 +2,16 @@
 import BlogPostLayout from "@/layouts/BlogPostLayout.astro";
 import { getCollection, render } from "astro:content";
 
-const { slug } = Astro.params;
+export const prerender = true;
 
-// Old URLs used the file name (/blog/post.md); send them to the clean slug
-if (slug?.endsWith(".md")) {
-  return Astro.redirect(`/blog/${slug.slice(0, -3)}`, 301);
+// One page per post, built ahead of time; any other slug is a 404. The old URLs (/blog/post.md, and
+// /blog/<project>) are redirected in astro.config.mjs.
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
 }
 
-const posts = await getCollection("blog");
-const post = posts.find((p) => p.slug === slug);
-
-if (!post) {
-  // Project write-ups used to live in the blog
-  const projects = await getCollection("projects");
-  if (projects.some((p) => p.slug === slug)) {
-    return Astro.redirect(`/projects/${slug}`, 301);
-  }
-  return Astro.rewrite("/404");
-}
+const { post } = Astro.props;
 
 const { Content } = await render(post);
 const data = post.data;

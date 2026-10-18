@@ -3,6 +3,8 @@ import MainLayout from "@/layouts/MainLayout.astro";
 import { outsideLinks, newTab } from "@/config/links";
 
 const HCAPTCHA_SITE_KEY = import.meta.env.PUBLIC_HCAPTCHA_SITE_KEY;
+
+export const prerender = true;
 ---
 <MainLayout title="Contact - mulek.cc" description="Get in touch with Michael Mulek. Have a question, project idea, or just want to say hello?">
 

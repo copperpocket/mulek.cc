@@ -19,6 +19,8 @@ const filters = [
     { name: "All", count: projects.length },
     ...categories.map((name) => ({ name, count: projects.filter((p) => p.data.category === name).length })),
 ];
+
+export const prerender = true;
 ---
 
 <MainLayout title="Projects - mulek.cc" description="Projects by Michael Mulek - web development, homelab infrastructure, and game servers.">

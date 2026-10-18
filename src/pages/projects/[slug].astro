@@ -2,14 +2,15 @@
 import MainLayout from "@/layouts/MainLayout.astro";
 import { getCollection, render } from "astro:content";
 
-const { slug } = Astro.params;
+export const prerender = true;
 
-const projects = await getCollection("projects");
-const project = projects.find((p) => p.slug === slug);
-
-if (!project) {
-  return Astro.rewrite("/404");
+// One page per project, built ahead of time; any other slug is a 404
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+  return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
 }
+
+const { project } = Astro.props;
 
 const { Content } = await render(project);
 const { title, description, category, tags, url, github, image } = project.data;
