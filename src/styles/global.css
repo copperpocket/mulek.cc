@@ -11,6 +11,8 @@
 @custom-variant xtall { @media (min-height: 801px) { @slot; } }
 
 @theme {
+  /* How long hover changes take (Tailwind's transition utilities default to this) */
+  --default-transition-duration: 400ms;
   --color-primary: #EC4646;
   --color-primary-dark: #F5EE27;
   /* Hover color and small highlights (tags, the logo's star): the sun's pink. Light mode is a deeper
@@ -109,8 +111,39 @@ html.dark {
   }
 
   .card-lift {
-    @apply transition-[translate,scale,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-2xl;
+    @apply transition-[translate,scale,box-shadow] ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-2xl;
   }
+}
+
+/*
+  Every link and button eases its color changes, so hovers fade instead of snapping. Anything with
+  its own transition utility (like the cards) uses that instead.
+*/
+@layer base {
+  a,
+  button,
+  label {
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity;
+    transition-duration: var(--default-transition-duration);
+    transition-timing-function: ease;
+  }
+}
+
+/* The wordmark swaps its colors on hover, like the rest of the site turning pink: pink letters, a lavender star */
+.logo-link:hover {
+  --logo-ink: var(--color-highlight);
+  --logo-star: var(--color-accent);
+}
+.logo-link svg * {
+  transition: stroke var(--default-transition-duration) ease, fill var(--default-transition-duration) ease;
+}
+
+/* Links in posts and write-ups match the rest of the site: lavender, pink on hover */
+.prose a {
+  color: var(--color-accent);
+}
+.prose a:hover {
+  color: var(--color-highlight);
 }
 
 /* Tailwind v4 leaves buttons with the default arrow cursor; give them the pointing hand, like links */
