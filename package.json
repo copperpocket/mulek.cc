@@ -20,12 +20,15 @@
   "description": "```sh npm create astro@latest -- --template basics ```",
   "main": "index.js",
   "devDependencies": {
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@fontsource-variable/lexend": "^5.3.0",
+    "@fontsource-variable/outfit": "^5.3.0",
     "@tailwindcss/typography": "^0.5.19",
     "astro": "^5.15.6",
     "sharp": "0.34.5"
   },
   "keywords": [],
-  "author": "Michael Scott Mulek",
+  "author": "Michael Mulek",
   "license": "MIT",
   "repository": {
     "type": "git",

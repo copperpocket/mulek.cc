@@ -1,9 +1,12 @@
+---
+import LogoMark from "@/components/LogoMark.astro";
+---
+
 <section
     id="section-footer"
-    class="mt-auto w-full bg-body dark:bg-body-dark text-neutral-600 dark:text-neutral-400 text-center text-xs"
+    class="mt-auto w-full bg-body dark:bg-body-dark text-neutral-600 dark:text-neutral-400 text-center text-xs pb-2"
   >
-    <p style="white-space: pre-line;">
-      &copy; {new Date().getFullYear()} Michael Scott Mulek
-      Built with AstroJS & Tailwind CSS
-</p>
+    <LogoMark tight class="h-2.5 w-auto mx-auto mb-1.5" />
+    <p>&copy; {new Date().getFullYear()} Michael Mulek</p>
+    <p>Built with AstroJS & Tailwind CSS</p>
   </section>

@@ -81,4 +81,4 @@ yarn start      # runs the standalone Node server from dist/server/entry.mjs
 
 The **code** in this repository is released under the [MIT License](LICENSE). Feel free to borrow anything useful; just keep the copyright notice.
 
-The **content** is not covered by that license and remains © Michael Scott Mulek, all rights reserved. That means the writing in `src/content/` and the personal images in `public/images/` (photos, avatar artwork and logos). Please don't reuse it without asking.
+The **content** is not covered by that license and remains © Michael Mulek, all rights reserved. That means the writing in `src/content/` and the personal images in `public/images/` (photos, avatar artwork and logos). Please don't reuse it without asking.

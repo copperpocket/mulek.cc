@@ -1,4 +1,9 @@
 @import "tailwindcss";
+/* The site's fonts, bundled with it (Fontsource), so there are no Google Fonts or other outside
+   requests. Each is one variable file covering every weight, and only the Latin part is downloaded. */
+@import "@fontsource-variable/outfit";
+@import "@fontsource-variable/lexend";
+@import "@fontsource-variable/jetbrains-mono";
 @plugin "@tailwindcss/typography";
 
 /* Enable browser theming  */
@@ -11,6 +16,13 @@
 @custom-variant xtall { @media (min-height: 801px) { @slot; } }
 
 @theme {
+  /* Fonts: Lexend for everything you read, Outfit for headings (matching the wordmark's round
+     letters), JetBrains Mono for the code-style bits */
+  --font-sans: "Lexend Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Outfit Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+  /* How long hover changes take (Tailwind's transition utilities default to this) */
+  --default-transition-duration: 400ms;
   --color-primary: #EC4646;
   --color-primary-dark: #F5EE27;
   /* Hover color and small highlights (tags, the logo's star): the sun's pink. Light mode is a deeper
@@ -109,8 +121,44 @@ html.dark {
   }
 
   .card-lift {
-    @apply transition-[translate,scale,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-2xl;
+    @apply transition-[translate,scale,box-shadow] ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-2xl;
   }
+}
+
+/*
+  Every link and button eases its color changes, so hovers fade instead of snapping. Anything with
+  its own transition utility (like the cards) uses that instead.
+*/
+@layer base {
+  a,
+  button,
+  label {
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity;
+    transition-duration: var(--default-transition-duration);
+    transition-timing-function: ease;
+  }
+}
+
+/* The wordmark swaps its colors on hover, like the rest of the site turning pink: pink letters, a lavender star */
+.logo-link:hover {
+  --logo-ink: var(--color-highlight);
+  --logo-star: var(--color-accent);
+}
+.logo-link svg * {
+  transition: stroke var(--default-transition-duration) ease, fill var(--default-transition-duration) ease;
+}
+
+/* Links in posts and write-ups match the rest of the site: lavender, pink on hover */
+.prose a {
+  color: var(--color-accent);
+}
+.prose a:hover {
+  color: var(--color-highlight);
+}
+
+/* Headings, the header nav and the menu's links use Outfit, the font that matches the wordmark */
+:is(h1, h2, h3, h4, h5, h6, .nav-link, .home-menu-links) {
+  font-family: var(--font-heading);
 }
 
 /* Tailwind v4 leaves buttons with the default arrow cursor; give them the pointing hand, like links */
@@ -126,7 +174,7 @@ button:not(:disabled),
 }
 
 .nav-link {
-  @apply text-neutral-800 dark:text-neutral-200 hover:text-highlight transition-colors;
+  @apply font-semibold text-neutral-800 dark:text-neutral-200 hover:text-highlight transition-colors;
 }
 .nav-link.active {
   @apply text-accent;

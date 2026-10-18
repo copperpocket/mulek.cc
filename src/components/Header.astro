@@ -35,7 +35,7 @@ const pathname = Astro.url.pathname;
     <span class="header-line absolute bottom-0 left-0 h-[2px] w-full"></span>
 
     {hideLogo !== true && (
-      <a href="/" class="header-logo flex items-center" aria-label="mulek.cc home">
+      <a href="/" class="header-logo logo-link flex items-center" aria-label="mulek.cc home">
         <Wordmark class="h-full w-auto" />
       </a>
     )}
@@ -88,7 +88,10 @@ const pathname = Astro.url.pathname;
   /* At the top of the page */
   .header-inner { height: 5.5rem; }
   .header-spacer { height: 5.5rem; }
-  .header-logo { height: 2.25rem; }
+  .header-logo { height: 1.75rem; }
+  @media (min-width: 40rem) {
+    .header-logo { height: 2.25rem; }
+  }
   .header-nav { gap: 2rem; font-size: 1.125rem; }
   /* Lavender with the sun's pink in the middle */
   .header-line {
