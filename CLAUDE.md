@@ -35,6 +35,13 @@ The `/api/contact` endpoint needs a `.env` file, which is gitignored. The rest o
 
 `astro.config.mjs` sets `server.allowedHosts: ['mulek.cc']` on purpose: the user reaches the dev/preview server through that hostname.
 
+## World-building context
+
+This site is not a source of lore for the fantasy world in the `worldbuilding` repo. Only a page that explicitly references that world touches it.
+
+- `/handoff`: skip its lore step unless the session changed a page that references the fantasy world. Game projects on the site (Echo Protocol, Duckcraft, Quackshire) are not lore for it.
+- `/pickup`: skip reading the world overview and the lore-inbox count unless the task involves that world.
+
 ## Architecture
 
 - **Rendering:** `output: 'server'` with the `@astrojs/node` standalone adapter, but every page sets `export const prerender = true`, so pages are built once at `yarn build` and served as files; only `/api/contact` runs on the server. That means anything that depends on the visit (a random roll, today's date) can't be computed in frontmatter: it would freeze at build time. Render a sensible starting value, then set the real one in a bundled script on `astro:page-load`. The sky's random counts (`Starfield`, sent as a `min,max` range), the footer year, the pet ages and the years in the industry all work this way, with the date math shared in `src/utils/dates.js`. A new page needs `prerender = true` too, and dynamic routes need `getStaticPaths`.
@@ -45,7 +52,7 @@ The `/api/contact` endpoint needs a `.env` file, which is gitignored. The rest o
   - Height-based variants `xshort`, `short`, `tall` and `xtall` exist alongside the usual width breakpoints.
   - Size popups and full-screen elements with `dvh`, not `vh`: `vh` measures the screen with the mobile address bar hidden, so it's taller than what's visible. For hover animations on `translate-*` or `scale-*`, use `transition-[translate,scale,...]`; `transition-transform` doesn't animate them in Tailwind v4.
   - Fonts are bundled with the site through Fontsource packages (imported at the top of `global.css`), never loaded from Google Fonts: Lexend for body text (`--font-sans`), Outfit for headings, the header nav and the menu (`--font-heading`, applied to `h1`–`h6`, `.nav-link` and `.home-menu-links`), and JetBrains Mono for code-style text (`--font-mono`).
-  - `@tailwindcss/typography` styles blog post bodies through `prose`.
+  - `@tailwindcss/typography` styles blog post and project write-up bodies through `prose`, inside a `card-edge bg-panel` panel so the text doesn't sit on the busy sky. Outside links in them get the home page's small ↗ arrow from `.prose a[href^="http"]::after` in `global.css`.
 - **Import alias:** `@/*` resolves to `src/*`, set in `tsconfig.json`.
 - **Page layouts:**
   - `MainLayout.astro` holds `<head>` and the shared shell: `<Starfield {...pageSky} />`, `<Header />` and `<Footer />` around the page's slot, plus `global.css` (pages don't import it). The home page passes `shell={false}` and brings its own sky and menu. The `<head>` includes the canonical URL and the Open Graph/Twitter preview tags (props: `image`, a path under `public/` defaulting to `/og.png`; `type`, set to `article` on posts and projects; `noindex` for the 404 page), the inline theme setup script that prevents a flash of the wrong theme, and Astro's `<ClientRouter />` page transitions.
