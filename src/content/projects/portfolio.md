@@ -22,7 +22,7 @@ This site, [mulek.cc](https://mulek.cc), is my personal portfolio and the place 
 
 The site is built with [Astro](https://astro.build/) and styled with [Tailwind CSS](https://tailwindcss.com/). Pages are built ahead of time and served as plain files, so they load quickly. Fonts are bundled with the site, so it makes no requests to outside services.
 
-It runs in a container on my own server. Pushing to the `master` branch on GitHub rebuilds and redeploys it automatically through Dokploy.
+It runs in a container on a VPS, kept apart from my home network. Pushing to the `master` branch on GitHub rebuilds and redeploys it automatically through Dokploy.
 
 ## Open source
 
