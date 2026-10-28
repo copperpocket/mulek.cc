@@ -151,9 +151,29 @@ html.dark {
 /* Links in posts and write-ups match the rest of the site: lavender, pink on hover */
 .prose a {
   color: var(--color-accent);
+  font-weight: 600;
+  text-decoration: none;
 }
 .prose a:hover {
   color: var(--color-highlight);
+  text-decoration: underline;
+}
+/* Outside links get the same small ↗ arrow as the home page and About links */
+.prose a[href^="http"]::after {
+  content: "";
+  display: inline-block;
+  width: 0.75em;
+  height: 0.75em;
+  margin-left: 0.15em;
+  background: currentColor;
+  opacity: 0.7;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='7' y1='17' x2='17' y2='7'/%3E%3Cpolyline points='7 7 17 7 17 17'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='7' y1='17' x2='17' y2='7'/%3E%3Cpolyline points='7 7 17 7 17 17'/%3E%3C/svg%3E") center / contain no-repeat;
+  transition: opacity var(--default-transition-duration) ease, translate var(--default-transition-duration) ease;
+}
+.prose a[href^="http"]:hover::after {
+  opacity: 1;
+  translate: 0.1em -0.1em;
 }
 
 /* Headings, the header nav and the menu's links use Outfit, the font that matches the wordmark */
