@@ -1,120 +1,64 @@
 ---
 title: "Homelab Overview"
-description: "A self-hosted ecosystem that powers my personal services, experiments, and development projects."
+description: "The network, servers and services I run at home, and what I've learned building them."
 pubDate: 2025-10-19
 category: "Infrastructure"
 tags: ["Proxmox", "TrueNAS", "OPNsense"]
 ---
 
-My **homelab** is a self-contained environment designed to power my personal services, test new technologies, and host private projects. It’s a mix of practical infrastructure and ongoing experimentation — blending automation, virtualization, and network management into a compact, efficient setup.
+My homelab is where I run my own services, try new tools before I use them at work, and host the game servers I run for friends and family. It's one Proxmox host, one TrueNAS storage server, and a network built around a dedicated OPNsense firewall.
 
-## Purpose
+I don't publish addresses or a full service list. This page covers the design and the parts I'm proudest of.
 
-The goal of this homelab is **autonomy** and **learning**. Every service I host — from authentication and DNS filtering to game servers and dashboards — teaches me more about system administration, networking, and automation.
+## Firewall and internet
 
-It’s also a **sandbox for projects** like my Minecraft world (*Quackshire*), World of Warcraft private server (*Duckcraft*), and internal tools I develop or test before deploying elsewhere.
+The firewall is an Intel N100 fanless mini PC with four ports, the kind sold as a "pfSense router" on AliExpress. It shipped with no RAM, so I added 64GB of DDR5. It runs [OPNsense](https://opnsense.org/) on its own hardware instead of in a virtual machine, so the network stays up when I'm rebooting or breaking things on Proxmox.
 
----
+My internet is 1000/1000 fiber. The first port is the WAN. The other three are bundled into a LAGG that connects to the switch. Traffic between VLANs all passes through the firewall, so bundling the links means it isn't squeezed down to a single gigabit link.
 
-## Network Diagram
+## Switches and Wi-Fi
 
-Here’s a simplified view of my home network layout, showing how each component fits together:
+- **MikroTik CRS326-24G-2S+RM:** my main switch, with 24 gigabit ports and two SFP+ ports, which is how I'm leaving room to move to faster links later. I chose MikroTik because of the good reviews and because it cost far less than the Cisco options. RouterOS is complicated and unlike other switch software, but I like working in it. I actually ordered the CSS326, which runs the simpler SwOS. The seller sent the CRS326 by mistake and let me keep it, so I got RouterOS for free.
+- **TP-Link TL-SG1210MPE:** a small switch I use only for PoE. The cameras and access points plug into it, and it powers them.
+- **Access points:** two Ubiquiti UAP-AC-PRO units, managed by a UniFi controller running in a container on Proxmox.
 
-    ┌──────────────────────────────┐
-    │           Internet           │
-    └──────────────┬───────────────┘
-                   │
-               [ISP Modem]
-                   │
-         ┌─────────┴─────────┐
-         │     OPNSense      │
-         │ Firewall + Router │
-         └─────────┬─────────┘
-                   │
-           ┌───────┼─────────────┐
-           │       │             │
-     [LAN Switch] [Wi-Fi AP] [IoT VLAN]
-           │
-    ┌──────┼────────────────────┐
-    │      │                    │
-    [Proxmox] [Pi-hole] [NAS / Backups]
-    │
-    ├─── Virtual Machines:
-    │ • Authelia
-    │ • Vaultwarden
-    │ • Zammad
-    │ • Caddy
-    │ • Grafana
-    │ • Prometheus
-    │
-    ├─── Game Servers:
-    │ • Duckcraft (AzerothCore WoW)
-    │ • Quackshire (PaperMC Minecraft)
+## VLANs
 
----
+The network is split into seven segments, so a problem on one device can't reach the rest. Everything is blocked by default, and each segment is allowed only what it needs. Most segments use my own DNS server, AdGuard Home. Guest uses a public one.
 
-## Core Infrastructure
+| Segment | What lives there |
+| :--- | :--- |
+| Trusted | The household's own devices: PCs, laptops, phones, tablets, the Steam Deck and VPN clients. They reach the internet, DNS and my apps through the reverse proxy, and nothing else directly apart from a few named rules, such as file shares, the Minecraft server and administration from one machine. |
+| Guest | Visitors' devices, plus the work laptops Chelsea and I use from home, so employer-managed devices stay off my own network. It reaches the internet through a public DNS server and nothing else. |
+| IoT | Smart home devices. They reach the internet, DNS and the reverse proxy on its web ports. They can't reach Trusted, Management or Security. |
+| Servers | Home Assistant, Docker hosts and the apps behind my reverse proxy. It can reach IoT and the DMZ. Into Management and Security, only Caddy, my dashboard and my monitoring are allowed, each on the ports it needs. |
+| Security | The cameras and the [Frigate](https://frigate.video/) recorder. They get DNS and nothing else: no internet at all. The only way to the Frigate page is through the reverse proxy, and from outside my network the only way in is the VPN. |
+| DMZ | Everything meant to be reached from the internet: n8n (my YouTube upload workflow, which needs a public domain name), Jellyfin, Gitea, Authelia, a file browser and the game servers. They reach the internet and DNS, and no other segment. |
+| Management | Switches, access points, the NAS, and the Proxmox and OPNsense management pages. Nothing reaches it except Caddy, my dashboard, my monitoring and a few named administration rules. It starts few connections of its own: DNS, time sync, updates, backups, and the access points reaching their controller. |
 
-- **Firewall & Router:**  
-  [**OPNSense**](https://opnsense.org/) runs as my main gateway, handling VLANs, VPNs, and traffic shaping. It provides complete visibility and control over all network traffic.
+Most web pages are administered through the reverse proxy. The switches can't be proxied, so one named rule lets my own PC, and nothing else, reach them and the other management pages directly.
 
-- **DNS Filtering:**  
-  [**Pi-hole**](https://pi-hole.net/) acts as a local DNS sinkhole to block ads, trackers, and telemetry. It keeps the network fast, clean, and secure.
+## Servers
 
-- **Virtualization:**  
-  [**Proxmox VE**](https://www.proxmox.com/en/) powers most of the lab’s workloads, running lightweight Linux containers (LXCs) and virtual machines for isolation and resource control.
+- **Proxmox:** one host with an AMD Ryzen 7 5700G (8 cores, 16 threads) and 64GB of RAM. Most services are lightweight Linux containers (LXCs), with virtual machines where I want full isolation. Snapshots run nightly.
+- **TrueNAS:** a separate machine with an AMD Ryzen 5 4600G (6 cores, 12 threads) for storage and backups.
 
----
+## Reverse proxy and DNS
 
-## Services and Applications
+- **Caddy, twice:** an internal [Caddy](https://caddyserver.com/) runs in a Proxmox container for services at home. A second Caddy runs on a VPS for the services that need to be reachable from the internet.
+- **AdGuard Home:** DNS filtering for the whole network, blocking ads and trackers. It runs as a container on Proxmox. It replaced Pi-hole.
 
-- **Authelia**  
-*Role:* Authentication Proxy  
-*Notes:* Manages SSO and secure access to all internal services  
+## What runs where
 
-- **Vaultwarden**  
-*Role:* Password Manager  
-*Notes:* Self-hosted Bitwarden-compatible server  
+Almost everything runs at home. The exceptions are mulek.cc and the external Caddy, which run on a VPS so a problem with the public site can't reach my home network. I used to host it in the lab. Pushing to the `master` branch on GitHub redeploys it through Dokploy.
 
-- **Zammad**  
-*Role:* Helpdesk  
-*Notes:* Used for IT-style ticket management and experimentation  
+## More from the lab
 
-- **Nginx Proxy Manager**  
-*Role:* Reverse Proxy  
-*Notes:* Simplifies SSL management and routing for web services  
+- [Quackshire](/projects/minecraft): the Minecraft server.
+- [Duckcraft](/projects/warcraft): the World of Warcraft server.
+- [Mailcow](/projects/mailcow): my mail server.
+- [mulek.cc](/projects/portfolio): this site.
 
-- **Grafana + Prometheus**  
-*Role:* Monitoring  
-*Notes:* Tracks uptime, system load, and resource metrics  
+## Why I do it
 
-- **Duckcraft**  
-*Role:* WoW Server  
-*Notes:* Private AzerothCore server with playerbot integration  
-
-- **Quackshire**  
-*Role:* Minecraft Server  
-*Notes:* Private creative world hosted on PaperMC 
-
----
-
-## Backup and Maintenance
-
-Automated snapshots and rsync-based backups run nightly to my NAS. Configuration files are version-controlled through **GitHub**, and critical systems are monitored via Grafana alerts.
-
-Regular maintenance tasks include:
-- Updating containers and VMs weekly  
-- Reviewing firewall and DNS logs  
-- Testing backup restoration quarterly  
-
----
-
-## Philosophy
-
-This homelab isn’t just for convenience — it’s about **understanding systems deeply**. Every configuration, container, and VLAN teaches something new about networking, security, and infrastructure resilience.
-
-It’s a living environment that evolves with my skills, providing a platform for both personal use and technical exploration.
-
----
-
-A small, self-contained world — built for learning, reliability, and control.
+I like knowing how a system works under the hood, and a homelab is a safe place to break things and learn from it.
