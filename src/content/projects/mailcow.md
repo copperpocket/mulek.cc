@@ -6,55 +6,35 @@ category: "Infrastructure"
 tags: ["Docker", "Postfix", "SMTP2GO"]
 ---
 
-My **mail server** is powered by **Mailcow**, a complete mail system built on Docker that handles all mail-related services under my own domain — **mulek.cc**.  
-It’s configured for both practicality and experimentation, serving as a private, self-managed alternative to third-party mail providers.
+**Mailcow** is the mail server for my domain, mulek.cc. It's a self-hosted, Docker-based mail system that runs my own mailboxes and receives the alerts my servers send.
 
-## Purpose
+## What it is
 
-This setup allows me to:
-- Use my **custom domain** for personal and system mail  
-- Receive **automated update summaries** from my servers  
-- Maintain **full control and visibility** over mail delivery  
-- Experiment with **SPF, DKIM, and DMARC** configurations for deliverability
+- **What it does:** mailboxes on my own domain, plus a home for system mail such as Proxmox backup reports and Uptime Kuma alerts.
+- **Who it's for:** me and the systems I run.
+- **Why:** full control and visibility over my own mail, and a place to practice SPF, DKIM and DMARC.
+- **Status:** running.
 
-Beyond functionality, it’s also a **proof of concept** — demonstrating how a reliable, domain-based mail service can run entirely within my homelab.
+## Setup
 
-## Sending Mail via SMTP2GO
+[Mailcow](https://mailcow.email/) runs as a Docker stack in its own virtual machine on Proxmox, in the DMZ segment of my [homelab](/projects/homelab-overview).
 
-Outgoing mail is relayed through **SMTP2GO**, using their free tier, which perfectly fits my current needs.  
-This setup ensures consistent delivery and reputation while keeping outbound messages lightweight — primarily for system alerts, update reports, and low-volume personal mail.
+**Incoming mail.** The public mail server name points at the VPS, not at my home network. Postfix there accepts mail for my domain and relays it to Mailcow through a WireGuard tunnel, so no ports are forwarded to the virtual machine and Mailcow is never exposed to the internet directly. DNS carries the MX, SPF, DKIM and DMARC records that make the mail deliverable and authenticated.
 
-**Mail delivery pipeline:**  
-Postfix → SMTP2GO → Recipient Mailbox
+**Outgoing mail.** Mailcow relays outgoing mail through [SMTP2GO](https://www.smtp2go.com/) on their free tier, which fits a low-volume sender: system alerts and personal mail. The path is Mailcow's Postfix, then SMTP2GO, then the recipient.
 
-This combination offloads outbound delivery to SMTP2GO’s infrastructure while maintaining complete control of the inbound mail flow through Mailcow.
+**System mail.** Proxmox emails its backup reports to a Mailcow mailbox. Uptime Kuma sends its alerts through Mailcow's submission port with an app password that only allows SMTP, so a leaked password can't read the mailbox.
 
-## Receiving Mail
+All mail is stored on the virtual machine, which is backed up every night with the rest of my services.
 
-Mailcow handles all **incoming mail** for `@mulek.cc` addresses directly.  
-DNS records (MX, SPF, DKIM, and DMARC) are configured to ensure reliable delivery and authentication. The setup supports multiple user mailboxes, including:
-- Personal accounts  
-- System and admin notifications  
-- Dedicated alert inboxes for server events  
+## Key decisions
 
-All mail is stored locally within my infrastructure, with automatic backups to my NAS.
+- **System mail sends from a real mailbox.** Mailcow rejects mail from a domain that doesn't exist, and from my own domain without a real mailbox behind it, so my servers rewrite their sender to one that exists.
+- **Outgoing mail goes through a relay.** Gmail refuses mail sent straight from a home connection for failing SPF and DKIM, so SMTP2GO carries it out.
+- **Incoming mail arrives through the VPS.** No ports are forwarded to the virtual machine, so Mailcow is never exposed to the internet directly.
+- **Uptime Kuma gets an SMTP-only app password.** A leaked password can't read the mailbox.
+- **Mail logs are rotated.** A stuck queue once grew the relay's log to 3 GB, so it is now size-managed.
 
-## Automated Update Summaries
+## Next
 
-Each server in my network runs scheduled updates via **APT automation**, and uses **Postfix + SMTP2GO** to send an **update summary email** to my Mailcow inbox.  
-This provides a centralized, at-a-glance view of all system maintenance across my homelab — no manual log checking required.
-
-**Example subjects include:**  
-    [Update Summary] office-pc-bazzite — 5 packages updated  
-    [Update Summary] proxmox-node1 — system fully up to date
-
-## Reliability and Maintenance
-
-Mailcow runs as a **Docker stack** with automated updates and backup routines. Regular checks include:
-- Monitoring queue health and message logs  
-- Verifying DKIM signatures  
-- Updating DNS and SSL certificates as needed  
-
----
-
-A personal mail system — built for reliability, transparency, and control under my own domain.
+- Get Crafty Controller's update emails delivering through Mailcow, which means giving it a sender Mailcow accepts.

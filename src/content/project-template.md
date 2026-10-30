@@ -11,14 +11,28 @@ image: "/images/projects/name.png" # optional card image under public/, remove i
 
 Copy this file into src/content/projects/ and rename it. The file name becomes the URL: projects/<file-name>.
 
-## Overview
+Every write-up has the same strict edges, so pages line up: What it is and Setup first, any sections that fit in the middle, then Key decisions and Next last. All four are required.
 
-What it is and why you built it.
+One or two sentences up top: what the project is, in plain words.
+
+## What it is
+
+- **Who it's for:** who uses it, and how someone gets access.
+- **Status:** running, planned or archived, in a few words.
+- Add other labelled facts that fit, such as the game, the stack or the main features.
 
 ## Setup
 
-How it works: hardware, software, architecture.
+How it runs: the hardware, the software and how it fits into the lab.
 
-## Lessons Learned
+## Free middle sections
 
-What went wrong, what you'd do differently.
+Add, rename or drop sections that fit the project (for example Custom work or Open source). They go between Setup and Key decisions. Use ### for subsections.
+
+## Key decisions
+
+Required. A short list of "I chose X because Y". Only real choices you made; if a decision isn't true, don't write it.
+
+## Next
+
+Required. Where to pick the project up again: what's planned, or what's left undone.
