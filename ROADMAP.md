@@ -74,3 +74,7 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [ ] `/uses` page (hardware, homelab stack, tools) and `/now` page
 - [ ] Downloadable résumé, plus certifications and skills on About
 - [ ] Live homelab status widget (uptime, Grafana stats)
+
+## Homelab
+
+- [ ] Optional: CrowdSec on the VPS, watching the Traefik, Postfix and SSH logs with a firewall bouncer (the home copy was removed in October 2026 because the exposed front door is the VPS, not the home network)
