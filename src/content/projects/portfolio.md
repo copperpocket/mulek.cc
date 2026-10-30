@@ -24,7 +24,7 @@ This site, [mulek.cc](https://mulek.cc), is my personal portfolio and the place 
 
 The site is built with [Astro](https://astro.build/) and styled with [Tailwind CSS](https://tailwindcss.com/). Pages are built ahead of time and served as plain files, so they load quickly. Fonts are bundled with the site, so it makes no requests to outside services.
 
-It runs in a container on a VPS, kept apart from my home network. Pushing to the `master` branch on GitHub rebuilds and redeploys it automatically through Dokploy.
+It runs in a container on a VPS, kept apart from my home network. Pushing to the `master` branch on GitHub rebuilds and redeploys it automatically through Dokploy; [How This Site Deploys](/projects/site-deploy) has the details.
 
 ## The background
 
@@ -40,4 +40,4 @@ The starfield is one canvas, drawn by a small script I wrote. Stars, comets, con
 
 ## Next
 
-More project write-ups, a network diagram of my homelab, and a short post on how this site deploys.
+More project write-ups and a network diagram of my homelab.
