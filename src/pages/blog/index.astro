@@ -1,26 +1,23 @@
 ---
 import MainLayout from "@/layouts/MainLayout.astro";
-import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
-import Starfield from "@/components/Starfield.astro";
-import { pageSky } from "@/config/sky";
-import "@/styles/global.css";
 
 import { getCollection } from "astro:content";
 
 const allPosts = await getCollection("blog");
 
-// Sort posts by newest first
+// Sort posts by newest first; posts from the same day go by slug, so Dev Log #4 sits above #3
 allPosts.sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  (a, b) =>
+    b.data.pubDate.valueOf() - a.data.pubDate.valueOf() ||
+    b.slug.localeCompare(a.slug, undefined, { numeric: true })
 );
 
 const pageTitle = "Blog Archive";
+
+export const prerender = true;
 ---
 
 <MainLayout title={`Blog - mulek.cc`} description="Articles on homelab infrastructure, self-hosting, and development by Michael Mulek.">
-  <Starfield {...pageSky} />
-  <Header />
 
   <div class="page-main">
     <div class="container mx-auto px-4">
@@ -60,5 +57,4 @@ const pageTitle = "Blog Archive";
     </div>
   </div>
 
-  <Footer />
 </MainLayout>

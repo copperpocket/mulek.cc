@@ -25,6 +25,10 @@ export async function GET(context) {
     description: "Blog posts and project write-ups on homelab infrastructure, self-hosting, and development by Michael Mulek.",
     site: context.site,
     trailingSlash: false,
-    items: [...posts, ...projects].sort((a, b) => b.pubDate.valueOf() - a.pubDate.valueOf()),
+    items: [...posts, ...projects].sort(
+      (a, b) =>
+        b.pubDate.valueOf() - a.pubDate.valueOf() ||
+        b.link.localeCompare(a.link, undefined, { numeric: true }),
+    ),
   });
 }

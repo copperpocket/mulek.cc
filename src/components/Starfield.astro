@@ -34,24 +34,28 @@ interface Props {
 }
 
 const { density = 1, grid = false, sun = false, stripes = true, haze = false, nebulaFade = true, cometSeconds = [8, 20], horizon = 0.5, fixed = true } = Astro.props;
-// Pages render per request, so a range gives a different count on every visit
-const roll = (count: number | [number, number] = 0) =>
-  Array.isArray(count) ? count[0] + Math.floor(Math.random() * (count[1] - count[0] + 1)) : count;
-const constellations = roll(Astro.props.constellations);
-const nebulas = roll(Astro.props.nebulas);
+// Pages are built ahead of time, so the counts are rolled in the browser: a range goes out as "min,max"
+// and gives a different count on every visit
+const range = (count: number | [number, number] = 0) => (Array.isArray(count) ? count.join(",") : String(count));
+const constellations = range(Astro.props.constellations);
+const nebulas = range(Astro.props.nebulas);
+const hasConstellations = constellations !== "0" && constellations !== "0,0";
+const hasNebulas = nebulas !== "0" && nebulas !== "0,0";
 ---
 
+<!-- Pinned to the viewport, it's as tall as the screen with the mobile address bar hidden (lvh), so
+     it keeps one size as the bar slides in and out on scroll; a resize would rearrange the sky -->
 <canvas
-  class:list={["starfield inset-0 w-full h-full pointer-events-none z-10", fixed ? "fixed" : "absolute"]}
+  class:list={["starfield left-0 top-0 w-full pointer-events-none z-10", fixed ? "fixed h-lvh" : "absolute h-full"]}
   data-density={density}
   data-grid={grid ? "" : undefined}
   data-sun={grid && sun ? "" : undefined}
   data-sun-stripes={grid && sun && stripes ? "" : undefined}
   data-horizon={horizon}
-  data-constellations={constellations || undefined}
-  data-haze={constellations && haze ? "" : undefined}
-  data-nebulas={nebulas || undefined}
-  data-nebula-fade={nebulas && nebulaFade ? "" : undefined}
+  data-constellations={hasConstellations ? constellations : undefined}
+  data-haze={hasConstellations && haze ? "" : undefined}
+  data-nebulas={hasNebulas ? nebulas : undefined}
+  data-nebula-fade={hasNebulas && nebulaFade ? "" : undefined}
   data-comet-seconds={cometSeconds.join(",")}
   aria-hidden="true"
 ></canvas>
@@ -361,8 +365,13 @@ const nebulas = roll(Astro.props.nebulas);
     const hasHaze = canvas.dataset.haze !== undefined;
     const nebulaFade = canvas.dataset.nebulaFade !== undefined;
     const cometSeconds = (canvas.dataset.cometSeconds ?? "8,20").split(",").map(Number); // wait between comets
-    const nebulas = nebulaCtx ? Array.from({ length: Math.min(12, Number(canvas.dataset.nebulas) || 0) }, makeNebula) : [];
-    const constellations = Array.from({ length: Math.min(12, Number(canvas.dataset.constellations) || 0) }, makeConstellation);
+    // "5" is exactly 5; "1,6" is a random number from 1 to 6, rolled here on every page load
+    const roll = (value: string | undefined) => {
+      const [min, max = min] = (value ?? "0").split(",").map(Number);
+      return Math.min(12, min + Math.floor(Math.random() * (max - min + 1))) || 0;
+    };
+    const nebulas = nebulaCtx ? Array.from({ length: roll(canvas.dataset.nebulas) }, makeNebula) : [];
+    const constellations = Array.from({ length: roll(canvas.dataset.constellations) }, makeConstellation);
     // The first starts soon after load, the next just before the first one finishes
     const drawSeconds = (c: Constellation) => ((c.lines.length - 1) * CONSTELLATION_LINE_STAGGER + 1) * CONSTELLATION_LINE_SECONDS;
     constellations.forEach((c, i) => {

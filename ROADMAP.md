@@ -38,6 +38,9 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [x] Comets come twice as often, sometimes in pairs, and rarely as a small meteor shower
 - [x] New site menu: one button that opens a card (full screen on phones) with the links, outside links and theme toggle; keyboard accessible, and used on the home page and on phones everywhere
 - [x] Pet photos: a pool per pet, picked at random, added through `yarn pet-photos`, which strips all metadata (location, camera, dates)
+- [x] The home page uses the About page's intro word for word, with each pet's age and the birthday cake; the birthday check moved into `AboutSummary`, so it also works when the About page is opened directly
+- [x] The sub-page background no longer rearranges itself (new stars, constellations and nebulas jumping to new spots) when the mobile address bar hides or shows on scroll: the canvas is sized to `100lvh`, which stays the same either way
+- [x] Pet photo popup fits on short phone screens: the photo is capped by the visible height (`dvh`) with room left for the caption, so the close button is never pushed off the top
 - [x] Projects page redesign: whole-card links, a featured current project, `CATEGORY · YEAR` labels, tags as plain text, matching filter buttons with counts, and plainer category names (Web, Infrastructure, Games)
 - [x] The home page no longer scrolls slightly on phones (`100dvh` instead of `100vh`)
 - [x] No more TypeScript files: the two config files are plain JavaScript
@@ -51,14 +54,8 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [x] Fonts chosen and bundled locally: Outfit for headings, Lexend for reading, JetBrains Mono for code
 - [x] Header nav links are semibold, like the menu's
 - [x] Post dates show the right day (they were a day early in US time zones), and inline code no longer shows literal backticks
-
-## Cleanup
-
-- [ ] Move the shared page shell (header, footer, background, global CSS) into `MainLayout`
-
-## Performance
-
-- [ ] Pre-render pages at build time and keep only `/api/contact` server-rendered
+- [x] The shared page shell (sky, header, footer, global CSS) lives in `MainLayout`; the home page opts out with `shell={false}`
+- [x] Pages are pre-rendered at build time and only `/api/contact` runs on the server; the sky's random counts, the footer year, the pet ages and the years in the industry are set in the browser, so they stay right without a redeploy
 
 ## SEO and sharing
 
@@ -77,3 +74,7 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [ ] `/uses` page (hardware, homelab stack, tools) and `/now` page
 - [ ] Downloadable résumé, plus certifications and skills on About
 - [ ] Live homelab status widget (uptime, Grafana stats)
+
+## Homelab
+
+- [ ] Optional: CrowdSec on the VPS, watching the Traefik, Postfix and SSH logs with a firewall bouncer (the home copy was removed in October 2026 because the exposed front door is the VPS, not the home network)

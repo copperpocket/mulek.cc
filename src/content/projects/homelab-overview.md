@@ -1,120 +1,80 @@
 ---
 title: "Homelab Overview"
-description: "A self-hosted ecosystem that powers my personal services, experiments, and development projects."
+description: "The network, servers and services I run at home, and what I've learned building them."
 pubDate: 2025-10-19
 category: "Infrastructure"
 tags: ["Proxmox", "TrueNAS", "OPNsense"]
 ---
 
-My **homelab** is a self-contained environment designed to power my personal services, test new technologies, and host private projects. It’s a mix of practical infrastructure and ongoing experimentation — blending automation, virtualization, and network management into a compact, efficient setup.
+My homelab is where I run my own services and try new tools before I use them at work. It's also where the game servers for friends and family live. The core is one Proxmox host, one TrueNAS storage server and a network built around a dedicated OPNsense firewall.
 
-## Purpose
+This page covers how the homelab is put together: how the network is divided, how I reach the lab from outside and how everything is backed up. I leave out addresses and the full list of services.
 
-The goal of this homelab is **autonomy** and **learning**. Every service I host — from authentication and DNS filtering to game servers and dashboards — teaches me more about system administration, networking, and automation.
+## Firewall and internet
 
-It’s also a **sandbox for projects** like my Minecraft world (*Quackshire*), World of Warcraft private server (*Duckcraft*), and internal tools I develop or test before deploying elsewhere.
+The firewall is a fanless Intel N100 mini PC (4 cores, 64GB of DDR5) with four network ports. It runs [OPNsense](https://opnsense.org/) on its own hardware instead of in a virtual machine, so the network stays up when I'm rebooting or breaking things on Proxmox.
 
----
+My internet is 1000/1000 fiber. The first port is the WAN. The other three are bundled into a LAGG that connects to the switch. Traffic between VLANs all passes through the firewall, so bundling the links keeps that traffic from being squeezed down to a single gigabit link.
 
-## Network Diagram
+## Switches and Wi-Fi
 
-Here’s a simplified view of my home network layout, showing how each component fits together:
+- **MikroTik CRS326-24G-2S+RM:** the main switch. It has 24 gigabit ports and two SFP+ ports, and it carries all the VLANs.
+- **TP-Link TL-SG1210MPE:** a small switch used only for PoE. It powers the cameras and the access points.
+- **Access points:** two Ubiquiti UAP-AC-PRO units, managed by a UniFi controller running in a container on Proxmox.
 
-    ┌──────────────────────────────┐
-    │           Internet           │
-    └──────────────┬───────────────┘
-                   │
-               [ISP Modem]
-                   │
-         ┌─────────┴─────────┐
-         │     OPNSense      │
-         │ Firewall + Router │
-         └─────────┬─────────┘
-                   │
-           ┌───────┼─────────────┐
-           │       │             │
-     [LAN Switch] [Wi-Fi AP] [IoT VLAN]
-           │
-    ┌──────┼────────────────────┐
-    │      │                    │
-    [Proxmox] [Pi-hole] [NAS / Backups]
-    │
-    ├─── Virtual Machines:
-    │ • Authelia
-    │ • Vaultwarden
-    │ • Zammad
-    │ • Caddy
-    │ • Grafana
-    │ • Prometheus
-    │
-    ├─── Game Servers:
-    │ • Duckcraft (AzerothCore WoW)
-    │ • Quackshire (PaperMC Minecraft)
+## Servers
 
----
+- **Proxmox:** one host with an AMD Ryzen 7 5700G (8 cores, 16 threads) and 64GB of RAM. Most services are lightweight Linux containers (LXCs), with virtual machines where I want full isolation.
+- **TrueNAS:** a separate machine with an AMD Ryzen 5 4600G (6 cores, 12 threads) for storage and backups.
 
-## Core Infrastructure
+## Reverse proxy and DNS
 
-- **Firewall & Router:**  
-  [**OPNSense**](https://opnsense.org/) runs as my main gateway, handling VLANs, VPNs, and traffic shaping. It provides complete visibility and control over all network traffic.
+- **Two reverse proxies:** an internal [Caddy](https://caddyserver.com/) runs in a Proxmox container for services at home. [Traefik](https://traefik.io/), managed by Dokploy on a small VPS (a rented server outside my home), fronts the services that need to be reachable from the internet and reaches the ones at home through WireGuard tunnels that those services open to the VPS.
+- **AdGuard Home:** DNS filtering for the whole network, blocking ads and trackers. It runs as a container on Proxmox. It replaced Pi-hole.
 
-- **DNS Filtering:**  
-  [**Pi-hole**](https://pi-hole.net/) acts as a local DNS sinkhole to block ads, trackers, and telemetry. It keeps the network fast, clean, and secure.
+## VLANs
 
-- **Virtualization:**  
-  [**Proxmox VE**](https://www.proxmox.com/en/) powers most of the lab’s workloads, running lightweight Linux containers (LXCs) and virtual machines for isolation and resource control.
+The network is split into seven segments, so a problem on one device stays where it started. Everything is blocked by default, and each segment gets only what it needs. Most of them use my own DNS server, AdGuard Home. Guests get a public one.
 
----
+| Segment | What lives there |
+| :--- | :--- |
+| Trusted | Our own computers, phones and tablets. They can reach the internet, DNS and my apps through the reverse proxy, plus a few named exceptions, like file shares. |
+| Guest | Visitors' devices and the work laptops we use from home, so employer-managed devices stay off my own network. Internet and public DNS, nothing else. |
+| IoT | Smart home devices. They get the internet, DNS and the web ports of the reverse proxy, and they can't reach anything sensitive. |
+| Servers | The services I run at home and the hosts behind my reverse proxy. They can talk to IoT and the DMZ, and reach into Management and Security only for narrow jobs like monitoring, each on just the ports it needs. |
+| Security | The cameras and their recorder. They get DNS and nothing else, with no internet at all. The recorder's page is reachable only through the reverse proxy, and from outside the only way in is my private tailnet (see Remote access). |
+| DMZ | The services meant to be reached from the internet, including the game servers. They get the internet and DNS, and no other segment. |
+| Management | The switches, access points, storage server, and the admin pages for the firewall and Proxmox. Very little can reach this segment, and it starts few connections of its own: DNS, time sync, updates and backups. |
 
-## Services and Applications
+Most admin pages are reached through the reverse proxy. The switches can't be proxied, so a single rule lets only my own PC reach them directly.
 
-- **Authelia**  
-*Role:* Authentication Proxy  
-*Notes:* Manages SSO and secure access to all internal services  
+## Remote access
 
-- **Vaultwarden**  
-*Role:* Password Manager  
-*Notes:* Self-hosted Bitwarden-compatible server  
+No management page is open to the internet, and the firewall has no inbound rules for administration. When I'm away I reach everything over a private network (a tailnet) built from [Tailscale](https://tailscale.com/) clients and a [Headscale](https://headscale.net/) coordination server that I host myself on the VPS, so no outside company holds the keys. Each device proves who it is with its own key.
 
-- **Zammad**  
-*Role:* Helpdesk  
-*Notes:* Used for IT-style ticket management and experimentation  
+A small container at home acts as the doorway. It advertises single hosts from the Servers segment instead of the whole segment, because traffic that stays inside one VLAN never passes the firewall and would skip the firewall's rules. The tailnet's DNS points at AdGuard Home, so ad blocking and my internal names work when I'm away from home. A wired break-glass port on the switch gets me into Management if the tailnet is ever down.
 
-- **Nginx Proxy Manager**  
-*Role:* Reverse Proxy  
-*Notes:* Simplifies SSL management and routing for web services  
+## Backups and monitoring
 
-- **Grafana + Prometheus**  
-*Role:* Monitoring  
-*Notes:* Tracks uptime, system load, and resource metrics  
+- **Containers:** Proxmox Backup Server snapshots every container each night onto TrueNAS.
+- **The VPS:** each night it gathers the things I can't rebuild, such as the Headscale database and the Dokploy configuration. A dedicated backup container at home then pulls them into an encrypted [restic](https://restic.net/) repository. I chose pull over push so the VPS holds no credentials for my network. A weekly check reads back every byte of the repository, and I've done a test restore to prove the backups work.
+- **Alerts:** [Uptime Kuma](https://uptime.kuma.pet/) watches the public site and both backup jobs, and emails me through my own Mailcow server if one fails or goes silent.
 
-- **Duckcraft**  
-*Role:* WoW Server  
-*Notes:* Private AzerothCore server with playerbot integration  
+## What runs where
 
-- **Quackshire**  
-*Role:* Minecraft Server  
-*Notes:* Private creative world hosted on PaperMC 
+Almost everything runs at home. The VPS handles the pieces that face the internet or need to stay up when my home network is down: the public reverse proxy, the public mail relay, the Headscale server for remote access, and this site. Keeping them there keeps the exposed edge away from the lab.
 
----
+The site deploys itself. Pushing to the `master` branch on GitHub makes Dokploy rebuild and redeploy it.
 
-## Backup and Maintenance
+## More from the lab
 
-Automated snapshots and rsync-based backups run nightly to my NAS. Configuration files are version-controlled through **GitHub**, and critical systems are monitored via Grafana alerts.
+- [Quackshire](/projects/minecraft): the Minecraft server.
+- [Duckcraft](/projects/warcraft): the World of Warcraft server.
+- [Mailcow](/projects/mailcow): my mail server.
+- [mulek.cc](/projects/portfolio): this site.
 
-Regular maintenance tasks include:
-- Updating containers and VMs weekly  
-- Reviewing firewall and DNS logs  
-- Testing backup restoration quarterly  
+## Why I do it
 
----
+I've always enjoyed learning how things work, and a homelab lets me do that with real systems instead of just reading about them. It's also one of the best ways I've found to build my skills for my job, and building mine has given me real confidence in my IT skills.
 
-## Philosophy
-
-This homelab isn’t just for convenience — it’s about **understanding systems deeply**. Every configuration, container, and VLAN teaches something new about networking, security, and infrastructure resilience.
-
-It’s a living environment that evolves with my skills, providing a platform for both personal use and technical exploration.
-
----
-
-A small, self-contained world — built for learning, reliability, and control.
+I run the whole lab myself, mostly on open source software, so I know what's running and who can reach each part. That's why security shapes the design, from a firewall that blocks everything by default to management that never touches the internet.

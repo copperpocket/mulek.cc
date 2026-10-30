@@ -6,33 +6,22 @@ import MainLayout from "@/layouts/MainLayout.astro";
 
 // Reusable UI components
 import Avatar from "@/components/Avatar.astro";
-import Starfield from "@/components/Starfield.astro";
-import { pageSky } from "@/config/sky";
-import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
 import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
 import AboutSummary from "@/components/AboutSummary.astro";
 import AboutTimelineItem from "@/components/AboutTimelineItem.astro";
 
-// Global styles (Tailwind + overrides)
-import "@/styles/global.css";
+export const prerender = true;
 ---
 
 <!--
   MainLayout:
   - Sets page title + meta description (SEO)
-  - Wraps all content in consistent layout (header/footer handled externally)
+  - Wraps all content in the shared shell (sky, header and footer come from the layout)
 -->
 <MainLayout title="About - mulek.cc" description="Learn more about Michael Mulek - Systems Engineer, homelab enthusiast, and developer.">
   
   <!-- Dev utility: shows current Tailwind breakpoint -->
   <TwSizeIndicator />
-
-  <!-- Decorative animated background layer -->
-  <Starfield {...pageSky} />
-
-  <!-- Global site header -->
-  <Header />
 
   <!--
     Main content container
@@ -72,26 +61,26 @@ import "@/styles/global.css";
           <div class="absolute left-1/2 transform -translate-x-1/2 w-0.5 h-full bg-accent/30 hidden sm:block"></div>
 
           <AboutTimelineItem
-            title="Internal IT Systems Engineer I"
-            date="2023 - 2026"
+            title="Systems Engineer"
+            date="2023 - Present"
             company="VC3"
-            description="Leading internal infrastructure projects and developing advanced automation workflows while managing daily operations to streamline large-scale MSP systems."
+            description="Lead internal infrastructure projects, build automation workflows, and manage the daily operations of the systems behind an MSP."
             side="left"
           />
 
           <AboutTimelineItem
-            title="Infrastructure Administrator I"
+            title="Infrastructure Administrator"
             date="2022 - 2023"
             company="CW Technology"
-            description="Maintained complex server environments and spearheaded high-stakes client offboarding projects within a fast-paced MSP environment."
+            description="Maintained server environments for managed service clients and led client offboarding projects."
             side="right"
           />
 
           <AboutTimelineItem
-            title="Help Desk Technician I"
+            title="Help Desk Technician"
             date="2021 - 2022"
             company="CW Technology"
-            description="Provided rapid-response technical support serving as the first point of contact for a diverse MSP client base."
+            description="First point of contact for technical support across a wide range of client businesses."
             side="left"
           />
 
@@ -99,15 +88,15 @@ import "@/styles/global.css";
             title="IT Support Specialist"
             date="2018 - 2021"
             company="Superior Choice Credit Union"
-            description="Managed multi-branch desktop environments, on-site infrastructure support, and critical security and compliance audits."
+            description="Managed desktops and on-site infrastructure across multiple branches, and supported security and compliance audits."
             side="right"
           />
 
           <AboutTimelineItem
-            title="Computer & Web Programming"
+            title="Computer & Web Programming Certificate"
             date="2014 - 2017"
             company="Lake Superior College"
-            description="Computer science fundamentals, full-stack development, and graphic design."
+            description="Certificate covering computer science fundamentals, full-stack development, and graphic design."
             side="left"
           />
         </div>
@@ -135,8 +124,8 @@ import "@/styles/global.css";
           <div class="text-center space-y-3">
             <div class="text-accent text-2xl">🛠️</div>
             <h3 class="text-lg font-bold">Ownership</h3>
-            <p class="text-xs opacity-80 leading-relaxed">
-              I believe in self-hosting and digital sovereignty. If it’s critical, it should run on hardware I control and infrastructure I understand from the ground up.
+            <p class="text-sm opacity-80 leading-relaxed">
+              I believe in self-hosting. If it’s critical, it should run on hardware I control and infrastructure I understand from the ground up.
             </p>
           </div>
 
@@ -144,7 +133,7 @@ import "@/styles/global.css";
           <div class="text-center space-y-3">
             <div class="text-accent text-2xl">🔒</div>
             <h3 class="text-lg font-bold">Resiliency</h3>
-            <p class="text-xs opacity-80 leading-relaxed">
+            <p class="text-sm opacity-80 leading-relaxed">
               Systems should be built to survive. I prioritize security, redundancy, and high availability - not because it's easy, but because reliable systems are invisible.
             </p>
           </div>
@@ -153,7 +142,7 @@ import "@/styles/global.css";
           <div class="text-center space-y-3">
             <div class="text-accent text-2xl">📈</div>
             <h3 class="text-lg font-bold">Iteration</h3>
-            <p class="text-xs opacity-80 leading-relaxed">
+            <p class="text-sm opacity-80 leading-relaxed">
               Optimization is a continuous process. I’m never truly "done" with a project; there is always a way to refactor, simplify, or squeeze out more performance.
             </p>
           </div>
@@ -181,7 +170,4 @@ import "@/styles/global.css";
       </a>
     </section>
   </main>
-
-  <!-- Global footer -->
-  <Footer />
 </MainLayout>
