@@ -11,22 +11,30 @@ github: "https://github.com/copperpocket/echo_protocol"
 
 The core player goal is the constant pursuit of **Echoes**—highly rare, powerful cards that represent digitized consciousness or "encoded titans"—to build a powerful and unique collection.
 
-## The World System: Grinding for Status
+## What it is
+
+- **Game:** a cross-genre design: an isometric exploration game tied to a competitive card game.
+- **Engine:** Godot, with Dialogic for dialogue.
+- **Status:** archived. I'm not working on it now.
+
+## Setup
+
+### The World System: Grinding for Status
 
 The persistent game world provides the context for collection and progression, blending RPG and social simulation elements.
 
-### 🗺️ The Environment
+#### 🗺️ The Environment
 
 The game features an **isometric world** where players explore hubs and encounter NPC communities. The core activities in this world are the primary engine for earning rewards.
 
 * **Exploration:** The world is rich with **lore, hidden currency, and rare pulls** waiting to be discovered.
 * **Social Hubs:** Key locations function like "Pokémon Gyms," serving as specialized venues for card duels, crafting, or puzzle solving.
 
-### 👤 The Lore Context
+#### 👤 The Lore Context
 
 The system is set in a society where resources are managed centrally. NPCs have structured lives (going to work, leaving in the evening), and the community relies on designated **feeding, leisure, and living centers**. The player exists within this system, striving for status and pride through their collection.
 
-## The Core Mechanic: The Pull
+### The Core Mechanic: The Pull
 
 The entire system revolves around earning **weighted card packs** through various in-game activities, chasing the coveted **Echo** cards.
 
@@ -41,7 +49,7 @@ The entire system revolves around earning **weighted card packs** through variou
 
 The **T4 (Gold) Pack**, which **always contains an Echo card**, is the central pillar of the replayability grind, motivating players to engage with all aspects of the world.
 
-### ⚙️ Earning the Gold Pack
+#### ⚙️ Earning the Gold Pack
 
 Gold Packs are earned by completing staple gameplay loop activities, ensuring all playstyles are rewarded:
 
@@ -50,7 +58,7 @@ Gold Packs are earned by completing staple gameplay loop activities, ensuring al
 * **Puzzling:** Solving a set number of environmental puzzles.
 * **Dungeoning:** Completing a dungeon or defeating a Boss NPC.
 
-## The Collectible Cards
+### The Collectible Cards
 
 The card pool is tiered to reinforce the status and power hierarchy, with **Echoes** being the pinnacle of a player’s collection.
 
@@ -61,10 +69,20 @@ The card pool is tiered to reinforce the status and power hierarchy, with **Echo
 | **Mythics** | **Echoes** | The crown jewels; full manifestations of power, often "digitized gods." |
 | **Ultra Rare** | **True Echoes / Originals** | Reserved for highly exclusive, story-driven, or serialized pulls. |
 
-## The Player Experience
+### The Player Experience
 
 The ultimate reward is **Status and Pride** derived from assembling a **cohesive group of Echoes** and demonstrating mastery over both the isometric world and the card game meta. The goal shifts from simple resource gathering to expressing personal power and identity through a unique collection.
 
 ---
 
 This design outlines a rich meta-game where the competitive card game is both a core feature and one of the many ways a player can demonstrate their power and earn the next big pull.
+
+## Key decisions
+
+- **Every activity feeds the same reward.** Duels, crafting, puzzles and dungeons all earn a Gold pack, so every playstyle is rewarded.
+- **Gold packs always contain an Echo.** The rare pull is the center of the replayability grind.
+- **Tiered cards.** Commons, Rares, Mythics and Ultra Rares reinforce the status hierarchy of a collection.
+
+## Next
+
+Archived. If I pick it up again, the design lives in the repository.

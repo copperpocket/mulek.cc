@@ -6,23 +6,29 @@ category: "Infrastructure"
 tags: ["Proxmox", "TrueNAS", "OPNsense"]
 ---
 
+## What it is
+
 My homelab is where I run my own services and try new tools before I use them at work. It's also where the game servers for friends and family live. The core is one Proxmox host, one TrueNAS storage server and a network built around a dedicated OPNsense firewall.
 
 This page covers how the homelab is put together: how the network is divided, how I reach the lab from outside and how everything is backed up. I leave out addresses and the full list of services.
 
-## Firewall and internet
+## Setup
+
+The hardware, from the internet connection to the servers.
+
+### Firewall and internet
 
 The firewall is a fanless Intel N100 mini PC (4 cores, 64GB of DDR5) with four network ports. It runs [OPNsense](https://opnsense.org/) on its own hardware instead of in a virtual machine, so the network stays up when I'm rebooting or breaking things on Proxmox.
 
 My internet is 1000/1000 fiber. The first port is the WAN. The other three are bundled into a LAGG that connects to the switch. Traffic between VLANs all passes through the firewall, so bundling the links keeps that traffic from being squeezed down to a single gigabit link.
 
-## Switches and Wi-Fi
+### Switches and Wi-Fi
 
 - **MikroTik CRS326-24G-2S+RM:** the main switch. It has 24 gigabit ports and two SFP+ ports, and it carries all the VLANs.
 - **TP-Link TL-SG1210MPE:** a small switch used only for PoE. It powers the cameras and the access points.
 - **Access points:** two Ubiquiti UAP-AC-PRO units, managed by a UniFi controller running in a container on Proxmox.
 
-## Servers
+### Servers
 
 - **Proxmox:** one host with an AMD Ryzen 7 5700G (8 cores, 16 threads) and 64GB of RAM. Most services are lightweight Linux containers (LXCs), with virtual machines where I want full isolation.
 - **TrueNAS:** a separate machine with an AMD Ryzen 5 4600G (6 cores, 12 threads) for storage and backups.
@@ -78,3 +84,18 @@ The site deploys itself. Pushing to the `master` branch on GitHub makes Dokploy 
 I've always enjoyed learning how things work, and a homelab lets me do that with real systems instead of just reading about them. It's also one of the best ways I've found to build my skills for my job, and building mine has given me real confidence in my IT skills.
 
 I run the whole lab myself, mostly on open source software, so I know what's running and who can reach each part. That's why security shapes the design, from a firewall that blocks everything by default to management that never touches the internet.
+
+## Key decisions
+
+- **A dedicated firewall instead of a virtual one.** The network stays up while I reboot or break things on Proxmox.
+- **Blocked by default.** Each VLAN gets only what it needs, and management never touches the internet.
+- **Pull backups instead of push.** The VPS holds no credentials for my network, and a dedicated container at home fetches what it needs.
+- **Single hosts through the tailnet.** The doorway advertises individual hosts, not whole segments, because traffic inside one VLAN would skip the firewall's rules.
+- **Self-hosted remote access.** I run Headscale myself, so no outside company holds the keys.
+- **Restores are tested.** I restored the Headscale database from a snapshot to prove the backups work.
+
+## Next
+
+- Rebuild the Wi-Fi so one network name covers every kind of device.
+- Add an offsite copy of the backups.
+- Draw a real network diagram for this page.

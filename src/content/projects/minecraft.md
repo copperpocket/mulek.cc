@@ -3,43 +3,35 @@ title: "Quackshire - Minecraft"
 description: "A private Minecraft server that hosts builds from my friends and family."
 pubDate: 2025-10-15
 category: "Games"
-tags: ["Java", "Spigot"]
+tags: ["Java", "PaperMC"]
 github: "https://github.com/copperpocket/quackshire"
 ---
 
-My **Minecraft server**, called **Quackshire**, is a private creative world that I host myself for friends and family. It’s designed to be simple, stable, and always available — a small but personal online space for shared creativity.
+**Quackshire** is the Minecraft server I run for friends and family. It's private and whitelisted, and it's where my partner and I keep our main survival world.
 
-## Technical Setup
+## What it is
 
-The server runs on **PaperMC**, a high-performance fork of Spigot built for flexibility and plugin support. Paper allows me to fine-tune performance and maintain complete control over gameplay, while still keeping things lightweight enough to run 24/7 from my home lab.
+- **Game:** Minecraft, survival. The main world began as a creative build and is now survival. It uses server-side plugins only, so nobody has to install client mods. The plugins cover quality-of-life tools, build protections and light role-based permissions.
+- **Who it's for:** friends and family only, by whitelist.
+- **How you join:** by name, `mc.mulek.cc`, with no IP address or port number to remember.
+- **Status:** running.
 
-I host the server directly on my own hardware, using **Linux** and managed through **OPNSense** for network control. A **Pi-hole** instance helps manage DNS and block unnecessary traffic, keeping the environment clean and secure.
+## Setup
 
-## Customization and Plugins
+The server runs on [PaperMC](https://papermc.io/), a performance-focused fork of Spigot with strong plugin support. Paper lets me tune performance and adjust gameplay with small mechanics, commands and custom tools, while staying light enough to run around the clock in my homelab.
 
-Quackshire uses a curated set of **server-side plugins** to enhance the creative experience without requiring anyone to install client mods. This includes quality-of-life tools, build protections, and light role-based permissions for collaborative building.
+[Crafty Controller](https://craftycontrol.com/) runs and manages the server, with automated restarts. It lives in the DMZ segment of my [homelab](/projects/homelab-overview), so it can reach the internet and DNS and nothing else on my network. OPNsense controls what it can reach, and AdGuard Home handles DNS.
 
-Since PaperMC supports customization through its plugin ecosystem, I can adjust gameplay as needed — adding small mechanics, commands, or custom tools to improve how we play.
+Players connect through a DNS SRV record, a type of DNS entry that carries a port as well as an address. The record points `mc.mulek.cc` at the server, so nobody types a port, and if the server's address ever changes, only the record has to change.
 
-## Connecting with a Custom Domain
+Its container is backed up every night with the rest of my services, so the world is protected like everything else I run.
 
-Instead of using a raw IP address, I configured a **DNS SRV record** that lets players join easily through a **fully qualified domain name (FQDN)**. This makes the connection cleaner and future-proofs access if the server ever changes addresses.  
+## Key decisions
 
-Example: play.mulek.cc
+- **Server-side plugins only.** Nobody has to install client mods, so anyone can join with an unmodified Minecraft client.
+- **A DNS SRV record for joining.** Players use `mc.mulek.cc` with no port, and if the server's address changes, only the record changes.
+- **A DMZ segment.** The server can reach the internet and DNS and nothing else on my network.
 
-This setup means players can connect seamlessly, no port numbers or IP memorization needed.
+## Next
 
-## Access and Whitelisting
-
-The server is **whitelisted**, meaning only approved accounts can join. It’s kept small and personal — open to my friends and family. I’m also developing a lightweight **web interface** where visitors can **request whitelisting** and **apply for promotion** (e.g., builder or moderator roles).
-
-That companion site will serve as a simple portal for server info, updates, and requests — keeping everything centralized and accessible.
-
-## Always Online
-
-Quackshire runs continuously with automated restarts and backups, ensuring uptime and data protection. If you’re curious about the technical side or want to know more about the setup, feel free to **reach out directly** — I’m always happy to talk about server architecture and hosting projects like this.
-
----
-
-A world built for creativity — and kept running through a love of good engineering.
-
+A small server site is planned, with a guide to joining, a page to request whitelisting and a role such as builder or moderator, and server news. This page will link to it once it exists.

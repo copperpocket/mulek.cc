@@ -1,55 +1,48 @@
 ---
 title: "Duckcraft - World of Warcraft"
-description: "A private Wrath of the Lich King server powered by AzerothCore and enhanced with playerbots."
+description: "A private Wrath of the Lich King server built on AzerothCore, with playerbots and custom addons."
 pubDate: 2025-10-19
 category: "Games"
 tags: ["AzerothCore", "C++"]
 ---
 
-My **World of Warcraft server**, called **Duckcraft**, is a private **Wrath of the Lich King (3.3.5a)** world powered by **AzerothCore**. It’s designed for solo and small-group play, featuring the **playerbots module** so the world always feels alive — even when playing alone.
+**Duckcraft** is the World of Warcraft server I run for solo and small-group play. It's a private **Wrath of the Lich King (3.3.5a)** world on [AzerothCore](https://www.azerothcore.org/), with the playerbots module so the world feels alive.
 
-## Technical Setup
+## What it is
 
-Duckcraft runs on top of **AzerothCore**, an open-source MMO framework that recreates the authentic WotLK experience with modern stability and configurability.  
-The server is hosted in my **home lab** on dedicated hardware under **Proxmox**, alongside supporting infrastructure like **Authelia**, **Pi-hole**, and **Grafana** for monitoring.
+- **Game:** Wrath of the Lich King 3.3.5a, on AzerothCore, an open-source framework that recreates the original game.
+- **Who it's for:** invite-only. To join, use the [contact page](/contact) and I'll send you an invite and set up your account.
+- **Playerbots:** AI-controlled characters who join groups and raids, level alongside players, fill missing roles like tank or healer, and take part in PvP.
+- **Custom work:** my own client addons and server modules, described below.
+- **Status:** running.
 
-This setup provides:
-- Full control over database and configuration tuning  
-- Automated snapshots and rollbacks through Proxmox  
-- Custom firewall rules and VLAN isolation via **OPNSense**
+## Setup
 
-## Gameplay and Playerbots
+Duckcraft runs in its own virtual machine on Proxmox. I installed it with AzerothCore's own install script, not Docker, and running it on its own VM gives me full control over the database and configuration.
 
-The **playerbots module** is the heart of Duckcraft. It populates the world with AI-controlled characters who can:
-- Join groups and raids  
-- Level alongside players  
-- Fill missing roles like tanks or healers  
-- Engage in PvP or follow scripted commands
+Like my other game servers, it sits in the DMZ segment of my [homelab](/projects/homelab-overview), where OPNsense limits what it can reach. The VM is backed up every night with the rest of my services, so a bad update can be undone. The server restarts on a schedule.
 
-This makes Duckcraft ideal for casual solo play or small-scale co-op without needing a large playerbase. Every quest, dungeon, and battleground remains accessible — with or without real players.
+## Custom work
 
-## Management and Configuration
+I build for both sides of the game: the client players see, and the server that runs the world.
 
-All components are managed through **Docker containers** and **AzerothCore build scripts**, ensuring reproducible setups and easy updates.  
-Databases and configs are version-controlled with **Git**, while **Grafana + Prometheus** track system metrics such as CPU load, uptime, and player activity.
+### Client addons
 
-Periodic maintenance includes:
-- Weekly database backups  
-- Core updates from the latest AzerothCore branch  
-- Automated cleanup of inactive characters  
+- [StockPlusUI](https://github.com/copperpocket/StockPlusUI): an overhaul of the default game interface. Action bars fade when idle and return during combat, on a new target or when the mouse is over them, and a menu entry opens its settings.
+- My fork of [VoiceOver](https://github.com/copperpocket/wow-voiceover/tree/feature/text-display): it shows the quest text on screen, so players can keep reading along after they walk away from the quest giver.
 
-## Access and Accounts
+### Server modules
 
-Duckcraft is **private and invite-only**. New players receive manual account creation after approval.  
-In the future, I plan to integrate account management into a **self-service web panel** secured behind **Authelia SSO**, streamlining registration and login.
+- [mod-level-rewards](https://github.com/copperpocket/mod-level-rewards): a custom module that gives gold, spells and reward chests at level milestones. The chests come in four quality tiers, and their loot is weighted by class, armor type and level range. Rewards go to the mail if a player's bags are full, and playerbot accounts are skipped.
+- My version of [ChallengeModes](https://github.com/copperpocket/mod-challenge-modes): a popular module that lets players opt in to extra rules at level 1, such as hardcore or slower XP, and stack the ones that work together.
 
-## Future Plans
+## Key decisions
 
-Planned features include:
-- Web-based character viewer and realm status  
-- Automated daily server restarts and patch syncing  
-- Custom events or expansions (e.g., progressive WotLK phases)  
+- **Updates are manual.** AzerothCore and the playerbots module change often, and automatic updates have broken things before, so I only update when I'm working on it.
+- **Its own virtual machine.** Full control over the database and configuration, and a nightly backup that can undo a bad update.
+- **Installed without Docker.** I used AzerothCore's own install script.
+- **A DMZ segment.** Like the other game servers, it can reach only the internet and DNS.
 
----
+## Next
 
-A world reborn — forged in code and kept alive through engineering.
+- Bring AzerothCore and the playerbots module up to date, then retest the custom modules and addons against them.

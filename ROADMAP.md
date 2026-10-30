@@ -68,12 +68,13 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 
 ## Content
 
-- [ ] Flesh out the project write-ups (overview, setup, lessons learned), including a real homelab network diagram
+- [ ] Draw a real homelab network diagram for the Homelab Overview (every write-up already follows the same four-part structure)
 - [ ] "How this site deploys" write-up (Astro, Docker, Dokploy, auto-deploy from `master`)
 - [ ] Blog features: cover images, reading time, tag pages, next/previous links, consistent date format
 - [ ] `/uses` page (hardware, homelab stack, tools) and `/now` page
 - [ ] Downloadable résumé, plus certifications and skills on About
 - [ ] Live homelab status widget (uptime, Grafana stats)
+- [ ] Build the Quackshire server site (a friendly sub-site such as minecraft.mulek.cc) from scratch: how to join, with a written guide plus photos or a video (installing the client, adding the server), a whitelist and role request page, and a simple identity (a small logo or color theme); then link it from the Quackshire write-up's intro
 
 ## Homelab
 
