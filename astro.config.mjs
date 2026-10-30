@@ -15,10 +15,35 @@ for (const slug of slugs("projects")) {
   redirects[`/blog/${slug}.md`] = { status: 301, destination: `/projects/${slug}` };
 }
 
+// Tables with three or more columns turn into stacked cards on phones (see .table-stack in global.css). Each cell
+// carries its column's heading in data-label so the card can show it.
+const textOf = (node) => (node.value ?? "") + (node.children ?? []).map(textOf).join("");
+const rowsOf = (node) => (node.children ?? []).filter((c) => c.tagName === "tr");
+const cellsOf = (row) => (row.children ?? []).filter((c) => c.tagName === "th" || c.tagName === "td");
+function labelTables(node) {
+  if (node.tagName === "table") {
+    const sections = (node.children ?? []).filter((c) => c.tagName === "thead" || c.tagName === "tbody");
+    const head = sections.find((s) => s.tagName === "thead");
+    const labels = head && rowsOf(head)[0] ? cellsOf(rowsOf(head)[0]).map((c) => textOf(c).trim()) : [];
+    if (labels.length >= 3) {
+      node.properties = { ...node.properties, className: [...(node.properties?.className ?? []), "table-stack"] };
+      for (const section of sections.filter((s) => s.tagName === "tbody")) {
+        for (const row of rowsOf(section)) cellsOf(row).forEach((cell, i) => (cell.properties = { ...cell.properties, "data-label": labels[i] ?? "" }));
+      }
+    }
+  }
+  (node.children ?? []).forEach(labelTables);
+}
+const rehypeTableLabels = () => labelTables;
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://mulek.cc",
   redirects,
+
+  markdown: {
+    rehypePlugins: [rehypeTableLabels],
+  },
 
   vite: {
     plugins: [tailwindcss()],

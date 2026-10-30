@@ -176,6 +176,54 @@ html.dark {
   translate: 0.1em -0.1em;
 }
 
+/* A long URL or code span wraps instead of pushing the page wider than a phone screen */
+.prose {
+  overflow-wrap: anywhere;
+}
+
+/* On phones a table with three or more columns becomes one card per row, each cell labelled by its column
+   (the labels are added to the cells in astro.config.mjs) */
+@media (max-width: 639px) {
+  .prose table.table-stack,
+  .prose table.table-stack tbody,
+  .prose table.table-stack tr,
+  .prose table.table-stack td {
+    display: block;
+  }
+  .prose table.table-stack thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .prose table.table-stack tr {
+    margin-block: 1rem;
+    padding: 0.25rem 0.75rem;
+    border: 1px solid var(--tw-prose-td-borders);
+    border-radius: 0.5rem;
+  }
+  .prose table.table-stack tbody tr:last-child {
+    border-bottom: 1px solid var(--tw-prose-td-borders);
+  }
+  .prose table.table-stack td {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--tw-prose-td-borders);
+  }
+  .prose table.table-stack td:last-child {
+    border-bottom: 0;
+  }
+  .prose table.table-stack td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.75em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tw-prose-captions);
+  }
+}
+
 /* Headings, the header nav and the menu's links use Outfit, the font that matches the wordmark */
 :is(h1, h2, h3, h4, h5, h6, .nav-link, .home-menu-links) {
   font-family: var(--font-heading);
