@@ -5,9 +5,11 @@ import { getCollection } from "astro:content";
 
 const allPosts = await getCollection("blog");
 
-// Sort posts by newest first
+// Sort posts by newest first; posts from the same day go by slug, so Dev Log #4 sits above #3
 allPosts.sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  (a, b) =>
+    b.data.pubDate.valueOf() - a.data.pubDate.valueOf() ||
+    b.slug.localeCompare(a.slug, undefined, { numeric: true })
 );
 
 const pageTitle = "Blog Archive";
