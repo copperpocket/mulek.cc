@@ -5,6 +5,7 @@ pubDate: 2025-10-15
 category: "Games"
 tags: ["Java", "PaperMC"]
 github: "https://github.com/copperpocket/quackshire"
+image: "/images/projects/minecraft.png"
 ---
 
 **Quackshire** is the Minecraft server I run for friends and family. It's private and whitelisted, and it's where my partner and I keep our main survival world.

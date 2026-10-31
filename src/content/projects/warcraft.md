@@ -4,6 +4,7 @@ description: "A private Wrath of the Lich King server built on AzerothCore, with
 pubDate: 2025-10-19
 category: "Games"
 tags: ["AzerothCore", "C++"]
+image: "/images/projects/warcraft.png"
 ---
 
 **Duckcraft** is the World of Warcraft server I run for solo and small-group play. It's a private **Wrath of the Lich King (3.3.5a)** world on [AzerothCore](https://www.azerothcore.org/), with the playerbots module so the world feels alive.

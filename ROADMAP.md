@@ -59,7 +59,7 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 
 ## SEO and sharing
 
-- [ ] Per-project preview images (set `image` in the frontmatter; the default card is used otherwise)
+- [x] Per-project preview images (drawn by `yarn project-previews`; set `image` in the frontmatter, otherwise the default card is used)
 
 ## Contact form
 

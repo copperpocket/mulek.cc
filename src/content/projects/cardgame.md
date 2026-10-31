@@ -5,6 +5,7 @@ pubDate: 2025-11-14
 category: "Games"
 tags: ["Godot", "Dialogic"]
 github: "https://github.com/copperpocket/echo_protocol"
+image: "/images/projects/cardgame.png"
 ---
 
 **Echo Protocol** is a comprehensive game design project that centers around the **joy of the rare pull** and the **status of collection**. It’s built on a dual-experience foundation: an **isometric world** of exploration and activity, seamlessly tied to a deep, competitive **digital card game**.

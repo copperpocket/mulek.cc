@@ -4,6 +4,7 @@ description: "The network, servers and services I run at home, and what I've lea
 pubDate: 2025-10-19
 category: "Infrastructure"
 tags: ["Proxmox", "TrueNAS", "OPNsense"]
+image: "/images/projects/homelab-overview.png"
 ---
 
 ## What it is

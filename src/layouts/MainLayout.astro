@@ -33,8 +33,8 @@ const {
 // Built pages have a trailing slash in their path (/about/); the canonical URL and the sitemap don't
 const canonicalUrl = new URL(Astro.url.pathname.replace(/(.)\/$/, "$1"), Astro.site);
 const imageUrl = new URL(image, Astro.site);
-// The default card is 1200x630; other images don't get size or alt hints
-const isDefaultImage = image === "/og.png";
+// Every preview image is 1200x630: the default card and the one drawn for each project (yarn project-previews)
+const imageAlt = image === "/og.png" ? "Michael Mulek, Systems Engineer, mulek.cc" : title;
 ---
 
 <!doctype html>
@@ -56,9 +56,9 @@ const isDefaultImage = image === "/og.png";
         <meta property="og:description" content={description} />
         <meta property="og:url" content={canonicalUrl} />
         <meta property="og:image" content={imageUrl} />
-        {isDefaultImage && <meta property="og:image:width" content="1200" />}
-        {isDefaultImage && <meta property="og:image:height" content="630" />}
-        {isDefaultImage && <meta property="og:image:alt" content="Michael Mulek, Systems Engineer, mulek.cc" />}
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={imageAlt} />
         <meta name="twitter:card" content="summary_large_image" />
         <!-- The theme, set in this one place: localStorage.theme ("light" or "dark"), or else the system
              setting. It runs before the page paints, so it never flashes the wrong theme, and again after

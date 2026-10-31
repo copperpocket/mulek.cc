@@ -5,6 +5,7 @@ pubDate: 2026-10-30
 category: "Infrastructure"
 tags: ["Dokploy", "Nixpacks", "Traefik", "GitHub"]
 github: "https://github.com/copperpocket/mulek.cc"
+image: "/images/projects/site-deploy.png"
 ---
 
 Merging to the `master` branch on GitHub is the whole release process for [mulek.cc](/projects/portfolio). A webhook tells Dokploy, which builds the site and puts the new version live, with no manual steps in between.

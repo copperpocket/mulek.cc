@@ -6,7 +6,7 @@ category: "Infrastructure" # Web | Infrastructure | Games (see projectCategories
 tags: ["Tech", "Stack"] # shown on the card as a short list
 url: "https://example.com" # optional, remove if there's no live site
 github: "https://github.com/copperpocket/repo" # optional, remove if not public
-image: "/images/projects/name.png" # optional card image under public/, remove if not needed
+image: "/images/projects/name.png" # link preview, drawn by `yarn project-previews` (same name as this file)
 ---
 
 Copy this file into src/content/projects/ and rename it. The file name becomes the URL: projects/<file-name>.

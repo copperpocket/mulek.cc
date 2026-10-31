@@ -7,6 +7,7 @@ tags: ["Astro.js", "TailwindCSS"]
 url: "https://mulek.cc"
 github: "https://github.com/copperpocket/mulek.cc"
 current: true
+image: "/images/projects/portfolio.png"
 ---
 
 This site, [mulek.cc](https://mulek.cc), is my personal portfolio and the place I write up my projects. I built it from scratch, and I keep it simple on purpose: fast pages, readable text, and nothing that gets in the way.
