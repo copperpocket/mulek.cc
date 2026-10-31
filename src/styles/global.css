@@ -224,6 +224,66 @@ html.dark {
   }
 }
 
+/* The homelab diagram is an inline SVG in the write-up, drawn with the theme's colors so it follows light and dark */
+.prose .diagram {
+  display: block;
+  width: 100%;
+  max-width: 36rem;
+  height: auto;
+  margin: 1.5rem auto;
+}
+.diagram text {
+  fill: currentColor;
+  font-family: var(--font-sans);
+}
+.diagram .box {
+  fill: color-mix(in oklab, var(--color-accent) 12%, transparent);
+  stroke: var(--color-accent);
+  stroke-width: 1.5;
+}
+.diagram .zone {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-opacity: 0.45;
+  stroke-width: 1.5;
+  stroke-dasharray: 2 6;
+  stroke-linecap: round;
+}
+.diagram .link {
+  stroke: currentColor;
+  stroke-opacity: 0.6;
+  stroke-width: 2;
+}
+.diagram .tailnet,
+.diagram .tunnel {
+  stroke-width: 2;
+  stroke-dasharray: 6 5;
+}
+.diagram .tailnet {
+  stroke: var(--color-accent);
+}
+.diagram .tunnel {
+  stroke: var(--color-highlight);
+}
+.diagram .t {
+  font-size: 20px;
+  font-weight: 600;
+}
+.diagram .s {
+  font-size: 15px;
+  opacity: 0.85;
+}
+.diagram .n {
+  font-size: 14px;
+  opacity: 0.85;
+}
+.diagram .z {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  fill: var(--color-accent);
+}
+
 /* Headings, the header nav and the menu's links use Outfit, the font that matches the wordmark */
 :is(h1, h2, h3, h4, h5, h6, .nav-link, .home-menu-links) {
   font-family: var(--font-heading);

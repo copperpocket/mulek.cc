@@ -17,6 +17,83 @@ This page covers how the homelab is put together: how the network is divided, ho
 
 The hardware, from the internet connection to the servers.
 
+### The big picture
+
+Everything at home sits behind one firewall, and the main switch carries every VLAN. Dashed lines are the paths that come from outside: the tailnet I use when I'm away, and the WireGuard tunnels my home services open to the VPS.
+
+<svg class="diagram" viewBox="0 0 580 946" role="img" aria-label="Network diagram of the homelab. The internet reaches a firewall, then a main switch that carries seven VLANs. A small PoE switch powers two access points and the cameras. A rented server (VPS) on the internet reaches the Servers VLAN through WireGuard tunnels, and a remote phone or laptop joins over a private network called a tailnet." xmlns="http://www.w3.org/2000/svg">
+<rect class="zone" x="8" y="150" width="564" height="780" rx="16"/>
+<text class="z" x="24" y="174" text-anchor="start">HOME</text>
+<rect class="zone" x="20" y="490" width="520" height="424" rx="12"/>
+<text class="z" x="36" y="512" text-anchor="start">SEVEN VLANS, BLOCKED BY DEFAULT</text>
+<line class="tailnet" x1="150" y1="58" x2="215" y2="58"/>
+<text class="n" x="182.5" y="48" text-anchor="middle">tailnet</text>
+<line class="link" x1="355" y1="58" x2="410" y2="58"/>
+<line class="link" x1="280" y1="100" x2="280" y2="190"/>
+<text class="n" x="292" y="160" text-anchor="start">fiber</text>
+<line class="link" x1="280" y1="252" x2="280" y2="300"/>
+<text class="n" x="292" y="282" text-anchor="start">LAGG, 3 bundled links</text>
+<line class="link" x1="390" y1="331" x2="406" y2="331"/>
+<line class="link" x1="473" y1="372" x2="473" y2="396"/>
+<line class="link" x1="280" y1="362" x2="280" y2="490"/>
+<line class="tunnel" x1="556" y1="100" x2="556" y2="664"/>
+<line class="tunnel" x1="556" y1="568" x2="524" y2="568"/>
+<line class="tunnel" x1="556" y1="664" x2="524" y2="664"/>
+<text class="n" x="548" y="232" text-anchor="end">WireGuard tunnels</text>
+<text class="n" x="548" y="250" text-anchor="end">opened from home</text>
+<rect class="box" x="10" y="16" width="140" height="84" rx="10"/>
+<text class="t" x="80" y="44" text-anchor="middle">Remote</text>
+<text class="s" x="80" y="64" text-anchor="middle">phone or laptop</text>
+<text class="s" x="80" y="84" text-anchor="middle">on Tailscale</text>
+<rect class="box" x="215" y="16" width="140" height="84" rx="10"/>
+<text class="t" x="285" y="64" text-anchor="middle">Internet</text>
+<rect class="box" x="410" y="16" width="160" height="84" rx="10"/>
+<text class="t" x="490" y="44" text-anchor="middle">VPS</text>
+<text class="s" x="490" y="64" text-anchor="middle">rented server</text>
+<text class="s" x="490" y="84" text-anchor="middle">public services</text>
+<rect class="box" x="170" y="190" width="220" height="62" rx="10"/>
+<text class="t" x="280" y="217" text-anchor="middle">Firewall</text>
+<text class="s" x="280" y="237" text-anchor="middle">blocks all by default</text>
+<rect class="box" x="170" y="300" width="220" height="62" rx="10"/>
+<text class="t" x="280" y="327" text-anchor="middle">Main switch</text>
+<text class="s" x="280" y="347" text-anchor="middle">carries every VLAN</text>
+<rect class="box" x="406" y="300" width="134" height="72" rx="10"/>
+<text class="t" x="473" y="322" text-anchor="middle">PoE switch</text>
+<text class="s" x="473" y="342" text-anchor="middle">powers APs</text>
+<text class="s" x="473" y="362" text-anchor="middle">and cameras</text>
+<rect class="box" x="406" y="396" width="134" height="62" rx="10"/>
+<text class="t" x="473" y="423" text-anchor="middle">Wi-Fi</text>
+<text class="s" x="473" y="443" text-anchor="middle">2 access points</text>
+<rect class="box" x="36" y="526" width="240" height="84" rx="10"/>
+<text class="t" x="156" y="554" text-anchor="middle">Trusted</text>
+<text class="s" x="156" y="574" text-anchor="middle">our computers</text>
+<text class="s" x="156" y="594" text-anchor="middle">and phones</text>
+<rect class="box" x="36" y="622" width="240" height="84" rx="10"/>
+<text class="t" x="156" y="650" text-anchor="middle">Guest</text>
+<text class="s" x="156" y="670" text-anchor="middle">visitors and</text>
+<text class="s" x="156" y="690" text-anchor="middle">work laptops</text>
+<rect class="box" x="36" y="718" width="240" height="84" rx="10"/>
+<text class="t" x="156" y="756" text-anchor="middle">IoT</text>
+<text class="s" x="156" y="776" text-anchor="middle">smart home devices</text>
+<rect class="box" x="36" y="814" width="240" height="84" rx="10"/>
+<text class="t" x="156" y="852" text-anchor="middle">Security</text>
+<text class="s" x="156" y="872" text-anchor="middle">cameras and recorder</text>
+<rect class="box" x="292" y="526" width="232" height="84" rx="10"/>
+<text class="t" x="408" y="554" text-anchor="middle">Servers</text>
+<text class="s" x="408" y="574" text-anchor="middle">home services,</text>
+<text class="s" x="408" y="594" text-anchor="middle">tailnet doorway</text>
+<rect class="box" x="292" y="622" width="232" height="84" rx="10"/>
+<text class="t" x="408" y="650" text-anchor="middle">DMZ</text>
+<text class="s" x="408" y="670" text-anchor="middle">game servers</text>
+<text class="s" x="408" y="690" text-anchor="middle">and mail server</text>
+<rect class="box" x="292" y="718" width="232" height="84" rx="10"/>
+<text class="t" x="408" y="746" text-anchor="middle">Management</text>
+<text class="s" x="408" y="766" text-anchor="middle">switches, APs, storage,</text>
+<text class="s" x="408" y="786" text-anchor="middle">firewall and Proxmox admin</text>
+<text class="n" x="408" y="856" text-anchor="middle">Traffic between VLANs</text>
+<text class="n" x="408" y="876" text-anchor="middle">always crosses the firewall</text>
+</svg>
+
 ### Firewall and internet
 
 The firewall is a fanless Intel N100 mini PC (4 cores, 64GB of DDR5) with four network ports. It runs [OPNsense](https://opnsense.org/) on its own hardware instead of in a virtual machine, so the network stays up when I'm rebooting or breaking things on Proxmox.
@@ -99,4 +176,3 @@ I run the whole lab myself, mostly on open source software, so I know what's run
 
 - Rebuild the Wi-Fi so one network name covers every kind of device.
 - Add an offsite copy of the backups.
-- Draw a real network diagram for this page.
