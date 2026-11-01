@@ -176,8 +176,12 @@ html.dark {
   translate: 0.1em -0.1em;
 }
 
-/* A long URL or code span wraps instead of pushing the page wider than a phone screen */
+/* A long URL or code span wraps instead of pushing the page wider than a phone screen. break-word keeps a table's
+   columns as wide as their longest word; only the last column, which holds the long text, may go narrower. */
 .prose {
+  overflow-wrap: break-word;
+}
+.prose td:last-child {
   overflow-wrap: anywhere;
 }
 
