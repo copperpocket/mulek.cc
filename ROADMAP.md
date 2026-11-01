@@ -82,5 +82,5 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 - [x] Keep the LXCs and VMs up to date: automatic security updates, regular updates from each OS's own repos, a daily report of pending updates pushed to Uptime Kuma, a weekly digest email, and a snapshot-first update command
 - [ ] Next up: move Frigate off Debian 11, which no longer gets security updates, by rebuilding it on a current Debian release with its config, recordings path and Coral access carried over
 - [ ] Extend the update report to the VPS, major versions and apps outside apt, and bring the VPS into automatic security updates
-- [ ] Decide how vendor apps, the Proxmox host and Mailcow take regular updates; they stay manual for now, through the weekly report and the snapshot-first command
+- [ ] Decide how vendor apps, the Proxmox host, and Mailcow take regular updates; they stay manual for now, listed in the weekly report, with the snapshot-first command for containers and VMs
 - [ ] Fix the Proxmox host hanging on reboot: set BIOS Power Supply Idle Control to Typical Current Idle at the next basement visit, and photograph the screen if it hangs again

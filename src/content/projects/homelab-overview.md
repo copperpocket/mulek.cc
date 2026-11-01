@@ -1,6 +1,6 @@
 ---
 title: "Homelab Overview"
-description: "The network, servers and services I run at home, and what I've learned building them."
+description: "The network, servers, and services I run at home, and what I've learned building them."
 pubDate: 2025-10-19
 category: "Infrastructure"
 tags: ["Proxmox", "TrueNAS", "OPNsense"]
@@ -9,9 +9,9 @@ image: "/images/projects/homelab-overview.png"
 
 ## What it is
 
-My homelab is where I run my own services and try new tools before I use them at work. It's also where the game servers for friends and family live. The core is one Proxmox host, one TrueNAS storage server and a network built around a dedicated OPNsense firewall.
+My homelab is where I run my own services and try new tools before I use them at work. It's also where the game servers for friends and family live. The core is one Proxmox host, one TrueNAS storage server, and a network built around a dedicated OPNsense firewall.
 
-This page covers how the homelab is put together: how the network is divided, how I reach the lab from outside and how everything is backed up. I leave out addresses and the full list of services.
+This page covers how the homelab is put together: how the network is divided, how I reach the lab from outside, and how everything is backed up. I leave out addresses and the full list of services.
 
 ## Setup
 
@@ -122,13 +122,13 @@ The network is split into seven segments, so a problem on one device stays where
 
 | Segment | What lives there |
 | :--- | :--- |
-| Trusted | Our own computers, phones and tablets. They can reach the internet, DNS and my apps through the reverse proxy, plus a few named exceptions, like file shares. |
+| Trusted | Our own computers, phones, and tablets. They can reach the internet, DNS, and my apps through the reverse proxy, plus a few named exceptions, like file shares. |
 | Guest | Visitors' devices and the work laptops we use from home, so employer-managed devices stay off my own network. Internet and public DNS, nothing else. |
-| IoT | Smart home devices. They get the internet, DNS and the web ports of the reverse proxy, and they can't reach anything sensitive. |
+| IoT | Smart home devices. They get the internet, DNS, and the web ports of the reverse proxy, and they can't reach anything sensitive. |
 | Servers | The services I run at home and the hosts behind my reverse proxy. They can talk to IoT and the DMZ, and reach into Management and Security only for narrow jobs like monitoring, each on just the ports it needs. |
 | Security | The cameras and their recorder. They get DNS and nothing else, with no internet at all. The recorder's page is reachable only through the reverse proxy, and from outside the only way in is my private tailnet (see Remote access). |
 | DMZ | The services meant to be reached from the internet, including the game servers. They get the internet and DNS, and no other segment. |
-| Management | The switches, access points, storage server, and the admin pages for the firewall and Proxmox. Very little can reach this segment, and it starts few connections of its own: DNS, time sync, updates and backups. |
+| Management | The switches, access points, storage server, and the admin pages for the firewall and Proxmox. Very little can reach this segment, and it starts few connections of its own: DNS, time sync, updates, and backups. |
 
 Most admin pages are reached through the reverse proxy. The switches can't be proxied, so a single rule lets only my own PC reach them directly.
 
@@ -138,11 +138,12 @@ No management page is open to the internet, and the firewall has no inbound rule
 
 A small container at home acts as the doorway. It advertises single hosts from the Servers segment instead of the whole segment, because traffic that stays inside one VLAN never passes the firewall and would skip the firewall's rules. The tailnet's DNS points at AdGuard Home, so ad blocking and my internal names work when I'm away from home. A wired break-glass port on the switch gets me into Management if the tailnet is ever down.
 
-## Backups and monitoring
+## Backups, updates, and monitoring
 
-- **Containers:** Proxmox Backup Server snapshots every container each night onto TrueNAS.
+- **Containers and VMs:** Proxmox Backup Server backs up every container and VM each night onto TrueNAS, without stopping them.
 - **The VPS:** each night it gathers the things I can't rebuild, such as the Headscale database and the Dokploy configuration. A dedicated backup container at home then pulls them into an encrypted [restic](https://restic.net/) repository. I chose pull over push so the VPS holds no credentials for my network. A weekly check reads back every byte of the repository, and I've done a test restore to prove the backups work.
-- **Alerts:** [Uptime Kuma](https://uptime.kuma.pet/) watches the public site and both backup jobs, and emails me through my own Mailcow server if one fails or goes silent.
+- **Updates:** every container and VM installs security updates and regular OS updates on its own, with no automatic reboots. Vendor apps, Mailcow, and the Proxmox host stay manual. For a container or VM, one command takes a snapshot, runs the update, and checks for anything that newly failed.
+- **Alerts:** [Uptime Kuma](https://uptime.kuma.pet/) watches the public site and both backup jobs, and emails me through my own Mailcow server if one fails or goes silent. A daily report flags pending security updates, full disks, and unreachable machines in Uptime Kuma, and a weekly email lists every update that's waiting.
 
 ## What runs where
 
@@ -170,9 +171,11 @@ I run the whole lab myself, mostly on open source software, so I know what's run
 - **Pull backups instead of push.** The VPS holds no credentials for my network, and a dedicated container at home fetches what it needs.
 - **Single hosts through the tailnet.** The doorway advertises individual hosts, not whole segments, because traffic inside one VLAN would skip the firewall's rules.
 - **Self-hosted remote access.** I run Headscale myself, so no outside company holds the keys.
-- **Restores are tested.** I restored the Headscale database from a snapshot to prove the backups work.
+- **OS updates are automatic, app updates are not.** OS repos change little and rarely break things, while a vendor app can bring a breaking change or a one-way database migration, so I want to be there.
+- **Restores are tested.** I restored the Headscale database from a snapshot and a full container from its nightly backup to prove the backups work.
 
 ## Next
 
 - Rebuild the Wi-Fi so one network name covers every kind of device.
 - Add an offsite copy of the backups.
+- Bring the VPS into the same update and reporting setup.
