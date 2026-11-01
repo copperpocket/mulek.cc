@@ -176,6 +176,118 @@ html.dark {
   translate: 0.1em -0.1em;
 }
 
+/* A long URL or code span wraps instead of pushing the page wider than a phone screen. break-word keeps a table's
+   columns as wide as their longest word; only the last column, which holds the long text, may go narrower. */
+.prose {
+  overflow-wrap: break-word;
+}
+.prose td:last-child {
+  overflow-wrap: anywhere;
+}
+
+/* On phones a table with three or more columns becomes one card per row, each cell labelled by its column
+   (the labels are added to the cells in astro.config.mjs) */
+@media (max-width: 639px) {
+  .prose table.table-stack,
+  .prose table.table-stack tbody,
+  .prose table.table-stack tr,
+  .prose table.table-stack td {
+    display: block;
+  }
+  .prose table.table-stack thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .prose table.table-stack tr {
+    margin-block: 1rem;
+    padding: 0.25rem 0.75rem;
+    border: 1px solid var(--tw-prose-td-borders);
+    border-radius: 0.5rem;
+  }
+  .prose table.table-stack tbody tr:last-child {
+    border-bottom: 1px solid var(--tw-prose-td-borders);
+  }
+  .prose table.table-stack td {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--tw-prose-td-borders);
+  }
+  .prose table.table-stack td:last-child {
+    border-bottom: 0;
+  }
+  .prose table.table-stack td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.75em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tw-prose-captions);
+  }
+}
+
+/* The homelab diagram is an inline SVG in the write-up, drawn with the theme's colors so it follows light and dark */
+.prose .diagram {
+  display: block;
+  width: 100%;
+  max-width: 36rem;
+  height: auto;
+  margin: 1.5rem auto;
+}
+.diagram text {
+  fill: currentColor;
+  font-family: var(--font-sans);
+}
+.diagram .box {
+  fill: color-mix(in oklab, var(--color-accent) 12%, transparent);
+  stroke: var(--color-accent);
+  stroke-width: 1.5;
+}
+.diagram .zone {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-opacity: 0.45;
+  stroke-width: 1.5;
+  stroke-dasharray: 2 6;
+  stroke-linecap: round;
+}
+.diagram .link {
+  stroke: currentColor;
+  stroke-opacity: 0.6;
+  stroke-width: 2;
+}
+.diagram .tailnet,
+.diagram .tunnel {
+  stroke-width: 2;
+  stroke-dasharray: 6 5;
+}
+.diagram .tailnet {
+  stroke: var(--color-accent);
+}
+.diagram .tunnel {
+  stroke: var(--color-highlight);
+}
+.diagram .t {
+  font-size: 20px;
+  font-weight: 600;
+}
+.diagram .s {
+  font-size: 15px;
+  opacity: 0.85;
+}
+.diagram .n {
+  font-size: 14px;
+  opacity: 0.85;
+}
+.diagram .z {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  fill: var(--color-accent);
+}
+
 /* Headings, the header nav and the menu's links use Outfit, the font that matches the wordmark */
 :is(h1, h2, h3, h4, h5, h6, .nav-link, .home-menu-links) {
   font-family: var(--font-heading);

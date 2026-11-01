@@ -1,20 +1,98 @@
 ---
 title: "Homelab Overview"
-description: "The network, servers and services I run at home, and what I've learned building them."
+description: "The network, servers, and services I run at home, and what I've learned building them."
 pubDate: 2025-10-19
 category: "Infrastructure"
 tags: ["Proxmox", "TrueNAS", "OPNsense"]
+image: "/images/projects/homelab-overview.png"
 ---
 
 ## What it is
 
-My homelab is where I run my own services and try new tools before I use them at work. It's also where the game servers for friends and family live. The core is one Proxmox host, one TrueNAS storage server and a network built around a dedicated OPNsense firewall.
+My homelab is where I run my own services and try new tools before I use them at work. It's also where the game servers for friends and family live. The core is one Proxmox host, one TrueNAS storage server, and a network built around a dedicated OPNsense firewall.
 
-This page covers how the homelab is put together: how the network is divided, how I reach the lab from outside and how everything is backed up. I leave out addresses and the full list of services.
+This page covers how the homelab is put together: how the network is divided, how I reach the lab from outside, and how everything is backed up. I leave out addresses and the full list of services.
 
 ## Setup
 
 The hardware, from the internet connection to the servers.
+
+### The big picture
+
+Everything at home sits behind one firewall, and the main switch carries every VLAN. Dashed lines are the paths that come from outside: the tailnet I use when I'm away, and the WireGuard tunnels my home services open to the VPS.
+
+<svg class="diagram" viewBox="0 0 580 946" role="img" aria-label="Network diagram of the homelab. The internet reaches a firewall, then a main switch that carries seven VLANs. A small PoE switch powers two access points and the cameras. A rented server (VPS) on the internet reaches the Servers VLAN through WireGuard tunnels, and a remote phone or laptop joins over a private network called a tailnet." xmlns="http://www.w3.org/2000/svg">
+<rect class="zone" x="8" y="150" width="564" height="780" rx="16"/>
+<text class="z" x="24" y="174" text-anchor="start">HOME</text>
+<rect class="zone" x="20" y="490" width="520" height="424" rx="12"/>
+<text class="z" x="36" y="512" text-anchor="start">SEVEN VLANS, BLOCKED BY DEFAULT</text>
+<line class="tailnet" x1="150" y1="58" x2="215" y2="58"/>
+<text class="n" x="182.5" y="48" text-anchor="middle">tailnet</text>
+<line class="link" x1="355" y1="58" x2="410" y2="58"/>
+<line class="link" x1="280" y1="100" x2="280" y2="190"/>
+<text class="n" x="292" y="160" text-anchor="start">fiber</text>
+<line class="link" x1="280" y1="252" x2="280" y2="300"/>
+<text class="n" x="292" y="282" text-anchor="start">LAGG, 3 bundled links</text>
+<line class="link" x1="390" y1="331" x2="406" y2="331"/>
+<line class="link" x1="473" y1="372" x2="473" y2="396"/>
+<line class="link" x1="280" y1="362" x2="280" y2="490"/>
+<line class="tunnel" x1="556" y1="100" x2="556" y2="664"/>
+<line class="tunnel" x1="556" y1="568" x2="524" y2="568"/>
+<line class="tunnel" x1="556" y1="664" x2="524" y2="664"/>
+<text class="n" x="548" y="232" text-anchor="end">WireGuard tunnels</text>
+<text class="n" x="548" y="250" text-anchor="end">opened from home</text>
+<rect class="box" x="10" y="16" width="140" height="84" rx="10"/>
+<text class="t" x="80" y="44" text-anchor="middle">Remote</text>
+<text class="s" x="80" y="64" text-anchor="middle">phone or laptop</text>
+<text class="s" x="80" y="84" text-anchor="middle">on Tailscale</text>
+<rect class="box" x="215" y="16" width="140" height="84" rx="10"/>
+<text class="t" x="285" y="64" text-anchor="middle">Internet</text>
+<rect class="box" x="410" y="16" width="160" height="84" rx="10"/>
+<text class="t" x="490" y="44" text-anchor="middle">VPS</text>
+<text class="s" x="490" y="64" text-anchor="middle">rented server</text>
+<text class="s" x="490" y="84" text-anchor="middle">public services</text>
+<rect class="box" x="170" y="190" width="220" height="62" rx="10"/>
+<text class="t" x="280" y="217" text-anchor="middle">Firewall</text>
+<text class="s" x="280" y="237" text-anchor="middle">blocks all by default</text>
+<rect class="box" x="170" y="300" width="220" height="62" rx="10"/>
+<text class="t" x="280" y="327" text-anchor="middle">Main switch</text>
+<text class="s" x="280" y="347" text-anchor="middle">carries every VLAN</text>
+<rect class="box" x="406" y="300" width="134" height="72" rx="10"/>
+<text class="t" x="473" y="322" text-anchor="middle">PoE switch</text>
+<text class="s" x="473" y="342" text-anchor="middle">powers APs</text>
+<text class="s" x="473" y="362" text-anchor="middle">and cameras</text>
+<rect class="box" x="406" y="396" width="134" height="62" rx="10"/>
+<text class="t" x="473" y="423" text-anchor="middle">Wi-Fi</text>
+<text class="s" x="473" y="443" text-anchor="middle">2 access points</text>
+<rect class="box" x="36" y="526" width="240" height="84" rx="10"/>
+<text class="t" x="156" y="554" text-anchor="middle">Trusted</text>
+<text class="s" x="156" y="574" text-anchor="middle">our computers</text>
+<text class="s" x="156" y="594" text-anchor="middle">and phones</text>
+<rect class="box" x="36" y="622" width="240" height="84" rx="10"/>
+<text class="t" x="156" y="650" text-anchor="middle">Guest</text>
+<text class="s" x="156" y="670" text-anchor="middle">visitors and</text>
+<text class="s" x="156" y="690" text-anchor="middle">work laptops</text>
+<rect class="box" x="36" y="718" width="240" height="84" rx="10"/>
+<text class="t" x="156" y="756" text-anchor="middle">IoT</text>
+<text class="s" x="156" y="776" text-anchor="middle">smart home devices</text>
+<rect class="box" x="36" y="814" width="240" height="84" rx="10"/>
+<text class="t" x="156" y="852" text-anchor="middle">Security</text>
+<text class="s" x="156" y="872" text-anchor="middle">cameras and recorder</text>
+<rect class="box" x="292" y="526" width="232" height="84" rx="10"/>
+<text class="t" x="408" y="554" text-anchor="middle">Servers</text>
+<text class="s" x="408" y="574" text-anchor="middle">home services,</text>
+<text class="s" x="408" y="594" text-anchor="middle">tailnet doorway</text>
+<rect class="box" x="292" y="622" width="232" height="84" rx="10"/>
+<text class="t" x="408" y="650" text-anchor="middle">DMZ</text>
+<text class="s" x="408" y="670" text-anchor="middle">game servers</text>
+<text class="s" x="408" y="690" text-anchor="middle">and mail server</text>
+<rect class="box" x="292" y="718" width="232" height="84" rx="10"/>
+<text class="t" x="408" y="746" text-anchor="middle">Management</text>
+<text class="s" x="408" y="766" text-anchor="middle">switches, APs, storage,</text>
+<text class="s" x="408" y="786" text-anchor="middle">firewall and Proxmox admin</text>
+<text class="n" x="408" y="856" text-anchor="middle">Traffic between VLANs</text>
+<text class="n" x="408" y="876" text-anchor="middle">always crosses the firewall</text>
+</svg>
 
 ### Firewall and internet
 
@@ -44,13 +122,13 @@ The network is split into seven segments, so a problem on one device stays where
 
 | Segment | What lives there |
 | :--- | :--- |
-| Trusted | Our own computers, phones and tablets. They can reach the internet, DNS and my apps through the reverse proxy, plus a few named exceptions, like file shares. |
+| Trusted | Our own computers, phones, and tablets. They can reach the internet, DNS, and my apps through the reverse proxy, plus a few named exceptions, like file shares. |
 | Guest | Visitors' devices and the work laptops we use from home, so employer-managed devices stay off my own network. Internet and public DNS, nothing else. |
-| IoT | Smart home devices. They get the internet, DNS and the web ports of the reverse proxy, and they can't reach anything sensitive. |
+| IoT | Smart home devices. They get the internet, DNS, and the web ports of the reverse proxy, and they can't reach anything sensitive. |
 | Servers | The services I run at home and the hosts behind my reverse proxy. They can talk to IoT and the DMZ, and reach into Management and Security only for narrow jobs like monitoring, each on just the ports it needs. |
 | Security | The cameras and their recorder. They get DNS and nothing else, with no internet at all. The recorder's page is reachable only through the reverse proxy, and from outside the only way in is my private tailnet (see Remote access). |
 | DMZ | The services meant to be reached from the internet, including the game servers. They get the internet and DNS, and no other segment. |
-| Management | The switches, access points, storage server, and the admin pages for the firewall and Proxmox. Very little can reach this segment, and it starts few connections of its own: DNS, time sync, updates and backups. |
+| Management | The switches, access points, storage server, and the admin pages for the firewall and Proxmox. Very little can reach this segment, and it starts few connections of its own: DNS, time sync, updates, and backups. |
 
 Most admin pages are reached through the reverse proxy. The switches can't be proxied, so a single rule lets only my own PC reach them directly.
 
@@ -60,11 +138,12 @@ No management page is open to the internet, and the firewall has no inbound rule
 
 A small container at home acts as the doorway. It advertises single hosts from the Servers segment instead of the whole segment, because traffic that stays inside one VLAN never passes the firewall and would skip the firewall's rules. The tailnet's DNS points at AdGuard Home, so ad blocking and my internal names work when I'm away from home. A wired break-glass port on the switch gets me into Management if the tailnet is ever down.
 
-## Backups and monitoring
+## Backups, updates, and monitoring
 
-- **Containers:** Proxmox Backup Server snapshots every container each night onto TrueNAS.
+- **Containers and VMs:** Proxmox Backup Server backs up every container and VM each night onto TrueNAS, without stopping them.
 - **The VPS:** each night it gathers the things I can't rebuild, such as the Headscale database and the Dokploy configuration. A dedicated backup container at home then pulls them into an encrypted [restic](https://restic.net/) repository. I chose pull over push so the VPS holds no credentials for my network. A weekly check reads back every byte of the repository, and I've done a test restore to prove the backups work.
-- **Alerts:** [Uptime Kuma](https://uptime.kuma.pet/) watches the public site and both backup jobs, and emails me through my own Mailcow server if one fails or goes silent.
+- **Updates:** every container and VM installs security updates and regular OS updates on its own, with no automatic reboots. Vendor apps, Mailcow, and the Proxmox host stay manual. For a container or VM, one command takes a snapshot, runs the update, and checks for anything that newly failed.
+- **Alerts:** [Uptime Kuma](https://uptime.kuma.pet/) watches the public site and both backup jobs, and emails me through my own Mailcow server if one fails or goes silent. A daily report flags pending security updates, full disks, and unreachable machines in Uptime Kuma, and a weekly email lists every update that's waiting.
 
 ## What runs where
 
@@ -92,10 +171,11 @@ I run the whole lab myself, mostly on open source software, so I know what's run
 - **Pull backups instead of push.** The VPS holds no credentials for my network, and a dedicated container at home fetches what it needs.
 - **Single hosts through the tailnet.** The doorway advertises individual hosts, not whole segments, because traffic inside one VLAN would skip the firewall's rules.
 - **Self-hosted remote access.** I run Headscale myself, so no outside company holds the keys.
-- **Restores are tested.** I restored the Headscale database from a snapshot to prove the backups work.
+- **OS updates are automatic, app updates are not.** OS repos change little and rarely break things, while a vendor app can bring a breaking change or a one-way database migration, so I want to be there.
+- **Restores are tested.** I restored the Headscale database from a snapshot and a full container from its nightly backup to prove the backups work.
 
 ## Next
 
 - Rebuild the Wi-Fi so one network name covers every kind of device.
 - Add an offsite copy of the backups.
-- Draw a real network diagram for this page.
+- Bring the VPS into the same update and reporting setup.

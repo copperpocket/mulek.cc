@@ -4,6 +4,7 @@ description: "A private Wrath of the Lich King server built on AzerothCore, with
 pubDate: 2025-10-19
 category: "Games"
 tags: ["AzerothCore", "C++"]
+image: "/images/projects/warcraft.png"
 ---
 
 **Duckcraft** is the World of Warcraft server I run for solo and small-group play. It's a private **Wrath of the Lich King (3.3.5a)** world on [AzerothCore](https://www.azerothcore.org/), with the playerbots module so the world feels alive.
@@ -28,12 +29,12 @@ I build for both sides of the game: the client players see, and the server that 
 
 ### Client addons
 
-- [StockPlusUI](https://github.com/copperpocket/StockPlusUI): an overhaul of the default game interface. Action bars fade when idle and return during combat, on a new target or when the mouse is over them, and a menu entry opens its settings.
+- [StockPlusUI](https://github.com/copperpocket/StockPlusUI): an overhaul of the default game interface. Action bars fade when idle and return during combat, on a new target, or when the mouse is over them, and a menu entry opens its settings.
 - My fork of [VoiceOver](https://github.com/copperpocket/wow-voiceover/tree/feature/text-display): it shows the quest text on screen, so players can keep reading along after they walk away from the quest giver.
 
 ### Server modules
 
-- [mod-level-rewards](https://github.com/copperpocket/mod-level-rewards): a custom module that gives gold, spells and reward chests at level milestones. The chests come in four quality tiers, and their loot is weighted by class, armor type and level range. Rewards go to the mail if a player's bags are full, and playerbot accounts are skipped.
+- [mod-level-rewards](https://github.com/copperpocket/mod-level-rewards): a custom module that gives gold, spells, and reward chests at level milestones. The chests come in four quality tiers, and their loot is weighted by class, armor type, and level range. Rewards go to the mail if a player's bags are full, and playerbot accounts are skipped.
 - My version of [ChallengeModes](https://github.com/copperpocket/mod-challenge-modes): a popular module that lets players opt in to extra rules at level 1, such as hardcore or slower XP, and stack the ones that work together.
 
 ## Key decisions

@@ -32,9 +32,9 @@ A smaller round: the site's code got cleaned up, the page titles now match, and 
 
 ### Cleanup
 
-- The nav links and the GitHub, Bluesky and RSS links are defined once, in `src/config/links.js`
+- The nav links and the GitHub, Bluesky, and RSS links are defined once, in `src/config/links.js`
 - On a project page, the menu now marks Projects as the current section, like the header
-- Deleted 19 unused files: old components, config, scripts and logo images
+- Deleted 19 unused files: old components, config, scripts, and logo images
 - `README.md` lists the current folders
 
 ---

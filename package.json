@@ -8,7 +8,8 @@
     "start": "node ./dist/server/entry.mjs",
     "preview": "astro preview",
     "astro": "astro",
-    "pet-photos": "node scripts/pet-photos.mjs"
+    "pet-photos": "node scripts/pet-photos.mjs",
+    "project-previews": "node scripts/project-previews.mjs"
   },
   "dependencies": {
     "@astrojs/node": "^9.5.0",

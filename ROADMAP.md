@@ -59,7 +59,7 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 
 ## SEO and sharing
 
-- [ ] Per-project preview images (set `image` in the frontmatter; the default card is used otherwise)
+- [x] Per-project preview images (drawn by `yarn project-previews`; set `image` in the frontmatter, otherwise the default card is used)
 
 ## Contact form
 
@@ -68,8 +68,8 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 
 ## Content
 
-- [ ] Draw a real homelab network diagram for the Homelab Overview (every write-up already follows the same four-part structure)
-- [ ] "How this site deploys" write-up (Astro, Docker, Dokploy, auto-deploy from `master`)
+- [x] Draw a real homelab network diagram for the Homelab Overview (every write-up already follows the same four-part structure)
+- [x] "How this site deploys" write-up (Astro, Docker, Dokploy, auto-deploy from `master`)
 - [ ] Blog features: cover images, reading time, tag pages, next/previous links, consistent date format
 - [ ] `/uses` page (hardware, homelab stack, tools) and `/now` page
 - [ ] Downloadable résumé, plus certifications and skills on About
@@ -79,3 +79,8 @@ A running list of improvements for mulek.cc. Check items off as they land, and a
 ## Homelab
 
 - [ ] Optional: CrowdSec on the VPS, watching the Traefik, Postfix and SSH logs with a firewall bouncer (the home copy was removed in October 2026 because the exposed front door is the VPS, not the home network)
+- [x] Keep the LXCs and VMs up to date: automatic security updates, regular updates from each OS's own repos, a daily report of pending updates pushed to Uptime Kuma, a weekly digest email, and a snapshot-first update command
+- [ ] Next up: move Frigate off Debian 11, which no longer gets security updates, by rebuilding it on a current Debian release with its config, recordings path and Coral access carried over
+- [ ] Extend the update report to the VPS, major versions and apps outside apt, and bring the VPS into automatic security updates
+- [ ] Decide how vendor apps, the Proxmox host, and Mailcow take regular updates; they stay manual for now, listed in the weekly report, with the snapshot-first command for containers and VMs
+- [ ] Fix the Proxmox host hanging on reboot: set BIOS Power Supply Idle Control to Typical Current Idle at the next basement visit, and photograph the screen if it hangs again

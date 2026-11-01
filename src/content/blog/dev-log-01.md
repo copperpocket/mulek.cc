@@ -1,6 +1,6 @@
 ---
 title: "[AI] Dev Log #1: Cleanup, a New Logo, and a Synthwave Sky"
-description: "Three days of work on mulek.cc: fixes, SEO, a new logo and header, and a home page sky with a sun, constellations and nebulas."
+description: "Three days of work on mulek.cc: fixes, SEO, a new logo and header, and a home page sky with a sun, constellations, and nebulas."
 pubDate: 2026-10-16
 tags: ["dev-log", "design", "starfield", "seo", "security"]
 ---
@@ -8,9 +8,9 @@ tags: ["dev-log", "design", "starfield", "seo", "security"]
 ## Summary
 
 - **Dates:** October 15–17, 2026
-- **Commits:** 27, across PR #7, PR #8, PR #9 and the `dev` branch
+- **Commits:** 27, across PR #7, PR #8, PR #9, and the `dev` branch
 - **Files changed:** 59 (+2,516 / −1,380 lines)
-- **Status:** PR #7, PR #8 and PR #9 merged to `master` and deployed; the rest ships with the PR that publishes this post
+- **Status:** PR #7, PR #8, and PR #9 merged to `master` and deployed; the rest ships with the PR that publishes this post
 
 The site got a cleanup pass first, then SEO and contact form hardening, a new logo, and a redesigned home page sky.
 
@@ -22,7 +22,7 @@ The site got a cleanup pass first, then SEO and contact form hardening, a new lo
 
 - Blog posts moved to clean URLs (`/blog/<name>`), with redirects from the old `.md` URLs
 - Unknown URLs show a 404 page instead of a server error
-- Removed placeholder links, a sample post, missing images and an unused slider
+- Removed placeholder links, a sample post, missing images, and an unused slider
 - Added an RSS feed at `/rss.xml`
 - Project write-ups moved out of the blog into their own collection at `/projects/<name>`
 
@@ -45,11 +45,11 @@ The site got a cleanup pass first, then SEO and contact form hardening, a new lo
 ### SEO
 
 - Link previews (Open Graph and Twitter tags) with a 1200×630 image
-- Canonical URLs, a sitemap and `robots.txt`
+- Canonical URLs, a sitemap, and `robots.txt`
 
 ### Brand and layout
 
-- New logo: the `>m_` mark, an `m` favicon and the `mulek✦cc` wordmark
+- New logo: the `>m_` mark, an `m` favicon, and the `mulek✦cc` wordmark
 - The header is tall at the top of the page and turns compact on scroll
 - Short pages center vertically; long pages start at the top
 - Even 32px spacing between page headings and the panels below them
@@ -59,13 +59,13 @@ The site got a cleanup pass first, then SEO and contact form hardening, a new lo
 - A large striped sun sits on the horizon behind the two hero panels
 - Constellations draw themselves in one after another, anywhere in the open sky
 - Soft haze around each constellation's stars
-- Nebula clouds in their own colors: green, cyan, blue and amber
+- Nebula clouds in their own colors: green, cyan, blue, and amber
 - The two hero panels are the same width and centered on the sun
 - Their 12px edge follows the sun's gradient and fades out near the bottom
 
 ### Colors
 
-- New highlight color, the sun's pink, used for hover states, category tags and the logo's ✦
+- New highlight color, the sun's pink, used for hover states, category tags, and the logo's ✦
 - Sub-page panels get an orchid-to-lavender edge to match the home page
 - Better contrast in both themes (at least 4.5:1 for text)
 
