@@ -29,7 +29,7 @@ This round finished the sky, replaced the old phone menu, added pet photos with 
 
 ### Site menu
 
-- One button opens the site links, outside links and the theme toggle
+- One button opens the site links, outside links, and the theme toggle
 - Full screen on phones, a small card under the button on wider screens
 - Used on the home page at every width, and on other pages on phones; desktop keeps the header nav bar
 - The icon is drawn as lines and folds into an X in two steps
@@ -54,7 +54,7 @@ This round finished the sky, replaced the old phone menu, added pet photos with 
 - The current project is a wide featured card at the top
 - Each card shows `CATEGORY · YEAR` and its tools as plain text
 - Filter buttons match each other and show a count
-- Categories renamed: Web, Infrastructure and Games
+- Categories renamed: Web, Infrastructure, and Games
 
 ### Fixes and cleanup
 

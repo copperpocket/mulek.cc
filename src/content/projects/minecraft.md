@@ -12,14 +12,14 @@ image: "/images/projects/minecraft.png"
 
 ## What it is
 
-- **Game:** Minecraft, survival. The main world began as a creative build and is now survival. It uses server-side plugins only, so nobody has to install client mods. The plugins cover quality-of-life tools, build protections and light role-based permissions.
+- **Game:** Minecraft, survival. The main world began as a creative build and is now survival. It uses server-side plugins only, so nobody has to install client mods. The plugins cover quality-of-life tools, build protections, and light role-based permissions.
 - **Who it's for:** friends and family only, by whitelist.
 - **How you join:** by name, `mc.mulek.cc`, with no IP address or port number to remember.
 - **Status:** running.
 
 ## Setup
 
-The server runs on [PaperMC](https://papermc.io/), a performance-focused fork of Spigot with strong plugin support. Paper lets me tune performance and adjust gameplay with small mechanics, commands and custom tools, while staying light enough to run around the clock in my homelab.
+The server runs on [PaperMC](https://papermc.io/), a performance-focused fork of Spigot with strong plugin support. Paper lets me tune performance and adjust gameplay with small mechanics, commands, and custom tools, while staying light enough to run around the clock in my homelab.
 
 [Crafty Controller](https://craftycontrol.com/) runs and manages the server, with automated restarts. It lives in the DMZ segment of my [homelab](/projects/homelab-overview), so it can reach the internet and DNS and nothing else on my network. OPNsense controls what it can reach, and AdGuard Home handles DNS.
 
@@ -35,4 +35,4 @@ Its container is backed up every night with the rest of my services, so the worl
 
 ## Next
 
-A small server site is planned, with a guide to joining, a page to request whitelisting and a role such as builder or moderator, and server news. This page will link to it once it exists.
+A small server site is planned, with a guide to joining, a page to request whitelisting, and a role such as builder or moderator, and server news. This page will link to it once it exists.

@@ -20,7 +20,7 @@ This round was about the site's identity: its fonts, where the logos go, and how
 
 ### Fonts
 
-- Headings, the header nav and the menu use Outfit, which matches the wordmark's round letters
+- Headings, the header nav, and the menu use Outfit, which matches the wordmark's round letters
 - Everything you read uses Lexend
 - Code-style text (the clock, `git clone`, card labels) uses JetBrains Mono
 - All three are bundled with the site, so there are no outside font requests
@@ -35,7 +35,7 @@ This round was about the site's identity: its fonts, where the logos go, and how
 
 ### Hovers
 
-- Every link, button and icon eases its hover color over 0.4 seconds instead of snapping
+- Every link, button, and icon eases its hover color over 0.4 seconds instead of snapping
 - Cards lift at the same speed
 - Links inside posts and project write-ups are lavender and turn pink on hover
 

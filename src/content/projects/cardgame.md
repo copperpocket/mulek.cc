@@ -80,9 +80,9 @@ This design outlines a rich meta-game where the competitive card game is both a 
 
 ## Key decisions
 
-- **Every activity feeds the same reward.** Duels, crafting, puzzles and dungeons all earn a Gold pack, so every playstyle is rewarded.
+- **Every activity feeds the same reward.** Duels, crafting, puzzles, and dungeons all earn a Gold pack, so every playstyle is rewarded.
 - **Gold packs always contain an Echo.** The rare pull is the center of the replayability grind.
-- **Tiered cards.** Commons, Rares, Mythics and Ultra Rares reinforce the status hierarchy of a collection.
+- **Tiered cards.** Commons, Rares, Mythics, and Ultra Rares reinforce the status hierarchy of a collection.
 
 ## Next
 

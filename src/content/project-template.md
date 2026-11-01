@@ -18,16 +18,16 @@ One or two sentences up top: what the project is, in plain words.
 ## What it is
 
 - **Who it's for:** who uses it, and how someone gets access.
-- **Status:** running, planned or archived, in a few words.
-- Add other labelled facts that fit, such as the game, the stack or the main features.
+- **Status:** running, planned, or archived, in a few words.
+- Add other labelled facts that fit, such as the game, the stack, or the main features.
 
 ## Setup
 
-How it runs: the hardware, the software and how it fits into the lab.
+How it runs: the hardware, the software, and how it fits into the lab.
 
 ## Free middle sections
 
-Add, rename or drop sections that fit the project (for example Custom work or Open source). They go between Setup and Key decisions. Use ### for subsections.
+Add, rename, or drop sections that fit the project (for example Custom work or Open source). They go between Setup and Key decisions. Use ### for subsections.
 
 ## Key decisions
 

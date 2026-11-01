@@ -22,7 +22,7 @@ This round made the site lighter to serve, put the long reads on a panel, and br
 
 - Pages are built once at deploy and served as files; only the contact form runs on the server
 - Blog and project pages are generated at build time
-- Anything that depends on the visit is set in the browser: the sky's random counts, the footer year, the pet ages and the years in the industry
+- Anything that depends on the visit is set in the browser: the sky's random counts, the footer year, the pet ages, and the years in the industry
 - The canonical URL no longer ends in a slash, so it matches the sitemap
 
 ### Design
@@ -35,14 +35,14 @@ This round made the site lighter to serve, put the long reads on a panel, and br
 
 ### Tooling
 
-- Every page gets its sky, header and footer from one layout, so a page is just its content; the home page opts out because it brings its own sky and menu
+- Every page gets its sky, header, and footer from one layout, so a page is just its content; the home page opts out because it brings its own sky and menu
 
 ### Content
 
 - The About page leads with the job and explains what an MSP is, and the homelab paragraph names the tools I run
 - The job title is Systems Engineer everywhere, and the CW Technology titles drop their level numerals
 - The portfolio write-up is rewritten to match the current site
-- The Homelab Overview is rewritten: the firewall, switches and seven VLANs, then remote access over a tailnet I host myself, how everything is backed up and monitored, and what runs on the VPS
+- The Homelab Overview is rewritten: the firewall, switches, and seven VLANs, then remote access over a tailnet I host myself, how everything is backed up and monitored, and what runs on the VPS
 - Posts published on the same day now sort by number, so Dev Log #4 sits above #3 and #2 on the blog and in the RSS feed
 
 ---

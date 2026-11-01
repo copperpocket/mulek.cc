@@ -12,7 +12,7 @@ tags: ["dev-log", "content", "tooling"]
 - **Files changed:** 10 (+213 / −126 lines)
 - **Status:** PR #14 (Dev Log #5) is merged to `master` and deployed; everything here ships with the PR that publishes this post
 
-This round gave the six project write-ups one shared structure, so each page says what the project is, how it runs, why it is built that way and where to pick it up again.
+This round gave the six project write-ups one shared structure, so each page says what the project is, how it runs, why it is built that way, and where to pick it up again.
 
 ---
 
@@ -20,8 +20,8 @@ This round gave the six project write-ups one shared structure, so each page say
 
 ### Content
 
-- Every project write-up has the same four required parts: What it is, Setup, Key decisions and Next, with any extra sections in the middle
-- What it is holds the labelled facts: who it's for, how to get access and the status
+- Every project write-up has the same four required parts: What it is, Setup, Key decisions, and Next, with any extra sections in the middle
+- What it is holds the labelled facts: who it's for, how to get access, and the status
 - Key decisions replaces Lessons Learned with a short list of "I chose X because Y"
 - Next says where to pick the project up again: what's planned or what's left undone
 - Mailcow is rewritten around how mail actually flows: incoming mail arrives through the VPS over WireGuard, outgoing mail goes through SMTP2GO, and Uptime Kuma sends its alerts with an SMTP-only app password

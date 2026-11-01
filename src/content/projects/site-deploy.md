@@ -1,6 +1,6 @@
 ---
 title: "How This Site Deploys"
-description: "How a merge to master becomes the live site: Dokploy, Nixpacks and Traefik on a VPS."
+description: "How a merge to master becomes the live site: Dokploy, Nixpacks, and Traefik on a VPS."
 pubDate: 2026-10-30
 category: "Infrastructure"
 tags: ["Dokploy", "Nixpacks", "Traefik", "GitHub"]
@@ -14,7 +14,7 @@ Merging to the `master` branch on GitHub is the whole release process for [mulek
 
 - **What it does:** turns a merge into a live deploy of this site.
 - **Who it's for:** me, and anyone curious how a personal site gets from a commit to a page.
-- **Parts:** GitHub, a webhook, [Dokploy](https://dokploy.com/), [Nixpacks](https://nixpacks.com/) and [Traefik](https://traefik.io/).
+- **Parts:** GitHub, a webhook, [Dokploy](https://dokploy.com/), [Nixpacks](https://nixpacks.com/), and [Traefik](https://traefik.io/).
 - **Status:** running.
 
 ## Setup
@@ -30,9 +30,9 @@ Almost nothing. Every page is built once during the deploy and served as a file,
 ## From commit to live
 
 1. I work on the `dev` branch. Pushing to `dev` deploys nothing.
-2. When a round of changes is ready, I open a pull request from `dev` to `master`. It follows a template with a plain-English title, the commit list and an after-deploy checklist.
+2. When a round of changes is ready, I open a pull request from `dev` to `master`. It follows a template with a plain-English title, the commit list, and an after-deploy checklist.
 3. I merge with a merge commit. That is the deploy.
-4. GitHub sends a webhook to Dokploy, which pulls `master`, builds the image with Nixpacks and starts the new version.
+4. GitHub sends a webhook to Dokploy, which pulls `master`, builds the image with Nixpacks, and starts the new version.
 5. After the deploy, I click through the changed pages in light and dark mode, and on a phone.
 
 ## When something goes wrong
@@ -47,4 +47,4 @@ If a deploy breaks the site, I can redeploy an earlier build from Dokploy. [Upti
 
 ## Next
 
-- Optional: add CrowdSec on the VPS, watching the Traefik, Postfix and SSH logs. Traefik is the doorway this site comes in through.
+- Optional: add CrowdSec on the VPS, watching the Traefik, Postfix, and SSH logs. Traefik is the doorway this site comes in through.
