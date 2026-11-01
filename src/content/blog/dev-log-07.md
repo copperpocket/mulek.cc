@@ -8,8 +8,8 @@ tags: ["dev-log", "design", "content", "seo", "tooling"]
 ## Summary
 
 - **Dates:** October 30 – November 1, 2026
-- **Commits:** 10, all on the `dev` branch
-- **Files changed:** 29 (+535 / −63 lines)
+- **Commits:** 12, all on the `dev` branch
+- **Files changed:** 29 (+540 / −63 lines)
 - **Status:** PR #15 (Dev Log #6) is merged to `master` and deployed; everything here ships with the PR that publishes this post
 
 This round finished the content items left over from Dev Log #6: the deploy write-up, the link preview images, and the homelab network diagram. It also fixed two ways write-ups could break on a phone.
@@ -51,6 +51,7 @@ This round finished the content items left over from Dev Log #6: the deploy writ
 - **Images drawn from frontmatter stay honest.** One command redraws every preview, so a new title doesn't leave an old image behind.
 - **The screenshot browser reports a light color scheme.** The preview script forces the logos to their dark-mode colors so they stay readable on the card.
 - **Headless Edge can't test phone widths.** A narrow window crops the page instead of reflowing it, so a clipped screenshot there doesn't prove a mobile bug.
+- **`overflow-wrap: anywhere` changes table columns.** It lets a column shrink past its longest word, which split the VLAN table's names mid-word, while `break-word` wraps long text and leaves the column width alone.
 - **A search that finds nothing proves nothing.** A broken pattern reported no missing commas until a known example failed to appear, so test a search on something you know is there.
 - **Finished work can linger on other pages.** The diagram came off the Homelab Overview's Next list but stayed on the portfolio page's until this post was checked against it.
 
@@ -68,7 +69,7 @@ This round finished the content items left over from Dev Log #6: the deploy writ
 | `6faf53b` | feat(projects): draw a link preview image for each project |
 | `250ebf7` | feat(projects): add a network diagram to the homelab overview |
 
-Plus five more commits: one that updates the homelab items in the roadmap, one that removes the finished diagram from the portfolio page's Next section, one that adds this post, `docs(blog): add Dev Log #7`, one that adds updates to the Homelab Overview, and one that applies the Oxford comma.
+Plus seven more commits: one that updates the homelab items in the roadmap, one that removes the finished diagram from the portfolio page's Next section, one that adds this post, `docs(blog): add Dev Log #7`, one that adds updates to the Homelab Overview, one that applies the Oxford comma, one that stops table columns breaking words, and one that updates this post.
 
 ---
 
