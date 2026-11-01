@@ -41,4 +41,4 @@ The starfield is one canvas, drawn by a small script I wrote. Stars, comets, con
 
 ## Next
 
-More project write-ups and a network diagram of my homelab.
+More project write-ups.
