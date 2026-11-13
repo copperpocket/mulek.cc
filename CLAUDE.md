@@ -35,12 +35,12 @@ The `/api/contact` endpoint needs a `.env` file, which is gitignored. The rest o
 
 `astro.config.mjs` sets `server.allowedHosts: ['mulek.cc']` on purpose: the user reaches the dev/preview server through that hostname.
 
-## World-building context
+## Session hooks
 
-This site is not a source of lore for the fantasy world in the `worldbuilding` repo. Only a page that explicitly references that world touches it.
+This site is not a source of lore for the fantasy world in the `worldbuilding` repo (`C:/Users/michael-gaming/Documents/GitHub/worldbuilding`). It may **read** that repo when a page or post references the world, and never writes to it, not even `lore-inbox.md`. Game projects on the site (Echo Protocol, Duckcraft, Quackshire) are not lore for it.
 
-- `/handoff`: skip its lore step unless the session changed a page that references the fantasy world. Game projects on the site (Echo Protocol, Duckcraft, Quackshire) are not lore for it.
-- `/pickup`: skip reading the world overview and the lore-inbox count unless the task involves that world.
+- Pickup: skip the world repo unless the task involves the fantasy world or a project set in it. If it does, read `overview.md` and only the lore files the task needs. Skip the lore-inbox count.
+- Handoff: no lore capture and no writes to the world repo. If this session wrote something that adds to or contradicts the lore, say so in one line of the reply so I can take it to the world repo or the game's repo.
 
 ## Architecture
 
